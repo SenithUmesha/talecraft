@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_text_widgets.dart';
+import 'package:talecraft/view/home/home.dart';
 import 'package:talecraft/view/registration/registration.dart';
 
 import '../../controller/login_controller.dart';
@@ -123,7 +124,9 @@ class Login extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if (formKey.currentState!.validate()) {}
+                                  if (formKey.currentState!.validate()) {
+                                    Get.to(() => const Home());
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
