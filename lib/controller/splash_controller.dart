@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-
-import '../view/login/login.dart';
+import 'package:talecraft/view/navBar/nav_bar.dart';
 
 class SplashController extends GetxController {
   @override
@@ -13,7 +12,8 @@ class SplashController extends GetxController {
 
   void navigateToNextPage() {
     Timer(const Duration(seconds: 2), () {
-      Get.offAll(Login());
+      // Get.offAll(Login());
+      Get.offAll(() => const NavBar());
     });
   }
 }

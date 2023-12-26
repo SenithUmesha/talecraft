@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:talecraft/utils/app_colors.dart';
 
-import '../../utils/app_colors.dart';
-
-class Home extends StatelessWidget {
-  const Home({super.key});
+class Bookmarks extends StatelessWidget {
+  const Bookmarks({super.key});
 
   @override
   Widget build(BuildContext context) {
