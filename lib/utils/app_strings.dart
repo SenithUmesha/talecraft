@@ -1,4 +1,5 @@
 class AppStrings {
+  static const appName = 'TaleCraft';
   static const welcomeBack = 'Welcome Back!';
   static const password = 'Password';
   static const rememberMe = 'Remember me';
@@ -14,4 +15,5 @@ class AppStrings {
   static const register = 'Register';
   static const passwordHelperText =
       'Password must have at least one uppercase letter, one lowercase letter, one number, and 8 digits long';
+  static const recommendedForYou = 'Recommended For You';
 }

@@ -27,6 +27,30 @@ class AppTextWidgets {
     );
   }
 
+  static boldText(
+      {text,
+      required double size,
+      color,
+      alignment,
+      decoration,
+      weight,
+      maxLines,
+      textOverFlow}) {
+    return Text(
+      text,
+      style: TextStyle(
+        decoration: decoration ?? TextDecoration.none,
+        fontSize: size,
+        color: color,
+        fontFamily: "Bold",
+        fontWeight: weight,
+      ),
+      overflow: textOverFlow,
+      maxLines: maxLines,
+      textAlign: alignment ?? TextAlign.start,
+    );
+  }
+
   static Widget normalTextField(
       {controller,
       hintText,
