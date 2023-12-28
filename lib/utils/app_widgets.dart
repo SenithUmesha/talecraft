@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'app_colors.dart';
 
-class AppTextWidgets {
+class AppWidgets {
   static regularText(
       {text,
       required double size,
@@ -51,7 +53,7 @@ class AppTextWidgets {
     );
   }
 
-  static Widget normalTextField(
+  static normalTextField(
       {controller,
       hintText,
       suffixIcon,
@@ -135,5 +137,68 @@ class AppTextWidgets {
         fillColor: fillColor,
       ),
     );
+  }
+
+  static imageWidget(String? image, errorImage, {bool? isFrameBuilder}) {
+    var width = MediaQuery.of(Get.context!).size.width;
+    return image != null && image.isNotEmpty
+        ? Image.network(
+            image,
+            frameBuilder: isFrameBuilder == true
+                ? (ctx, child, frame, wasSynchronouslyLoaded) {
+                    return frame != null
+                        ? child
+                        : Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Center(
+                              child: Container(
+                                width: width * 0.43,
+                                height: width * 0.43,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                          );
+                  }
+                : null,
+            loadingBuilder: (ctx, Widget, loadingProgress) {
+              return loadingProgress == null
+                  ? Widget
+                  : Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Center(
+                        child: Container(
+                          width: width * 0.43,
+                          height: width * 0.43,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+            },
+            errorBuilder: (ctx, _, error) {
+              try {
+                return Image.asset(
+                  errorImage,
+                  fit: BoxFit.cover,
+                );
+              } catch (e) {
+                return Image.asset(
+                  errorImage,
+                  fit: BoxFit.cover,
+                );
+              }
+            },
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            errorImage,
+            fit: BoxFit.cover,
+          );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'app_colors.dart';
-import 'app_text_widgets.dart';
+import 'app_widgets.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Get.back();
         },
       ),
-      title: AppTextWidgets.regularText(
+      title: AppWidgets.regularText(
         text: title,
         size: 20,
         color: AppColors.black,

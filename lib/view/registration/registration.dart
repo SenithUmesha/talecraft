@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_strings.dart';
-import 'package:talecraft/utils/app_text_widgets.dart';
+import 'package:talecraft/utils/app_widgets.dart';
 import 'package:talecraft/utils/validator.dart';
 
 import '../../controller/registration_controller.dart';
@@ -138,8 +138,7 @@ class Registration extends StatelessWidget {
                                                 Padding(
                                                   padding: const EdgeInsets
                                                       .symmetric(),
-                                                  child: AppTextWidgets
-                                                      .regularText(
+                                                  child: AppWidgets.regularText(
                                                     text: AppStrings.register,
                                                     size: 22,
                                                     color: AppColors.white,
@@ -159,7 +158,7 @@ class Registration extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        AppTextWidgets.regularText(
+                                        AppWidgets.regularText(
                                           text: AppStrings.alreadyHaveAnAccount,
                                           size: 18.0,
                                           color: AppColors.black,
@@ -169,7 +168,7 @@ class Registration extends StatelessWidget {
                                           onTap: () {
                                             Get.back();
                                           },
-                                          child: AppTextWidgets.regularText(
+                                          child: AppWidgets.regularText(
                                             text: AppStrings.login,
                                             size: 18.0,
                                             color: AppColors.red,
@@ -210,13 +209,13 @@ class Registration extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextWidgets.regularText(
+        AppWidgets.regularText(
           text: name,
           size: 18.0,
           color: AppColors.black,
           weight: FontWeight.w400,
         ),
-        AppTextWidgets.normalTextField(
+        AppWidgets.normalTextField(
           controller: textEditingController,
           obscureText: obscureText,
           maxLines: 1,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
-import 'package:talecraft/utils/app_text_widgets.dart';
+import 'package:talecraft/utils/app_widgets.dart';
 import 'package:talecraft/view/navBar/nav_bar.dart';
 import 'package:talecraft/view/registration/registration.dart';
 
@@ -110,7 +110,7 @@ class Login extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {},
-                                    child: AppTextWidgets.regularText(
+                                    child: AppWidgets.regularText(
                                       text: AppStrings.forgotPassword,
                                       size: 16.0,
                                       color: AppColors.grey,
@@ -145,7 +145,7 @@ class Login extends StatelessWidget {
                                           Padding(
                                             padding:
                                                 const EdgeInsets.symmetric(),
-                                            child: AppTextWidgets.regularText(
+                                            child: AppWidgets.regularText(
                                               text: AppStrings.login,
                                               size: 22,
                                               color: AppColors.white,
@@ -164,7 +164,7 @@ class Login extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  AppTextWidgets.regularText(
+                                  AppWidgets.regularText(
                                     text: AppStrings.doNotHaveAnAccount,
                                     size: 18.0,
                                     color: AppColors.black,
@@ -174,7 +174,7 @@ class Login extends StatelessWidget {
                                     onTap: () async {
                                       Get.to(() => Registration());
                                     },
-                                    child: AppTextWidgets.regularText(
+                                    child: AppWidgets.regularText(
                                       text: AppStrings.signUp,
                                       size: 18.0,
                                       color: AppColors.red,
@@ -212,13 +212,13 @@ class Login extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextWidgets.regularText(
+        AppWidgets.regularText(
           text: name,
           size: 18.0,
           color: AppColors.black,
           weight: FontWeight.w400,
         ),
-        AppTextWidgets.normalTextField(
+        AppWidgets.normalTextField(
           controller: textEditingController,
           obscureText: obscureText,
           filled: false,
