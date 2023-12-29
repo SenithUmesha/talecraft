@@ -306,7 +306,7 @@ class StoryDetails extends StatelessWidget {
               maxLines: 2,
               textOverFlow: TextOverflow.ellipsis,
               color: AppColors.black,
-              weight: FontWeight.w400,
+              weight: FontWeight.w500,
             ),
           ),
         ],

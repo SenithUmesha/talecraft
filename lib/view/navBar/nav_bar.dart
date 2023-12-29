@@ -8,7 +8,7 @@ import 'package:talecraft/view/profile/profile.dart';
 import 'package:talecraft/view/search/search.dart';
 
 import '../../controller/nav_bar_controller.dart';
-import '../createStory/create_story.dart';
+import '../createStory/storyboard.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -34,7 +34,7 @@ class NavBar extends StatelessWidget {
                                 ? const Search()
                                 : controller.bottomNavIndex == 3
                                     ? const Profile()
-                                    : const CreateStory()),
+                                    : const Storyboard()),
                 floatingActionButton: FloatingActionButton(
                   backgroundColor: controller.bottomNavIndex == 4
                       ? AppColors.black
