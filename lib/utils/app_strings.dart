@@ -18,4 +18,5 @@ class AppStrings {
   static const recommendedForYou = 'Recommended For You';
   static const read = 'Read';
   static const moreFromAuther = 'More From This Author';
+  static const newStory = "Create a New Story";
 }

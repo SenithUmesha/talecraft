@@ -6,8 +6,10 @@ import 'app_widgets.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
+  final List<Widget>? actions;
+  final bool? cantGoBack;
 
-  const CustomAppBar({super.key, this.title});
+  const CustomAppBar({super.key, this.title, this.actions, this.cantGoBack});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -18,15 +20,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
       elevation: 4,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.black,
-        ),
-        onPressed: () {
-          Get.back();
-        },
-      ),
+      leading: cantGoBack != null && cantGoBack!
+          ? null
+          : IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+      actions: actions,
       title: title == null
           ? null
           : AppWidgets.regularText(

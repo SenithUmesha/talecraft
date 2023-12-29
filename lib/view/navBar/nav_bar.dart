@@ -40,7 +40,7 @@ class NavBar extends StatelessWidget {
                       ? AppColors.black
                       : AppColors.red,
                   child: Icon(
-                    Icons.add_rounded,
+                    Icons.note_alt_rounded,
                     color: AppColors.white,
                   ),
                   onPressed: () {
