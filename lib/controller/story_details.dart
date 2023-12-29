@@ -1,21 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talecraft/model/Story.dart';
 
-class HomeController extends GetxController {
-  List<String> genreList = [
-    'Action',
-    'Adventure',
-    'Sci-Fi',
-    'Drama',
-    'Comedy',
-    'Thriller'
-  ];
+import '../model/Story.dart';
 
+class StoryDetailsController extends GetxController {
   List<Story> storyList = [
     Story(
         id: 1,
-        name: "The Adventure Begins",
+        name: "The Adventure Ends",
         author: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
@@ -87,16 +78,8 @@ class HomeController extends GetxController {
         isBookmarked: true),
   ];
 
-  bool isLoading = false;
-  final scrollController = ScrollController();
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.position.pixels) {}
-    });
+  void updateIsBookmarked(Story story) {
+    story.isBookmarked = !(story.isBookmarked ?? false);
+    update();
   }
 }

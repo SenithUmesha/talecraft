@@ -6,6 +6,7 @@ import 'package:talecraft/controller/home_controller.dart';
 import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
+import 'package:talecraft/view/home/story_details.dart';
 
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
@@ -62,7 +63,7 @@ class Home extends StatelessWidget {
                           text: AppStrings.recommendedForYou,
                           size: 20.0,
                           color: AppColors.black,
-                          weight: FontWeight.w400,
+                          weight: FontWeight.w600,
                         ),
                       ),
                       SizedBox(
@@ -90,7 +91,7 @@ class Home extends StatelessWidget {
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.anywhere,
-                          color: AppColors.red,
+                          color: AppColors.black,
                           onRefresh: () async {},
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -120,7 +121,7 @@ class Home extends StatelessWidget {
         });
   }
 
-  getGenreItem(String genre, double width) {
+  static getGenreItem(String genre, double width) {
     return Container(
       width: width * 0.25,
       decoration: BoxDecoration(
@@ -140,7 +141,9 @@ class Home extends StatelessWidget {
 
   getStoryItem(double height, double width, Story story) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Get.to(() => StoryDetails(
+            story: story,
+          )),
       child: Padding(
         padding: EdgeInsets.only(bottom: 10),
         child: Container(
@@ -154,7 +157,7 @@ class Home extends StatelessWidget {
                 ),
                 child: AppWidgets.imageWidget(
                   story.image,
-                  AppImages.storyCover,
+                  AppImages.noStoryCover,
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 height: height * 0.2,
@@ -184,11 +187,12 @@ class Home extends StatelessWidget {
                       height: height * 0.008,
                     ),
                     AppWidgets.regularText(
-                      text: story.description,
-                      size: 14.0,
-                      color: AppColors.black,
-                      weight: FontWeight.w400,
-                    ),
+                        text: story.description,
+                        size: 14.0,
+                        color: AppColors.black,
+                        weight: FontWeight.w400,
+                        maxLines: 3,
+                        textOverFlow: TextOverflow.ellipsis),
                     SizedBox(
                       height: height * 0.008,
                     ),

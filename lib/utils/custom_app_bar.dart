@@ -5,9 +5,9 @@ import 'app_colors.dart';
 import 'app_widgets.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
 
-  const CustomAppBar({super.key, required this.title});
+  const CustomAppBar({super.key, this.title});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -27,12 +27,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Get.back();
         },
       ),
-      title: AppWidgets.regularText(
-        text: title,
-        size: 20,
-        color: AppColors.black,
-        weight: FontWeight.w600,
-      ),
+      title: title == null
+          ? null
+          : AppWidgets.regularText(
+              text: title,
+              size: 20,
+              color: AppColors.black,
+              weight: FontWeight.w600,
+            ),
       centerTitle: true,
     );
   }
