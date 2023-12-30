@@ -66,11 +66,25 @@ class AddBlockDialog extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return AlertDialog(
-      title: AppWidgets.regularText(
-        text: "Add Block",
-        size: 20.0,
-        color: AppColors.black,
-        weight: FontWeight.w600,
+      title: Row(
+        children: [
+          AppWidgets.regularText(
+            text: "Add Block",
+            size: 20.0,
+            color: AppColors.black,
+            weight: FontWeight.w600,
+          ),
+          Spacer(),
+          IconButton(
+            icon: const Icon(
+              Icons.close_rounded,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          )
+        ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,

@@ -67,14 +67,27 @@ class Storyboard extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
-                                        child: ListTile(
-                                          title: AppWidgets.regularText(
-                                            text: block.toString(),
-                                            size: 16.0,
-                                            color: AppColors.black,
-                                            weight: FontWeight.w400,
-                                          ),
-                                        ),
+                                        child: block.type == BlockType.Story
+                                            ? ListTile(
+                                                title: AppWidgets.regularText(
+                                                  text: block.toString(),
+                                                  size: 16.0,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w400,
+                                                ),
+                                              )
+                                            : ListTile(
+                                                title: ReorderableListView(
+                                                  physics:
+                                                      BouncingScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  children: [],
+                                                  onReorder:
+                                                      (oldIndex, newIndex) {},
+                                                ),
+                                              ),
                                       ),
                                     ),
                                 ],
