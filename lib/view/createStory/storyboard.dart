@@ -7,6 +7,7 @@ import 'package:talecraft/utils/app_colors.dart';
 
 import '../../controller/storyboard_controller.dart';
 import '../../utils/app_strings.dart';
+import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
 
 class Storyboard extends StatelessWidget {
@@ -235,6 +236,27 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
                         ],
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.help,
+                          color: AppColors.grey,
+                          size: 14,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        AppWidgets.regularText(
+                          text:
+                              "Double press to edit block | Hold press to delete block",
+                          size: 10.0,
+                          alignment: TextAlign.center,
+                          color: AppColors.grey,
+                          weight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
                     Divider(
                       thickness: 1,
                       color: AppColors.grey,
@@ -270,7 +292,7 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
                             },
                             builder: (context, node) {
                               return GestureDetector(
-                                onTap: () {
+                                onDoubleTap: () {
                                   controller.showAddTextDialog(node.data!);
                                 },
                                 onLongPress: () {
@@ -282,24 +304,33 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
                                   });
                                 },
                                 child: Container(
-                                  color: Colors.white60,
-                                  padding: const EdgeInsets.all(16),
-                                  child: Text(
-                                    (node.data as Block).shortDescription,
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppColors.white,
+                                        border: Border.all(
+                                            color: (node.data as Block).type ==
+                                                    BlockType.story
+                                                ? AppColors.black
+                                                : AppColors.red,
+                                            width: 2)),
+                                    padding: const EdgeInsets.all(12),
+                                    child: AppWidgets.regularText(
+                                        text: (node.data as Block)
+                                            .shortDescription,
+                                        size: 14.0,
+                                        alignment: TextAlign.center,
+                                        color: AppColors.black,
+                                        weight: FontWeight.w400,
+                                        textOverFlow: TextOverflow.ellipsis,
+                                        maxLines: 1)),
                               );
                             },
                             onEdgeColor: (n1, n2) {
                               if (n1.data?.oneOut == false &&
                                   n2.data?.multiIn == false) {
-                                return AppColors.red;
-                              } else {
                                 return AppColors.black;
+                              } else {
+                                return AppColors.red;
                               }
                             },
                           );
@@ -348,12 +379,12 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
 enum BlockType { story, choice }
 
 class Block {
-  final int id;
-  final BlockType type;
-  final String shortDescription;
-  final String text;
-  final bool oneOut;
-  final bool multiIn;
+  int id;
+  BlockType type;
+  String shortDescription;
+  String text;
+  bool oneOut;
+  bool multiIn;
 
   Block({
     required this.id,
@@ -363,4 +394,9 @@ class Block {
     required this.oneOut,
     required this.multiIn,
   });
+
+  void updateText(String shortDescription, String text) {
+    this.shortDescription = shortDescription;
+    this.text = text;
+  }
 }

@@ -59,7 +59,7 @@ class StoryboardController extends GetxController {
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter some text';
-                        } else if (value.trim().length < 50) {
+                        } else if (value.trim().length > 20) {
                           return 'Please enter a shorter description';
                         }
                         return null;
@@ -122,6 +122,11 @@ class StoryboardController extends GetxController {
                           MaterialStateProperty.all<Color>(AppColors.black)),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
+                      block.updateText(
+                        shortDesciptionController.text,
+                        textController.text,
+                      );
+                      update();
                       Get.back();
                     }
                   },
