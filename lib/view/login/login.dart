@@ -121,9 +121,10 @@ class Login extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () async {
-                                      if (formKey.currentState!.validate()) {
-                                        Get.to(() => const NavBar());
-                                      }
+                                      // if (formKey.currentState!.validate()) {
+                                      //   Get.to(() => const NavBar());
+                                      // }
+                                      Get.to(() => const NavBar());
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(

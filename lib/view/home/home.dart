@@ -173,37 +173,37 @@ class Home extends StatelessWidget {
                   children: [
                     AppWidgets.regularText(
                       text: story.name,
-                      size: 18.0,
+                      size: 16.0,
                       color: AppColors.black,
                       weight: FontWeight.w600,
                     ),
                     AppWidgets.regularText(
                       text: story.author,
-                      size: 16.0,
+                      size: 14.0,
                       color: AppColors.black,
                       weight: FontWeight.w400,
                     ),
                     SizedBox(
-                      height: height * 0.008,
+                      height: height * 0.006,
                     ),
                     AppWidgets.regularText(
                         text: story.description,
-                        size: 14.0,
+                        size: 12.0,
                         color: AppColors.black,
                         weight: FontWeight.w400,
                         maxLines: 3,
                         textOverFlow: TextOverflow.ellipsis),
                     SizedBox(
-                      height: height * 0.008,
+                      height: height * 0.006,
                     ),
                     AppWidgets.regularText(
                       text: "${story.readTime} read",
-                      size: 14.0,
+                      size: 12.0,
                       color: AppColors.grey,
                       weight: FontWeight.w400,
                     ),
                     SizedBox(
-                      height: height * 0.008,
+                      height: height * 0.006,
                     ),
                     RatingBarIndicator(
                       rating: story.rating ?? 0.0,

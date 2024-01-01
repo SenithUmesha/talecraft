@@ -61,7 +61,7 @@ class StoryDetails extends StatelessWidget {
                                     ),
                                     AppWidgets.regularText(
                                       text: story.name,
-                                      size: 20.0,
+                                      size: 18.0,
                                       color: AppColors.black,
                                       weight: FontWeight.w600,
                                     ),
@@ -74,7 +74,7 @@ class StoryDetails extends StatelessWidget {
                                       children: [
                                         AppWidgets.regularText(
                                           text: story.author,
-                                          size: 16.0,
+                                          size: 14.0,
                                           color: AppColors.black,
                                           weight: FontWeight.w400,
                                         ),
@@ -83,7 +83,7 @@ class StoryDetails extends StatelessWidget {
                                         ),
                                         AppWidgets.regularText(
                                           text: "${story.readTime} read",
-                                          size: 16.0,
+                                          size: 14.0,
                                           color: AppColors.grey,
                                           weight: FontWeight.w400,
                                         ),
@@ -108,7 +108,7 @@ class StoryDetails extends StatelessWidget {
                                     AppWidgets.regularText(
                                       alignment: TextAlign.center,
                                       text: story.description,
-                                      size: 16.0,
+                                      size: 14.0,
                                       color: AppColors.black,
                                       weight: FontWeight.w400,
                                     ),
@@ -204,7 +204,7 @@ class StoryDetails extends StatelessWidget {
                                           child: Center(
                                             child: AppWidgets.regularText(
                                               text: AppStrings.read,
-                                              size: 18.0,
+                                              size: 16.0,
                                               color: AppColors.white,
                                               weight: FontWeight.w500,
                                             ),
