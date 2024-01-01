@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flow_graph/flow_graph.dart';
@@ -143,6 +145,34 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
     super.initState();
   }
 
+  Map<String, dynamic> graphToJson(GraphNode<Block> node) {
+    Map<String, dynamic> json = node.data!.toJson();
+    json['nextList'] = [];
+
+    for (var nextNode in node.nextList) {
+      json['nextList'].add(graphToJson(nextNode as GraphNode<Block>));
+    }
+
+    return json;
+  }
+
+  Map<String, dynamic> serializeGraph(GraphNode<Block> root) {
+    return graphToJson(root);
+  }
+
+  void graphFromJson(GraphNode<Block> root, Map<String, dynamic> json) {
+    root.data = Block.fromJson(json);
+
+    if (json.containsKey('nextList')) {
+      var nextListJson = json['nextList'] as List<dynamic>;
+      for (var nextNodeJson in nextListJson) {
+        var nextNode = GraphNode<Block>();
+        graphFromJson(nextNode, nextNodeJson as Map<String, dynamic>);
+        root.addNext(nextNode);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -154,6 +184,29 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
           appBar: CustomAppBar(
             title: AppStrings.newStory,
             cantGoBack: true,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.save_rounded,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Map<String, dynamic> graphJson = serializeGraph(root);
+                  String jsonString = json.encode(graphJson);
+                  log(jsonString);
+
+                  setState(() {
+                    root.clearAllNext();
+                  });
+                  log("Cleared");
+                  Timer(const Duration(seconds: 2), () {
+                    setState(() {
+                      graphFromJson(root, graphJson);
+                    });
+                  });
+                },
+              ),
+            ],
           ),
           body: GetBuilder<StoryboardController>(
               init: StoryboardController(),
@@ -292,6 +345,10 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
                             },
                             builder: (context, node) {
                               return GestureDetector(
+                                onTap: () {
+                                  log("Next: ${node.nextList.length}");
+                                  log("Prev: ${node.prevList.length}");
+                                },
                                 onDoubleTap: () {
                                   controller.showAddTextDialog(node.data!);
                                 },
@@ -394,6 +451,30 @@ class Block {
     required this.oneOut,
     required this.multiIn,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type.toString(),
+      'shortDescription': shortDescription,
+      'text': text,
+      'oneOut': oneOut,
+      'multiIn': multiIn,
+    };
+  }
+
+  factory Block.fromJson(Map<String, dynamic> json) {
+    return Block(
+      id: json['id'] as int,
+      type: json['type'] == 'BlockType.story'
+          ? BlockType.story
+          : BlockType.choice,
+      shortDescription: json['shortDescription'] as String,
+      text: json['text'] as String,
+      oneOut: json['oneOut'] as bool,
+      multiIn: json['multiIn'] as bool,
+    );
+  }
 
   void updateText(String shortDescription, String text) {
     this.shortDescription = shortDescription;

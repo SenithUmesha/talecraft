@@ -13,6 +13,7 @@ class StoryboardController extends GetxController {
   void showAddTextDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
     shortDesciptionController.text = block.shortDescription;
+    textController.text = block.text;
 
     showDialog(
         barrierDismissible: false,
