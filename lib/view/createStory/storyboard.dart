@@ -180,223 +180,231 @@ class _DraggableNodePageState extends State<DraggableNodePage> {
     return Container(
       color: AppColors.white,
       child: SafeArea(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: AppStrings.newStory,
-            cantGoBack: true,
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.save_rounded,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Map<String, dynamic> graphJson = serializeGraph(root);
-                  String jsonString = json.encode(graphJson);
-                  log(jsonString);
+        child: WillPopScope(
+          onWillPop: () {
+            return Get.find<StoryboardController>()
+                .showExitConfirmationDialog();
+          },
+          child: Scaffold(
+            appBar: CustomAppBar(
+              title: AppStrings.newStory,
+              cantGoBack: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.save_rounded,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Map<String, dynamic> graphJson = serializeGraph(root);
+                    String jsonString = json.encode(graphJson);
+                    log(jsonString);
 
-                  setState(() {
-                    root.clearAllNext();
-                  });
-                  log("Cleared");
-                  Timer(const Duration(seconds: 2), () {
                     setState(() {
-                      graphFromJson(root, graphJson);
+                      root.clearAllNext();
                     });
-                  });
-                },
-              ),
-            ],
-          ),
-          body: GetBuilder<StoryboardController>(
-              init: StoryboardController(),
-              builder: (controller) {
-                return Column(
-                  children: [
-                    Container(
-                      height: height * 0.1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Draggable<GraphNodeFactory<Block>>(
-                            data: GraphNodeFactory(
-                              dataBuilder: () => Block(
-                                id: maxId + 1,
-                                type: BlockType.story,
-                                shortDescription: 'Add Story',
-                                text: '',
-                                oneOut: false,
-                                multiIn: false,
-                              ),
-                            ),
-                            child: Card(
-                              elevation: 2,
-                              child: storyBlock(width),
-                            ),
-                            feedback: Card(
-                              color: AppColors.white,
-                              elevation: 6,
-                              child: storyBlock(width),
-                            ),
-                            onDragStarted: () {
-                              setState(() {
-                                draggedNode = GraphNode<Block>(
-                                    data: Block(
+                    log("Cleared");
+                    Timer(const Duration(seconds: 2), () {
+                      setState(() {
+                        graphFromJson(root, graphJson);
+                      });
+                    });
+                  },
+                ),
+              ],
+            ),
+            body: GetBuilder<StoryboardController>(
+                init: StoryboardController(),
+                builder: (controller) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: height * 0.1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Draggable<GraphNodeFactory<Block>>(
+                              data: GraphNodeFactory(
+                                dataBuilder: () => Block(
                                   id: maxId + 1,
                                   type: BlockType.story,
                                   shortDescription: 'Add Story',
                                   text: '',
                                   oneOut: false,
                                   multiIn: false,
-                                ));
-                              });
-                            },
-                          ),
-                          Draggable<GraphNodeFactory<Block>>(
-                            data: GraphNodeFactory(
-                              dataBuilder: () => Block(
-                                id: maxId + 1,
-                                type: BlockType.choice,
-                                shortDescription: 'Add Choice',
-                                text: '',
-                                oneOut: true,
-                                multiIn: false,
+                                ),
                               ),
+                              child: Card(
+                                elevation: 2,
+                                child: storyBlock(width),
+                              ),
+                              feedback: Card(
+                                color: AppColors.white,
+                                elevation: 6,
+                                child: storyBlock(width),
+                              ),
+                              onDragStarted: () {
+                                setState(() {
+                                  draggedNode = GraphNode<Block>(
+                                      data: Block(
+                                    id: maxId + 1,
+                                    type: BlockType.story,
+                                    shortDescription: 'Add Story',
+                                    text: '',
+                                    oneOut: false,
+                                    multiIn: false,
+                                  ));
+                                });
+                              },
                             ),
-                            child: Card(
-                              elevation: 2,
-                              child: choiceBlock(width),
-                            ),
-                            feedback: Card(
-                              color: AppColors.white,
-                              elevation: 6,
-                              child: choiceBlock(width),
-                            ),
-                            onDragStarted: () {
-                              setState(() {
-                                draggedNode = GraphNode<Block>(
-                                    data: Block(
+                            Draggable<GraphNodeFactory<Block>>(
+                              data: GraphNodeFactory(
+                                dataBuilder: () => Block(
                                   id: maxId + 1,
                                   type: BlockType.choice,
                                   shortDescription: 'Add Choice',
                                   text: '',
                                   oneOut: true,
                                   multiIn: false,
-                                ));
-                              });
-                            },
+                                ),
+                              ),
+                              child: Card(
+                                elevation: 2,
+                                child: choiceBlock(width),
+                              ),
+                              feedback: Card(
+                                color: AppColors.white,
+                                elevation: 6,
+                                child: choiceBlock(width),
+                              ),
+                              onDragStarted: () {
+                                setState(() {
+                                  draggedNode = GraphNode<Block>(
+                                      data: Block(
+                                    id: maxId + 1,
+                                    type: BlockType.choice,
+                                    shortDescription: 'Add Choice',
+                                    text: '',
+                                    oneOut: true,
+                                    multiIn: false,
+                                  ));
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.help,
+                            color: AppColors.grey,
+                            size: 14,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          AppWidgets.regularText(
+                            text:
+                                "Double press to edit block | Hold press to delete block",
+                            size: 10.0,
+                            alignment: TextAlign.center,
+                            color: AppColors.grey,
+                            weight: FontWeight.w400,
                           ),
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.help,
-                          color: AppColors.grey,
-                          size: 14,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        AppWidgets.regularText(
-                          text:
-                              "Double press to edit block | Hold press to delete block",
-                          size: 10.0,
-                          alignment: TextAlign.center,
-                          color: AppColors.grey,
-                          weight: FontWeight.w400,
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      thickness: 1,
-                      color: AppColors.grey,
-                    ),
-                    Expanded(
-                      child: StatefulBuilder(
-                        builder: (context, setter) {
-                          return DraggableFlowGraphView<Block>(
-                            root: root,
-                            direction: Axis.horizontal,
-                            centerLayout: true,
-                            enableDelete: true,
-                            onConnect: (prevNode, node) {
-                              setState(() {
-                                maxId += 1;
-                              });
-                            },
-                            willConnect: (node) {
-                              log("Will Connect: ${node.data!.id} and ${draggedNode!.data!.id}");
-                              if (!node.data!.oneOut && !node.data!.multiIn) {
-                                // Node - Story Block
-                                return draggedNode!.data?.type ==
-                                    BlockType.choice;
-                              } else if (node.data!.oneOut &&
-                                  !node.data!.multiIn) {
-                                // Node - Choice Block
-                                return draggedNode!.data?.type ==
-                                        BlockType.story &&
-                                    node.nextList.isEmpty;
-                              }
-
-                              return false;
-                            },
-                            builder: (context, node) {
-                              return GestureDetector(
-                                onTap: () {
-                                  log("Next: ${node.nextList.length}");
-                                  log("Prev: ${node.prevList.length}");
-                                },
-                                onDoubleTap: () {
-                                  controller.showAddTextDialog(node.data!);
-                                },
-                                onLongPress: () {
-                                  setter(() {
-                                    node.deleteSelf();
-                                  });
-                                  setState(() {
-                                    maxId -= 1;
-                                  });
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: AppColors.white,
-                                        border: Border.all(
-                                            color: (node.data as Block).type ==
-                                                    BlockType.story
-                                                ? AppColors.black
-                                                : AppColors.red,
-                                            width: 2)),
-                                    padding: const EdgeInsets.all(12),
-                                    child: AppWidgets.regularText(
-                                        text: (node.data as Block)
-                                            .shortDescription,
-                                        size: 14.0,
-                                        alignment: TextAlign.center,
-                                        color: AppColors.black,
-                                        weight: FontWeight.w400,
-                                        textOverFlow: TextOverflow.ellipsis,
-                                        maxLines: 1)),
-                              );
-                            },
-                            onEdgeColor: (n1, n2) {
-                              if (n1.data?.oneOut == false &&
-                                  n2.data?.multiIn == false) {
-                                return AppColors.black;
-                              } else {
-                                return AppColors.red;
-                              }
-                            },
-                          );
-                        },
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.grey,
                       ),
-                    )
-                  ],
-                );
-              }),
+                      Expanded(
+                        child: StatefulBuilder(
+                          builder: (context, setter) {
+                            return DraggableFlowGraphView<Block>(
+                              root: root,
+                              direction: Axis.horizontal,
+                              centerLayout: true,
+                              enableDelete: true,
+                              onConnect: (prevNode, node) {
+                                setState(() {
+                                  maxId += 1;
+                                });
+                              },
+                              willConnect: (node) {
+                                log("Will Connect: ${node.data!.id} and ${draggedNode!.data!.id}");
+                                if (!node.data!.oneOut && !node.data!.multiIn) {
+                                  // Node - Story Block
+                                  return draggedNode!.data?.type ==
+                                      BlockType.choice;
+                                } else if (node.data!.oneOut &&
+                                    !node.data!.multiIn) {
+                                  // Node - Choice Block
+                                  return draggedNode!.data?.type ==
+                                          BlockType.story &&
+                                      node.nextList.isEmpty;
+                                }
+
+                                return false;
+                              },
+                              builder: (context, node) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    log("Next: ${node.nextList.length}");
+                                    log("Prev: ${node.prevList.length}");
+                                  },
+                                  onDoubleTap: () {
+                                    controller.showEditBlockDialog(node.data!);
+                                  },
+                                  onLongPress: () {
+                                    setter(() {
+                                      node.deleteSelf();
+                                    });
+                                    setState(() {
+                                      maxId -= 1;
+                                    });
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: AppColors.white,
+                                          border: Border.all(
+                                              color:
+                                                  (node.data as Block).type ==
+                                                          BlockType.story
+                                                      ? AppColors.black
+                                                      : AppColors.red,
+                                              width: 2)),
+                                      padding: const EdgeInsets.all(12),
+                                      child: AppWidgets.regularText(
+                                          text: (node.data as Block)
+                                              .shortDescription,
+                                          size: 14.0,
+                                          alignment: TextAlign.center,
+                                          color: AppColors.black,
+                                          weight: FontWeight.w400,
+                                          textOverFlow: TextOverflow.ellipsis,
+                                          maxLines: 1)),
+                                );
+                              },
+                              onEdgeColor: (n1, n2) {
+                                if (n1.data?.oneOut == false &&
+                                    n2.data?.multiIn == false) {
+                                  return AppColors.black;
+                                } else {
+                                  return AppColors.red;
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                }),
+          ),
         ),
       ),
     );

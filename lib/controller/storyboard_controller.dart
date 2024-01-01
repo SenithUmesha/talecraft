@@ -10,7 +10,7 @@ class StoryboardController extends GetxController {
       TextEditingController();
   final TextEditingController textController = TextEditingController();
 
-  void showAddTextDialog(Block block) {
+  void showEditBlockDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
     shortDesciptionController.text = block.shortDescription;
     textController.text = block.text;
@@ -140,5 +140,56 @@ class StoryboardController extends GetxController {
                 ),
               ],
             ));
+  }
+
+  showExitConfirmationDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: AppWidgets.regularText(
+            text: "Warning",
+            size: 20.0,
+            color: AppColors.black,
+            weight: FontWeight.w600,
+          ),
+          content: AppWidgets.regularText(
+            text:
+                "Please save your progress before going back.\n\nAre you sure you want to leave?",
+            size: 16.0,
+            color: AppColors.black,
+            weight: FontWeight.w400,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: AppWidgets.regularText(
+                text: 'No',
+                size: 16.0,
+                color: AppColors.black,
+                weight: FontWeight.w400,
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(AppColors.black)),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: AppWidgets.regularText(
+                text: 'Yes',
+                size: 16.0,
+                color: AppColors.white,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
