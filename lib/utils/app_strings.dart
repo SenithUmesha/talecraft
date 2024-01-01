@@ -19,4 +19,9 @@ class AppStrings {
   static const read = 'Read';
   static const moreFromAuther = 'More From This Author';
   static const newStory = "Create a New Story";
+  static const addStory = "Add Story";
+  static const addChoice = "Add Choice";
+  static const saveProgress = "Progress saved";
+  static const storyboardHelp =
+      "Double press to edit block | Hold press to delete block";
 }

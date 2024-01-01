@@ -1,14 +1,152 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:talecraft/view/createStory/storyboard.dart';
+import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flow_graph/flow_graph.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../model/Block.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
 class StoryboardController extends GetxController {
   final TextEditingController shortDesciptionController =
       TextEditingController();
   final TextEditingController textController = TextEditingController();
+  late GraphNode<Block> root;
+  late GraphNode<Block>? draggedNode;
+  int maxId = 0;
+  final box = GetStorage();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    root = GraphNode<Block>(
+      data: Block(
+        id: 0,
+        type: BlockType.story,
+        shortDescription: AppStrings.addStory,
+        text: '',
+        oneOut: false,
+        multiIn: false,
+      ),
+      isRoot: true,
+    );
+  }
+
+  increaseMaxId() {
+    maxId += 1;
+    update();
+  }
+
+  decreaseMaxId() {
+    maxId -= 1;
+    update();
+  }
+
+  onDraggedBlock(BlockType type) {
+    draggedNode = type == BlockType.choice
+        ? GraphNode<Block>(
+            data: Block(
+            id: maxId + 1,
+            type: BlockType.choice,
+            shortDescription: 'Add Choice',
+            text: '',
+            oneOut: true,
+            multiIn: false,
+          ))
+        : GraphNode<Block>(
+            data: Block(
+            id: maxId + 1,
+            type: BlockType.story,
+            shortDescription: 'Add Story',
+            text: '',
+            oneOut: false,
+            multiIn: false,
+          ));
+    update();
+  }
+
+  Map<String, dynamic> graphToJson(GraphNode<Block> node) {
+    Map<String, dynamic> json = node.data!.toJson();
+    json['nextList'] = [];
+
+    for (var nextNode in node.nextList) {
+      json['nextList'].add(graphToJson(nextNode as GraphNode<Block>));
+    }
+
+    return json;
+  }
+
+  Map<String, dynamic> serializeGraph(GraphNode<Block> root) {
+    return graphToJson(root);
+  }
+
+  void graphFromJson(GraphNode<Block> root, Map<String, dynamic> json) {
+    root.data = Block.fromJson(json);
+
+    if (json.containsKey('nextList')) {
+      var nextListJson = json['nextList'] as List<dynamic>;
+      for (var nextNodeJson in nextListJson) {
+        var nextNode = GraphNode<Block>();
+        graphFromJson(nextNode, nextNodeJson as Map<String, dynamic>);
+        root.addNext(nextNode);
+      }
+    }
+  }
+
+  saveProgress() {
+    Map<String, dynamic> graphJson =
+        Get.find<StoryboardController>().serializeGraph(root);
+    String jsonString = json.encode(graphJson);
+    log(jsonString);
+
+    box.write('saved_graph', graphJson);
+    // Map<String, dynamic> savedGraph = box.read('saved_graph');
+
+    Fluttertoast.showToast(
+        msg: AppStrings.saveProgress,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.black,
+        textColor: AppColors.white,
+        fontSize: 16.0);
+  }
+
+  Widget storyBlock(double width) => Container(
+        width: width * 0.4,
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.menu_book_rounded),
+            SizedBox(
+              width: 16,
+            ),
+            Text('Story Block')
+          ],
+        ),
+      );
+
+  Widget choiceBlock(double width) => Container(
+        width: width * 0.4,
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.playlist_add_check),
+            SizedBox(
+              width: 16,
+            ),
+            Text('Choice Block')
+          ],
+        ),
+      );
 
   void showEditBlockDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
