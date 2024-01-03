@@ -8,6 +8,7 @@ import 'package:talecraft/view/profile/profile.dart';
 import 'package:talecraft/view/search/search.dart';
 
 import '../../controller/nav_bar_controller.dart';
+import '../../controller/storyboard_controller.dart';
 import '../createStory/storyboard.dart';
 
 class NavBar extends StatelessWidget {
@@ -39,12 +40,19 @@ class NavBar extends StatelessWidget {
                   backgroundColor: controller.bottomNavIndex == 4
                       ? AppColors.black
                       : AppColors.red,
-                  child: Icon(
-                    Icons.note_alt_rounded,
-                    color: AppColors.white,
-                  ),
+                  child: controller.bottomNavIndex == 4
+                      ? Icon(
+                          Icons.arrow_forward_rounded,
+                          color: AppColors.white,
+                        )
+                      : Icon(
+                          Icons.note_alt_rounded,
+                          color: AppColors.white,
+                        ),
                   onPressed: () {
-                    controller.updateIndex(4);
+                    controller.bottomNavIndex == 4
+                        ? Get.find<StoryboardController>().finalizeStory()
+                        : controller.updateIndex(4);
                   },
                 ),
                 floatingActionButtonLocation:

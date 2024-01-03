@@ -135,31 +135,31 @@ class _StoryboardState extends State<Storyboard> {
                               direction: Axis.horizontal,
                               centerLayout: true,
                               enableDelete: true,
-                              onConnect: (prevNode, node) =>
+                              onConnect: (prevBlock, block) =>
                                   controller.increaseMaxId(),
-                              willConnect: (node) {
-                                log("Will Connect: ${node.data!.id} and ${controller.draggedNode!.data!.id}");
-                                if (!node.data!.oneOut && !node.data!.multiIn) {
-                                  // Node - Story Block
-                                  return controller.draggedNode!.data?.type ==
+                              willConnect: (block) {
+                                log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
+                                if (!block.data!.oneOut &&
+                                    !block.data!.multiIn) {
+                                  // Story Block
+                                  return controller.draggedBlock!.data?.type ==
                                       BlockType.choice;
-                                } else if (node.data!.oneOut &&
-                                    !node.data!.multiIn) {
-                                  // Node - Choice Block
-                                  return controller.draggedNode!.data?.type ==
+                                } else if (block.data!.oneOut &&
+                                    !block.data!.multiIn) {
+                                  // Choice Block
+                                  return controller.draggedBlock!.data?.type ==
                                           BlockType.story &&
-                                      node.nextList.isEmpty;
+                                      block.nextList.isEmpty;
                                 }
-
                                 return false;
                               },
-                              builder: (context, node) {
+                              builder: (context, block) {
                                 return GestureDetector(
                                   onDoubleTap: () => controller
-                                      .showEditBlockDialog(node.data!),
+                                      .showEditBlockDialog(block.data!),
                                   onLongPress: () {
                                     setter(() {
-                                      node.deleteSelf();
+                                      block.deleteSelf();
                                     });
                                     controller.decreaseMaxId();
                                   },
@@ -170,14 +170,14 @@ class _StoryboardState extends State<Storyboard> {
                                           color: AppColors.white,
                                           border: Border.all(
                                               color:
-                                                  (node.data as Block).type ==
+                                                  (block.data as Block).type ==
                                                           BlockType.story
                                                       ? AppColors.black
                                                       : AppColors.red,
                                               width: 2)),
                                       padding: const EdgeInsets.all(12),
                                       child: AppWidgets.regularText(
-                                          text: (node.data as Block)
+                                          text: (block.data as Block)
                                               .shortDescription,
                                           size: 14.0,
                                           alignment: TextAlign.center,

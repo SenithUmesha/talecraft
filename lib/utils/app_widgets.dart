@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -200,5 +201,16 @@ class AppWidgets {
             errorImage,
             fit: BoxFit.cover,
           );
+  }
+
+  static showToast(String message) {
+    return Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.black,
+        textColor: AppColors.white,
+        fontSize: 16.0);
   }
 }

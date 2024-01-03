@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -17,7 +16,7 @@ class StoryboardController extends GetxController {
       TextEditingController();
   final TextEditingController textController = TextEditingController();
   late GraphNode<Block> root;
-  late GraphNode<Block>? draggedNode;
+  late GraphNode<Block>? draggedBlock;
   int maxId = 0;
   final box = GetStorage();
 
@@ -48,13 +47,83 @@ class StoryboardController extends GetxController {
     update();
   }
 
+  finalizeStory() {
+    if (root.nextList.isEmpty || !hasAtLeastTwoChoiceBlocks(root)) {
+      AppWidgets.showToast(AppStrings.atLeastTwoChoices);
+    } else if (!checkLastBlocks(root)) {
+      AppWidgets.showToast(AppStrings.endWithStoryBlock);
+    } else if (!isValidChoiceStructure(root)) {
+      AppWidgets.showToast(AppStrings.moreThanTwoChoices);
+    } else {}
+  }
+
+  bool isValidChoiceStructure(GraphNode<Block> block) {
+    int foundChoiceBlocks = 0;
+
+    for (var nextBlock in block.nextList) {
+      if (nextBlock.data?.type == BlockType.choice) {
+        foundChoiceBlocks++;
+        if (!isValidChoiceStructure(nextBlock as GraphNode<Block>)) {
+          return false;
+        }
+      }
+    }
+
+    if (block.data?.type == BlockType.story && foundChoiceBlocks == 1) {
+      return false;
+    }
+
+    for (var nextBlock in block.nextList) {
+      if (!isValidChoiceStructure(nextBlock as GraphNode<Block>)) {
+        return false;
+      }
+    }
+
+    return foundChoiceBlocks != 1;
+  }
+
+  int countChoiceBlocksForTwoChoiceBlockCheck(GraphNode<Block> block) {
+    int choiceBlockCount = 0;
+
+    if (block.data?.type == BlockType.choice) {
+      choiceBlockCount++;
+    }
+    for (var nextNode in block.nextList) {
+      choiceBlockCount +=
+          countChoiceBlocksForTwoChoiceBlockCheck(nextNode as GraphNode<Block>);
+    }
+    return choiceBlockCount;
+  }
+
+  bool hasAtLeastTwoChoiceBlocks(GraphNode<Block> block) {
+    int totalChoiceBlocks = 0;
+    for (var nextNode in block.nextList) {
+      totalChoiceBlocks +=
+          countChoiceBlocksForTwoChoiceBlockCheck(nextNode as GraphNode<Block>);
+    }
+    return totalChoiceBlocks >= 2;
+  }
+
+  bool checkLastBlocks(GraphNode<Block> block) {
+    if (block.nextList.isEmpty) {
+      return block.data!.type == BlockType.story;
+    } else {
+      for (var branch in block.nextList) {
+        if (!checkLastBlocks(branch as GraphNode<Block>)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+
   onDraggedBlock(BlockType type) {
-    draggedNode = type == BlockType.choice
+    draggedBlock = type == BlockType.choice
         ? GraphNode<Block>(
             data: Block(
             id: maxId + 1,
             type: BlockType.choice,
-            shortDescription: 'Add Choice',
+            shortDescription: AppStrings.addChoice,
             text: '',
             oneOut: true,
             multiIn: false,
@@ -63,7 +132,7 @@ class StoryboardController extends GetxController {
             data: Block(
             id: maxId + 1,
             type: BlockType.story,
-            shortDescription: 'Add Story',
+            shortDescription: AppStrings.addStory,
             text: '',
             oneOut: false,
             multiIn: false,
@@ -71,30 +140,30 @@ class StoryboardController extends GetxController {
     update();
   }
 
-  Map<String, dynamic> graphToJson(GraphNode<Block> node) {
-    Map<String, dynamic> json = node.data!.toJson();
+  Map<String, dynamic> graphToJson(GraphNode<Block> block) {
+    Map<String, dynamic> json = block.data!.toJson();
     json['nextList'] = [];
 
-    for (var nextNode in node.nextList) {
+    for (var nextNode in block.nextList) {
       json['nextList'].add(graphToJson(nextNode as GraphNode<Block>));
     }
 
     return json;
   }
 
-  Map<String, dynamic> serializeGraph(GraphNode<Block> root) {
-    return graphToJson(root);
+  Map<String, dynamic> serializeGraph(GraphNode<Block> block) {
+    return graphToJson(block);
   }
 
-  void graphFromJson(GraphNode<Block> root, Map<String, dynamic> json) {
-    root.data = Block.fromJson(json);
+  void graphFromJson(GraphNode<Block> block, Map<String, dynamic> json) {
+    block.data = Block.fromJson(json);
 
     if (json.containsKey('nextList')) {
       var nextListJson = json['nextList'] as List<dynamic>;
       for (var nextNodeJson in nextListJson) {
         var nextNode = GraphNode<Block>();
         graphFromJson(nextNode, nextNodeJson as Map<String, dynamic>);
-        root.addNext(nextNode);
+        block.addNext(nextNode);
       }
     }
   }
@@ -108,14 +177,7 @@ class StoryboardController extends GetxController {
     box.write('saved_graph', graphJson);
     // Map<String, dynamic> savedGraph = box.read('saved_graph');
 
-    Fluttertoast.showToast(
-        msg: AppStrings.saveProgress,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.black,
-        textColor: AppColors.white,
-        fontSize: 16.0);
+    AppWidgets.showToast(AppStrings.saveProgress);
   }
 
   Widget storyBlock(double width) => Container(
@@ -128,7 +190,7 @@ class StoryboardController extends GetxController {
             SizedBox(
               width: 16,
             ),
-            Text('Story Block')
+            Text(AppStrings.storyBlock)
           ],
         ),
       );
@@ -143,7 +205,7 @@ class StoryboardController extends GetxController {
             SizedBox(
               width: 16,
             ),
-            Text('Choice Block')
+            Text(AppStrings.choiceBlock)
           ],
         ),
       );
@@ -159,8 +221,8 @@ class StoryboardController extends GetxController {
         builder: (context) => AlertDialog(
               title: AppWidgets.regularText(
                 text: block.type == BlockType.story
-                    ? "Edit Story Block"
-                    : "Edit Choice Block",
+                    ? AppStrings.editStoryBlock
+                    : AppStrings.editChoiceBlock,
                 size: 20.0,
                 color: AppColors.black,
                 weight: FontWeight.w600,
@@ -182,7 +244,7 @@ class StoryboardController extends GetxController {
                         focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: AppColors.black, width: 2)),
-                        hintText: "Short Description",
+                        hintText: AppStrings.shortDescription,
                         hintStyle: TextStyle(
                           color: AppColors.grey,
                           fontWeight: FontWeight.w400,
@@ -197,9 +259,9 @@ class StoryboardController extends GetxController {
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter some text';
+                          return AppStrings.addSomeText;
                         } else if (value.trim().length > 20) {
-                          return 'Please enter a shorter description';
+                          return AppStrings.enterShortDescription;
                         }
                         return null;
                       },
@@ -219,8 +281,9 @@ class StoryboardController extends GetxController {
                         focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: AppColors.black, width: 2)),
-                        hintText:
-                            block.type == BlockType.story ? "Story" : "Choice",
+                        hintText: block.type == BlockType.story
+                            ? AppStrings.story
+                            : AppStrings.choice,
                         hintStyle: TextStyle(
                           color: AppColors.grey,
                           fontWeight: FontWeight.w400,
@@ -235,7 +298,7 @@ class StoryboardController extends GetxController {
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter some text';
+                          return AppStrings.addSomeText;
                         }
                         return null;
                       },
@@ -249,7 +312,7 @@ class StoryboardController extends GetxController {
                     Navigator.pop(context);
                   },
                   child: AppWidgets.regularText(
-                    text: 'Cancel',
+                    text: AppStrings.cancel,
                     size: 16.0,
                     color: AppColors.black,
                     weight: FontWeight.w400,
@@ -270,7 +333,7 @@ class StoryboardController extends GetxController {
                     }
                   },
                   child: AppWidgets.regularText(
-                    text: 'Save',
+                    text: AppStrings.save,
                     size: 16.0,
                     color: AppColors.white,
                     weight: FontWeight.w400,
@@ -287,14 +350,13 @@ class StoryboardController extends GetxController {
       builder: (BuildContext context) {
         return AlertDialog(
           title: AppWidgets.regularText(
-            text: "Warning",
+            text: AppStrings.warning,
             size: 20.0,
             color: AppColors.black,
             weight: FontWeight.w600,
           ),
           content: AppWidgets.regularText(
-            text:
-                "Please save your progress before going back.\n\nAre you sure you want to leave?",
+            text: AppStrings.saveProgressBeforeLeaving,
             size: 16.0,
             color: AppColors.black,
             weight: FontWeight.w400,
@@ -305,7 +367,7 @@ class StoryboardController extends GetxController {
                 Navigator.of(context).pop(false);
               },
               child: AppWidgets.regularText(
-                text: 'No',
+                text: AppStrings.no,
                 size: 16.0,
                 color: AppColors.black,
                 weight: FontWeight.w400,
@@ -319,7 +381,7 @@ class StoryboardController extends GetxController {
                 Navigator.of(context).pop(true);
               },
               child: AppWidgets.regularText(
-                text: 'Yes',
+                text: AppStrings.yes,
                 size: 16.0,
                 color: AppColors.white,
                 weight: FontWeight.w400,
