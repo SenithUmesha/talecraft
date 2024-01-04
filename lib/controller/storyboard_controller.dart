@@ -5,6 +5,7 @@ import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:talecraft/view/createStory/finalize_story.dart';
 
 import '../model/Block.dart';
 import '../utils/app_colors.dart';
@@ -35,6 +36,19 @@ class StoryboardController extends GetxController {
       ),
       isRoot: true,
     );
+
+    loadProgress();
+  }
+
+  loadProgress() {
+    if (box.hasData('saved_graph')) {
+      Map<String, dynamic> graphJson = box.read('saved_graph');
+      String jsonString = json.encode(graphJson);
+      log(jsonString);
+
+      jsonToGraph(root, graphJson);
+      AppWidgets.showToast(AppStrings.loadProgress);
+    }
   }
 
   increaseMaxId() {
@@ -47,6 +61,15 @@ class StoryboardController extends GetxController {
     update();
   }
 
+  clearAllBlocks() {
+    root.clearAllNext();
+    root.data?.text = "";
+    root.data?.shortDescription = AppStrings.addStory;
+    box.erase();
+    AppWidgets.showToast(AppStrings.graphCleared);
+    update();
+  }
+
   finalizeStory() {
     if (root.nextList.isEmpty || !hasAtLeastTwoChoiceBlocks(root)) {
       AppWidgets.showToast(AppStrings.atLeastTwoChoices);
@@ -54,7 +77,10 @@ class StoryboardController extends GetxController {
       AppWidgets.showToast(AppStrings.endWithStoryBlock);
     } else if (!isValidChoiceStructure(root)) {
       AppWidgets.showToast(AppStrings.moreThanTwoChoices);
-    } else {}
+    } else {
+      saveProgress();
+      Get.to(() => FinalizeStory());
+    }
   }
 
   bool isValidChoiceStructure(GraphNode<Block> block) {
@@ -155,14 +181,14 @@ class StoryboardController extends GetxController {
     return graphToJson(block);
   }
 
-  void graphFromJson(GraphNode<Block> block, Map<String, dynamic> json) {
+  void jsonToGraph(GraphNode<Block> block, Map<String, dynamic> json) {
     block.data = Block.fromJson(json);
 
     if (json.containsKey('nextList')) {
       var nextListJson = json['nextList'] as List<dynamic>;
       for (var nextNodeJson in nextListJson) {
         var nextNode = GraphNode<Block>();
-        graphFromJson(nextNode, nextNodeJson as Map<String, dynamic>);
+        jsonToGraph(nextNode, nextNodeJson as Map<String, dynamic>);
         block.addNext(nextNode);
       }
     }
@@ -175,8 +201,6 @@ class StoryboardController extends GetxController {
     log(jsonString);
 
     box.write('saved_graph', graphJson);
-    // Map<String, dynamic> savedGraph = box.read('saved_graph');
-
     AppWidgets.showToast(AppStrings.saveProgress);
   }
 

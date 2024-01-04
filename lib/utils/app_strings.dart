@@ -35,6 +35,8 @@ class AppStrings {
   static const editStoryBlock = "Edit Story Block";
   static const editChoiceBlock = "Edit Choice Block";
   static const saveProgress = "Progress saved";
+  static const loadProgress = "Progress loaded";
+  static const graphCleared = "Graph cleared";
   static const shortDescription = "Short Description";
   static const storyboardHelp =
       "Double press to edit blocks | Hold press to delete blocks";

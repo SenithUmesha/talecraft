@@ -52,7 +52,7 @@ class _StoryboardState extends State<Storyboard> {
                       Container(
                         height: height * 0.1,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Draggable<GraphNodeFactory<Block>>(
                               data: GraphNodeFactory(
@@ -77,6 +77,9 @@ class _StoryboardState extends State<Storyboard> {
                               onDragStarted: () =>
                                   controller.onDraggedBlock(BlockType.story),
                             ),
+                            SizedBox(
+                              width: 5,
+                            ),
                             Draggable<GraphNodeFactory<Block>>(
                               data: GraphNodeFactory(
                                 dataBuilder: () => Block(
@@ -100,6 +103,16 @@ class _StoryboardState extends State<Storyboard> {
                               onDragStarted: () =>
                                   controller.onDraggedBlock(BlockType.choice),
                             ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () => controller.clearAllBlocks(),
+                              child: Icon(
+                                Icons.clear_all_rounded,
+                                color: AppColors.black,
+                              ),
+                            )
                           ],
                         ),
                       ),
