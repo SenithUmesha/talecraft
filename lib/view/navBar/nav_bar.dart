@@ -46,7 +46,7 @@ class NavBar extends StatelessWidget {
                           color: AppColors.white,
                         )
                       : Icon(
-                          Icons.note_alt_rounded,
+                          Icons.edit_rounded,
                           color: AppColors.white,
                         ),
                   onPressed: () {

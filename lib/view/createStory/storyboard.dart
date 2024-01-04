@@ -174,7 +174,6 @@ class _StoryboardState extends State<Storyboard> {
                                     setter(() {
                                       block.deleteSelf();
                                     });
-                                    controller.decreaseMaxId();
                                   },
                                   child: Container(
                                       decoration: BoxDecoration(

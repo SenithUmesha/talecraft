@@ -56,13 +56,9 @@ class StoryboardController extends GetxController {
     update();
   }
 
-  decreaseMaxId() {
-    maxId -= 1;
-    update();
-  }
-
   clearAllBlocks() {
     root.clearAllNext();
+    maxId = 0;
     root.data?.text = "";
     root.data?.shortDescription = AppStrings.addStory;
     box.erase();
