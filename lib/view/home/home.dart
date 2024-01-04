@@ -6,6 +6,7 @@ import 'package:talecraft/controller/home_controller.dart';
 import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
+import 'package:talecraft/view/createStory/ai_story.dart';
 import 'package:talecraft/view/home/story_details.dart';
 
 import '../../utils/app_images.dart';
@@ -50,6 +51,26 @@ class Home extends StatelessWidget {
               Divider(
                 thickness: 1,
                 color: AppColors.grey,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 10, bottom: 5, left: 15, right: 15),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => AiStory()),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Image.asset(
+                      AppImages.bannerOne,
+                      fit: BoxFit.cover,
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    height: height * 0.17,
+                    width: width,
+                  ),
+                ),
               ),
               Expanded(
                 child: Padding(

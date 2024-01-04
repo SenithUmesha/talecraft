@@ -4,4 +4,5 @@ class AppImages {
   static const transparentAppIcon = "assets/images/app_icon_transparent.png";
   static const loginBackground = "assets/images/login_background.png";
   static const noStoryCover = "assets/images/no_image_story.png";
+  static const bannerOne = "assets/images/banner_one.png";
 }

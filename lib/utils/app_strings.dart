@@ -18,7 +18,7 @@ class AppStrings {
   static const recommendedForYou = "Recommended For You";
   static const read = "Read";
   static const moreFromAuther = "More From This Author";
-  static const newStory = "Create a New Story";
+  static const newStory = "Create New Story";
   static const addStory = "Add Story";
   static const story = "Story";
   static const addChoice = "Add Choice";
@@ -47,4 +47,5 @@ class AppStrings {
   static const atLeastTwoChoices = "Story must have at least 2 choice blocks";
   static const moreThanTwoChoices =
       "When branching, the story blocks must have at least two choice blocks";
+  static const aiGenaratedStory = "Create AI Genarated Story";
 }
