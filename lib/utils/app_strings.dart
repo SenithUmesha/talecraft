@@ -48,4 +48,7 @@ class AppStrings {
   static const moreThanTwoChoices =
       "When branching, the story blocks must have at least two choice blocks";
   static const aiGenaratedStory = "Create AI Genarated Story";
+  static const provideContext =
+      "Provide a starting point or context for your story";
+  static const genarated = "Generate";
 }

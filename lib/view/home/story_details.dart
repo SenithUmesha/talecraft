@@ -36,7 +36,7 @@ class StoryDetails extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 20, right: 20, top: 30),
+                                    left: 15, right: 15, top: 20),
                                 child: Column(
                                   children: [
                                     Center(
@@ -223,7 +223,7 @@ class StoryDetails extends StatelessWidget {
                                 color: AppColors.grey,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20),
+                                padding: const EdgeInsets.only(left: 15),
                                 child: Column(
                                   children: [
                                     SizedBox(
