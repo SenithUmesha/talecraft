@@ -71,7 +71,7 @@ class AppWidgets {
       obscureText,
       labelText,
       errorText,
-      isInputBorder,
+      isUnderlinedBorder,
       maxLines,
       maxLength,
       minLines,
@@ -125,15 +125,21 @@ class AppWidgets {
         suffixIcon: suffixIcon,
         hintText: hintText,
         disabledBorder: InputBorder.none,
-        enabledBorder: isInputBorder
+        enabledBorder: isUnderlinedBorder
             ? UnderlineInputBorder(borderSide: BorderSide(color: borderColor))
-            : InputBorder.none,
-        focusedBorder: isInputBorder
+            : OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor),
+                borderRadius: BorderRadius.all(Radius.circular(4.0))),
+        focusedBorder: isUnderlinedBorder
             ? UnderlineInputBorder(borderSide: BorderSide(color: borderColor))
-            : InputBorder.none,
-        border: isInputBorder
+            : OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor),
+                borderRadius: BorderRadius.all(Radius.circular(4.0))),
+        border: isUnderlinedBorder
             ? UnderlineInputBorder(borderSide: BorderSide(color: borderColor))
-            : InputBorder.none,
+            : OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor),
+                borderRadius: BorderRadius.all(Radius.circular(4.0))),
         filled: filled,
         fillColor: fillColor,
       ),

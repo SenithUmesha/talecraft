@@ -61,3 +61,11 @@ String? validateConfirmPasswordRegistration(
     return null;
   }
 }
+
+String? validateSearch(String? text) {
+  if (text == null || text.isEmpty) {
+    return 'Please enter some text';
+  } else {
+    return null;
+  }
+}

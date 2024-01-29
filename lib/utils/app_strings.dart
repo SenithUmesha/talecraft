@@ -51,4 +51,7 @@ class AppStrings {
   static const provideContext =
       "Provide a starting point or context for your story";
   static const genarated = "Generate";
+  static const bookmarkedStories = "Bookmarked Stories";
+  static const search = "Search";
+  static const storyName = "Story name";
 }

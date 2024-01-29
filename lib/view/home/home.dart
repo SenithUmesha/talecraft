@@ -160,7 +160,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  getStoryItem(double height, double width, Story story) {
+  static getStoryItem(double height, double width, Story story) {
     return GestureDetector(
       onTap: () => Get.to(() => StoryDetails(
             story: story,
