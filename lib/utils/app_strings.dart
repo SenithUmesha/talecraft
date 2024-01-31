@@ -54,4 +54,8 @@ class AppStrings {
   static const bookmarkedStories = "Bookmarked Stories";
   static const search = "Search";
   static const storyName = "Story name";
+  static const profile = "Profile";
+  static const editProfile = "Edit Profile";
+  static const changePassword = "Change Password";
+  static const logOut = "Log out";
 }
