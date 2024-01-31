@@ -7,6 +7,7 @@ import 'package:talecraft/utils/app_colors.dart';
 
 import '../../controller/storyboard_controller.dart';
 import '../../model/Block.dart';
+import '../../utils/app_icons.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
@@ -107,12 +108,11 @@ class _StoryboardState extends State<Storyboard> {
                               width: 10,
                             ),
                             GestureDetector(
-                              onTap: () => controller.clearAllBlocks(),
-                              child: Icon(
-                                Icons.clear_all_rounded,
-                                color: AppColors.black,
-                              ),
-                            )
+                                onTap: () => controller.clearAllBlocks(),
+                                child: Image.asset(
+                                  AppIcons.erase,
+                                  scale: 4,
+                                ))
                           ],
                         ),
                       ),
@@ -145,7 +145,7 @@ class _StoryboardState extends State<Storyboard> {
                           builder: (context, setter) {
                             return DraggableFlowGraphView<Block>(
                               root: controller.root,
-                              direction: Axis.horizontal,
+                              direction: Axis.vertical,
                               centerLayout: true,
                               enableDelete: true,
                               onConnect: (prevBlock, block) =>
