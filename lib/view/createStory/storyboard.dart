@@ -58,13 +58,10 @@ class _StoryboardState extends State<Storyboard> {
                             Draggable<GraphNodeFactory<Block>>(
                               data: GraphNodeFactory(
                                 dataBuilder: () => Block(
-                                  id: controller.maxId + 1,
-                                  type: BlockType.story,
-                                  shortDescription: AppStrings.addStory,
-                                  text: '',
-                                  oneOut: false,
-                                  multiIn: false,
-                                ),
+                                    id: controller.maxId + 1,
+                                    type: BlockType.story,
+                                    shortDescription: AppStrings.addStory,
+                                    text: ''),
                               ),
                               child: Card(
                                 elevation: 2,
@@ -84,13 +81,10 @@ class _StoryboardState extends State<Storyboard> {
                             Draggable<GraphNodeFactory<Block>>(
                               data: GraphNodeFactory(
                                 dataBuilder: () => Block(
-                                  id: controller.maxId + 1,
-                                  type: BlockType.choice,
-                                  shortDescription: AppStrings.addChoice,
-                                  text: '',
-                                  oneOut: true,
-                                  multiIn: false,
-                                ),
+                                    id: controller.maxId + 1,
+                                    type: BlockType.choice,
+                                    shortDescription: AppStrings.addChoice,
+                                    text: ''),
                               ),
                               child: Card(
                                 elevation: 2,
@@ -152,14 +146,11 @@ class _StoryboardState extends State<Storyboard> {
                                   controller.increaseMaxId(),
                               willConnect: (block) {
                                 log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
-                                if (!block.data!.oneOut &&
-                                    !block.data!.multiIn) {
-                                  // Story Block
+                                if (block.data?.type == BlockType.story) {
                                   return controller.draggedBlock!.data?.type ==
                                       BlockType.choice;
-                                } else if (block.data!.oneOut &&
-                                    !block.data!.multiIn) {
-                                  // Choice Block
+                                } else if (block.data?.type ==
+                                    BlockType.choice) {
                                   return controller.draggedBlock!.data?.type ==
                                           BlockType.story &&
                                       block.nextList.isEmpty;
@@ -200,8 +191,8 @@ class _StoryboardState extends State<Storyboard> {
                                 );
                               },
                               onEdgeColor: (n1, n2) {
-                                if (n1.data?.oneOut == false &&
-                                    n2.data?.multiIn == false) {
+                                if ((n1.data as Block).type ==
+                                    BlockType.story) {
                                   return AppColors.black;
                                 } else {
                                   return AppColors.red;

@@ -27,13 +27,10 @@ class StoryboardController extends GetxController {
 
     root = GraphNode<Block>(
       data: Block(
-        id: 0,
-        type: BlockType.story,
-        shortDescription: AppStrings.addStory,
-        text: '',
-        oneOut: false,
-        multiIn: false,
-      ),
+          id: 0,
+          type: BlockType.story,
+          shortDescription: AppStrings.addStory,
+          text: ''),
       isRoot: true,
     );
 
@@ -143,22 +140,16 @@ class StoryboardController extends GetxController {
     draggedBlock = type == BlockType.choice
         ? GraphNode<Block>(
             data: Block(
-            id: maxId + 1,
-            type: BlockType.choice,
-            shortDescription: AppStrings.addChoice,
-            text: '',
-            oneOut: true,
-            multiIn: false,
-          ))
+                id: maxId + 1,
+                type: BlockType.choice,
+                shortDescription: AppStrings.addChoice,
+                text: ''))
         : GraphNode<Block>(
             data: Block(
-            id: maxId + 1,
-            type: BlockType.story,
-            shortDescription: AppStrings.addStory,
-            text: '',
-            oneOut: false,
-            multiIn: false,
-          ));
+                id: maxId + 1,
+                type: BlockType.story,
+                shortDescription: AppStrings.addStory,
+                text: ''));
     update();
   }
 
