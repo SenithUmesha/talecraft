@@ -197,13 +197,43 @@ class StoryDetails extends StatelessWidget {
                                           width: width * 0.4,
                                           height: width * 0.14,
                                           decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: AppColors.white,
+                                              border: Border.all(
+                                                  color: AppColors.black,
+                                                  width: 2)),
+                                          child: Center(
+                                            child: AppWidgets.regularText(
+                                              text: AppStrings.read,
+                                              size: 16.0,
+                                              color: AppColors.black,
+                                              weight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: width * 0.025,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: width * 0.4 +
+                                              width * 0.14 +
+                                              width * 0.025,
+                                          height: width * 0.14,
+                                          decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                             color: AppColors.black,
                                           ),
                                           child: Center(
                                             child: AppWidgets.regularText(
-                                              text: AppStrings.read,
+                                              text: AppStrings.listen,
                                               size: 16.0,
                                               color: AppColors.white,
                                               weight: FontWeight.w500,

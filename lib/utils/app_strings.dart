@@ -17,6 +17,7 @@ class AppStrings {
       "Password must have at least one uppercase letter, one lowercase letter, one number, and 8 digits long";
   static const recommendedForYou = "Recommended For You";
   static const read = "Read";
+  static const listen = "Listen";
   static const moreFromAuther = "More From This Author";
   static const newStory = "Create New Story";
   static const addStory = "Add Story";
