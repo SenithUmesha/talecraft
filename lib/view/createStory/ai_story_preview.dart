@@ -46,7 +46,10 @@ class AiStoryPreview extends StatelessWidget {
                                       width: 2)),
                               padding: const EdgeInsets.all(12),
                               child: AppWidgets.regularText(
-                                  text: (block.data as Block).shortDescription,
+                                  text: (block.data as Block).type ==
+                                          BlockType.choice
+                                      ? (block.data as Block).text
+                                      : (block.data as Block).shortDescription,
                                   size: 14.0,
                                   alignment: TextAlign.center,
                                   color: AppColors.black,

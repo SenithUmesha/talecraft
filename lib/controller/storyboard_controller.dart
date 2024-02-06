@@ -223,7 +223,7 @@ class StoryboardController extends GetxController {
 
   void showEditBlockDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-    shortDesciptionController.text = block.shortDescription;
+    shortDesciptionController.text = block.shortDescription ?? "";
     textController.text = block.text;
 
     showDialog(
