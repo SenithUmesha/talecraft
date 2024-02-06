@@ -80,28 +80,22 @@ class Search extends StatelessWidget {
                               ],
                             ),
                             Expanded(
-                              child: RefreshIndicator(
-                                triggerMode:
-                                    RefreshIndicatorTriggerMode.anywhere,
-                                color: AppColors.black,
-                                onRefresh: () async {},
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: CupertinoScrollbar(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: CupertinoScrollbar(
+                                  controller: controller.scrollController,
+                                  child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    padding:
+                                        EdgeInsets.only(bottom: 30, top: 10),
                                     controller: controller.scrollController,
-                                    child: ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      shrinkWrap: true,
-                                      padding:
-                                          EdgeInsets.only(bottom: 30, top: 10),
-                                      controller: controller.scrollController,
-                                      itemCount: controller.searchList.length,
-                                      itemBuilder: (context, index) {
-                                        return Home.getStoryItem(height, width,
-                                            controller.searchList[index]);
-                                      },
-                                    ),
+                                    itemCount: controller.searchList.length,
+                                    itemBuilder: (context, index) {
+                                      return Home.getStoryItem(height, width,
+                                          controller.searchList[index]);
+                                    },
                                   ),
                                 ),
                               ),
