@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
@@ -52,8 +53,17 @@ class StoryPublishController extends GetxController {
                 color: AppColors.black,
                 weight: FontWeight.w400,
               ),
-              onPressed: (context) {
-                takePhoto();
+              onPressed: (context) async {
+                if (await Permission.camera.isGranted) {
+                  takePhoto();
+                } else {
+                  final hasFilePermission = await requestPermission();
+                  if (hasFilePermission) {
+                    takePhoto();
+                  } else {
+                    AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+                  }
+                }
                 Get.back();
               }),
           BottomSheetAction(
@@ -63,8 +73,17 @@ class StoryPublishController extends GetxController {
                 color: AppColors.black,
                 weight: FontWeight.w400,
               ),
-              onPressed: (context) {
-                pickImageFromGallery();
+              onPressed: (context) async {
+                if (await Permission.photos.isGranted) {
+                  pickImageFromGallery();
+                } else {
+                  final hasFilePermission = await requestPermission();
+                  if (hasFilePermission) {
+                    pickImageFromGallery();
+                  } else {
+                    AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+                  }
+                }
                 Get.back();
               }),
         ],
@@ -76,6 +95,25 @@ class StoryPublishController extends GetxController {
             weight: FontWeight.w400,
           ),
         ));
+  }
+
+  Future<bool> requestPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.storage,
+    ].request();
+
+    if (statuses[Permission.camera] == PermissionStatus.granted &&
+        statuses[Permission.storage] == PermissionStatus.granted) {
+      return true;
+    } else if (statuses[Permission.camera] ==
+            PermissionStatus.permanentlyDenied ||
+        statuses[Permission.storage] == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+      return false;
+    } else {
+      return false;
+    }
   }
 
   void takePhoto() async {
@@ -98,7 +136,7 @@ class StoryPublishController extends GetxController {
         update();
       }
     } catch (e) {
-      AppWidgets.showSnackBar(AppStrings.pleaseTryAgain);
+      AppWidgets.showSnackBar(AppStrings.errorWhenTakingPicture);
     }
   }
 
@@ -121,7 +159,7 @@ class StoryPublishController extends GetxController {
         update();
       }
     } catch (e) {
-      AppWidgets.showSnackBar(AppStrings.pleaseTryAgain);
+      AppWidgets.showSnackBar(AppStrings.errorWhenPickingFile);
     }
   }
 }

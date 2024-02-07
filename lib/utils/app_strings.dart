@@ -71,5 +71,8 @@ class AppStrings {
   static const chooseimagesource = "Choose Image Source";
   static const takePhoto = "Take a Photo";
   static const chooseFromGallery = "Choose from Gallery";
-  static const pleaseTryAgain = "Please try again";
+  static const permissionNotGranted = "Permission not granted";
+  static const errorWhenPickingFile = "An error occurred when picking a file";
+  static const errorWhenTakingPicture =
+      "An error occurred when taking a picture";
 }
