@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:talecraft/utils/app_strings.dart';
 
 import 'app_colors.dart';
 
@@ -218,5 +219,19 @@ class AppWidgets {
         backgroundColor: AppColors.black,
         textColor: AppColors.white,
         fontSize: 16.0);
+  }
+
+  static showSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: AppStrings.close,
+        textColor: AppColors.red,
+        onPressed: () {},
+      ),
+    );
+
+    ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
   }
 }

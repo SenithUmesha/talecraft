@@ -25,6 +25,7 @@ class AppStrings {
   static const addChoice = "Add Choice";
   static const choice = "Choice";
   static const cancel = "Cancel";
+  static const close = "Close";
   static const yes = "Yes";
   static const no = "No";
   static const saveProgressBeforeLeaving =
@@ -42,6 +43,8 @@ class AppStrings {
   static const storyboardHelp =
       "Double press to edit blocks | Hold press to delete blocks";
   static const addSomeText = "Please enter some text";
+  static const textShouldBeLessThan40 = "Text should be less than 40";
+  static const textShouldBeLessThan100 = "Text should be less than 100";
   static const enterShortDescription = "Please enter a shorter description";
   static const endWithStoryBlock =
       "All branches need to end with a story block";
@@ -53,11 +56,20 @@ class AppStrings {
   static const provideContext =
       "Provide a starting point or context for your story";
   static const genarated = "Generate";
+  static const publish = "Publish";
   static const bookmarkedStories = "Bookmarked Stories";
   static const search = "Search";
-  static const storyName = "Story name";
+  static const storyName = "Story Name";
+  static const storyCover = "Story Cover";
   static const profile = "Profile";
   static const editProfile = "Edit Profile";
   static const changePassword = "Change Password";
   static const logOut = "Log out";
+  static const publishStory = "Publish Story";
+  static const storyDescription = "Story Description";
+  static const storyPublishedSuccessfully = "Story Published Successfully!";
+  static const chooseimagesource = "Choose Image Source";
+  static const takePhoto = "Take a Photo";
+  static const chooseFromGallery = "Choose from Gallery";
+  static const pleaseTryAgain = "Please try again";
 }

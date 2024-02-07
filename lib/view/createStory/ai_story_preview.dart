@@ -1,6 +1,8 @@
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:talecraft/controller/ai_story_controller.dart';
+import 'package:talecraft/view/createStory/story_publish.dart';
 
 import '../../model/Block.dart';
 import '../../utils/app_colors.dart';
@@ -36,7 +38,7 @@ class AiStoryPreview extends StatelessWidget {
               Icons.arrow_forward_rounded,
               color: AppColors.white,
             ),
-            onPressed: () {},
+            onPressed: () => Get.to(() => StoryPublish()),
           ),
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
