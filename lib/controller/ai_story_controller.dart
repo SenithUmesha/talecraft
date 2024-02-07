@@ -6,6 +6,7 @@ import '../model/Block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
+import '../view/createStory/ai_story_preview.dart';
 
 class AiStoryController extends GetxController {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -140,8 +141,6 @@ class AiStoryController extends GetxController {
       data: Block(id: 0, type: BlockType.story, shortDescription: '', text: ''),
       isRoot: true,
     );
-
-    loadProgress(root, jsonStory);
   }
 
   loadProgress(GraphNode<Block> block, Map<String, dynamic> json) {
@@ -154,6 +153,16 @@ class AiStoryController extends GetxController {
         loadProgress(nextNode, nextNodeJson as Map<String, dynamic>);
         block.addNext(nextNode);
       }
+    }
+
+    Get.to(() => AiStoryPreview(
+          controller: this,
+        ));
+  }
+
+  void genarate() {
+    if (formKey.currentState!.validate()) {
+      loadProgress(root, jsonStory);
     }
   }
 

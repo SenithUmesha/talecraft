@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/ai_story_controller.dart';
-import 'package:talecraft/view/createStory/ai_story_preview.dart';
 
 import '../../utils/app_colors.dart';
 import '../../utils/app_strings.dart';
@@ -84,14 +83,7 @@ class AiStory extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 20),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      if (controller.formKey.currentState!
-                                          .validate()) {
-                                        Get.to(() => AiStoryPreview(
-                                              controller: controller,
-                                            ));
-                                      }
-                                    },
+                                    onTap: () => controller.genarate(),
                                     child: Container(
                                       width: width * 0.4,
                                       height: width * 0.14,

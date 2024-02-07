@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:talecraft/utils/app_strings.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_widgets.dart';
@@ -52,7 +53,7 @@ class NavBarController extends GetxController with GetTickerProviderStateMixin {
                 Navigator.of(context).pop(false);
               },
               child: AppWidgets.regularText(
-                text: 'No',
+                text: AppStrings.no,
                 size: 16.0,
                 color: AppColors.black,
                 weight: FontWeight.w400,
@@ -68,7 +69,7 @@ class NavBarController extends GetxController with GetTickerProviderStateMixin {
                 Get.back();
               },
               child: AppWidgets.regularText(
-                text: 'Yes',
+                text: AppStrings.yes,
                 size: 16.0,
                 color: AppColors.white,
                 weight: FontWeight.w400,
