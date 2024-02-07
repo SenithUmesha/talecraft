@@ -155,9 +155,7 @@ class AiStoryController extends GetxController {
       }
     }
 
-    Get.to(() => AiStoryPreview(
-          controller: this,
-        ));
+    Get.to(() => AiStoryPreview());
   }
 
   void genarate() {

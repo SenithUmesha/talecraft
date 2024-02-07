@@ -11,8 +11,7 @@ import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
 
 class AiStoryPreview extends StatelessWidget {
-  final AiStoryController controller;
-  const AiStoryPreview({super.key, required this.controller});
+  const AiStoryPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +47,14 @@ class AiStoryPreview extends StatelessWidget {
                   child: StatefulBuilder(
                     builder: (context, setter) {
                       return DraggableFlowGraphView<Block>(
-                        root: controller.root,
+                        root: Get.find<AiStoryController>().root,
                         direction: Axis.vertical,
                         centerLayout: true,
                         enableDelete: false,
                         builder: (context, block) {
                           return GestureDetector(
-                            onDoubleTap: () =>
-                                controller.showBlockDialog(block.data!),
+                            onDoubleTap: () => Get.find<AiStoryController>()
+                                .showBlockDialog(block.data!),
                             child: Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),

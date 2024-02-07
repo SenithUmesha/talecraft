@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
+import '../model/Block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
+import 'ai_story_controller.dart';
 
 class StoryPublishController extends GetxController {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -18,6 +21,14 @@ class StoryPublishController extends GetxController {
       TextEditingController();
   String imagePath = "";
   bool isImagePathEmpty = false;
+  List<Block> lastBlockList = [];
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    getLastBlocks(Get.find<AiStoryController>().root);
+  }
 
   void validateImageUpload() {
     if (imagePath.isEmpty) {
@@ -32,6 +43,20 @@ class StoryPublishController extends GetxController {
     validateImageUpload();
     if (formKey.currentState!.validate()) {
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
+    }
+  }
+
+  bool getLastBlocks(GraphNode<Block> block) {
+    if (block.nextList.isEmpty) {
+      lastBlockList.add(block.data!);
+      return block.data!.type == BlockType.story;
+    } else {
+      for (var branch in block.nextList) {
+        if (!getLastBlocks(branch as GraphNode<Block>)) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 
