@@ -51,18 +51,33 @@ class Search extends StatelessWidget {
                             Row(
                               children: [
                                 Expanded(
-                                  child: textFieldView(
-                                      name: AppStrings.search,
-                                      hintText: AppStrings.storyName,
-                                      validator: validateSearch,
-                                      textEditingController:
-                                          controller.searchController,
-                                      keyBoardType: TextInputType.text,
-                                      context: context,
-                                      controller: controller,
-                                      obscureText: false,
-                                      suffixIcon: false,
-                                      index: 0),
+                                  child: TextFormField(
+                                    controller: controller.searchController,
+                                    maxLines: 1,
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: AppColors.grey)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: AppColors.black,
+                                              width: 1)),
+                                      hintText: AppStrings.search,
+                                      hintStyle: TextStyle(
+                                        color: AppColors.grey,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.0,
+                                    ),
+                                    validator: validateSearch,
+                                  ),
                                 ),
                                 SizedBox(
                                   width: width * 0.025,
@@ -78,6 +93,9 @@ class Search extends StatelessWidget {
                                   ),
                                 )
                               ],
+                            ),
+                            SizedBox(
+                              height: height * 0.01,
                             ),
                             Expanded(
                               child: Padding(

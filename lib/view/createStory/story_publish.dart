@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -157,7 +158,94 @@ class StoryPublish extends StatelessWidget {
                                           keyBoardType: TextInputType.text,
                                           height: height,
                                           index: 1,
-                                          maxLines: 3)
+                                          maxLines: 3),
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
+                                      AppWidgets.regularText(
+                                        text: AppStrings.achievementEnding,
+                                        size: 16.0,
+                                        color: AppColors.black,
+                                        weight: FontWeight.w400,
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
+                                      DropdownButtonFormField2<String>(
+                                        hint: AppWidgets.regularText(
+                                          text: AppStrings.selectEnding,
+                                          size: 14.0,
+                                          color: AppColors.black,
+                                          weight: FontWeight.w400,
+                                        ),
+                                        decoration: InputDecoration.collapsed(
+                                            hintText: ''),
+                                        items: controller.endingsList
+                                            .map((String item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: AppWidgets.regularText(
+                                                    text: item,
+                                                    size: 14.0,
+                                                    color: AppColors.black,
+                                                    weight: FontWeight.w400,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return AppStrings
+                                                .pleaseSelectEnding;
+                                          }
+                                          return null;
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        value: controller.selectedEnding,
+                                        onChanged: (String? value) {
+                                          controller.updateEndings(value);
+                                        },
+                                        buttonStyleData: ButtonStyleData(
+                                          height: height * 0.065,
+                                          width: width,
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 15),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                              color: AppColors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                          ),
+                                          iconSize: 14,
+                                          iconEnabledColor: AppColors.black,
+                                          iconDisabledColor: Colors.grey,
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: height * 0.15,
+                                          width: width - 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                            radius: const Radius.circular(5),
+                                            thickness: MaterialStateProperty
+                                                .all<double>(6),
+                                            thumbVisibility:
+                                                MaterialStateProperty.all<bool>(
+                                                    true),
+                                          ),
+                                        ),
+                                        menuItemStyleData: MenuItemStyleData(
+                                          height: height * 0.05,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -246,9 +334,3 @@ class StoryPublish extends StatelessWidget {
     );
   }
 }
-// (value) {
-//             if (value == null || value.trim().isEmpty) {
-//               return AppStrings.addSomeText;
-//             }
-//             return null;
-//           },

@@ -75,4 +75,7 @@ class AppStrings {
   static const errorWhenPickingFile = "An error occurred when picking a file";
   static const errorWhenTakingPicture =
       "An error occurred when taking a picture";
+  static const achievementEnding = "Achievement Ending";
+  static const pleaseSelectEnding = "Please select an ending";
+  static const selectEnding = "Select an ending";
 }

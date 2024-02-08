@@ -22,6 +22,8 @@ class StoryPublishController extends GetxController {
   String imagePath = "";
   bool isImagePathEmpty = false;
   List<Block> lastBlockList = [];
+  List<String> endingsList = [];
+  String? selectedEnding;
 
   @override
   void onInit() {
@@ -49,6 +51,7 @@ class StoryPublishController extends GetxController {
   bool getLastBlocks(GraphNode<Block> block) {
     if (block.nextList.isEmpty) {
       lastBlockList.add(block.data!);
+      endingsList.add(block.data!.shortDescription!);
       return block.data!.type == BlockType.story;
     } else {
       for (var branch in block.nextList) {
@@ -186,5 +189,10 @@ class StoryPublishController extends GetxController {
     } catch (e) {
       AppWidgets.showSnackBar(AppStrings.errorWhenPickingFile);
     }
+  }
+
+  updateEndings(String? value) {
+    selectedEnding = value;
+    update();
   }
 }
