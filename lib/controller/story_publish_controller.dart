@@ -20,7 +20,7 @@ class StoryPublishController extends GetxController {
   final TextEditingController storyDescriptionController =
       TextEditingController();
   String imagePath = "";
-  bool isImagePathEmpty = false;
+  bool isImagePathEmptyValidator = false;
   List<Block> lastBlockList = [];
   List<String> endingsList = [];
   String? selectedEnding;
@@ -34,9 +34,9 @@ class StoryPublishController extends GetxController {
 
   void validateImageUpload() {
     if (imagePath.isEmpty) {
-      isImagePathEmpty = true;
+      isImagePathEmptyValidator = true;
     } else {
-      isImagePathEmpty = false;
+      isImagePathEmptyValidator = false;
     }
     update();
   }
@@ -154,11 +154,12 @@ class StoryPublishController extends GetxController {
 
       if (image != null) {
         String dir = path.dirname(image.path);
-        String newPath = path.join(dir, 'story_cover.jpg');
+        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+        String newPath = path.join(dir, 'story_cover_$timestamp.jpg');
         File(image.path).renameSync(newPath);
 
         imagePath = newPath;
-        isImagePathEmpty = false;
+        isImagePathEmptyValidator = false;
         imageCache.clear();
         imageCache.clearLiveImages();
         update();
@@ -177,11 +178,12 @@ class StoryPublishController extends GetxController {
           maxWidth: 1000);
       if (image != null) {
         String dir = path.dirname(image.path);
-        String newPath = path.join(dir, 'story_cover.jpg');
+        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+        String newPath = path.join(dir, 'story_cover_$timestamp.jpg');
         File(image.path).renameSync(newPath);
 
         imagePath = newPath;
-        isImagePathEmpty = false;
+        isImagePathEmptyValidator = false;
         imageCache.clear();
         imageCache.clearLiveImages();
         update();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,15 +69,23 @@ class StoryPublish extends StatelessWidget {
                                                     BorderRadius.circular(8),
                                                 border: Border.all(
                                                     color: controller
-                                                            .isImagePathEmpty
+                                                            .isImagePathEmptyValidator
                                                         ? AppColors.red
                                                         : AppColors.black,
                                                     width: 2),
                                               ),
-                                              child: AppWidgets.imageWidget(
-                                                AppImages.noStoryCover,
-                                                AppImages.noStoryCover,
-                                              ),
+                                              child: controller
+                                                      .imagePath.isEmpty
+                                                  ? AppWidgets.imageWidget(
+                                                      AppImages.noStoryCover,
+                                                      AppImages.noStoryCover,
+                                                    )
+                                                  : Image.file(
+                                                      File(
+                                                        controller.imagePath,
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
                                               clipBehavior:
                                                   Clip.antiAliasWithSaveLayer,
                                               height: height * 0.2,
@@ -92,7 +102,7 @@ class StoryPublish extends StatelessWidget {
                                                   height: 40,
                                                   child: CircleAvatar(
                                                     backgroundColor: controller
-                                                            .isImagePathEmpty
+                                                            .isImagePathEmptyValidator
                                                         ? AppColors.red
                                                         : AppColors.black,
                                                     child: SizedBox(
@@ -250,7 +260,7 @@ class StoryPublish extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 20),
+                                  padding: const EdgeInsets.only(top: 30),
                                   child: GestureDetector(
                                     onTap: () => controller.publish(),
                                     child: Container(
