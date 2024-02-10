@@ -60,7 +60,8 @@ class _StoryboardState extends State<Storyboard> {
                                 dataBuilder: () => Block(
                                     id: controller.maxId + 1,
                                     type: BlockType.story,
-                                    shortDescription: AppStrings.addStory,
+                                    shortDescription:
+                                        "${AppStrings.addStory} ${controller.maxId + 1}",
                                     text: ''),
                               ),
                               child: Card(
@@ -83,7 +84,8 @@ class _StoryboardState extends State<Storyboard> {
                                 dataBuilder: () => Block(
                                     id: controller.maxId + 1,
                                     type: BlockType.choice,
-                                    shortDescription: AppStrings.addChoice,
+                                    shortDescription:
+                                        "${AppStrings.addChoice} ${controller.maxId + 1}",
                                     text: ''),
                               ),
                               child: Card(

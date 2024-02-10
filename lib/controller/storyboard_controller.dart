@@ -18,7 +18,7 @@ class StoryboardController extends GetxController {
   final TextEditingController textController = TextEditingController();
   late GraphNode<Block> root;
   late GraphNode<Block>? draggedBlock;
-  int maxId = 0;
+  int maxId = 1;
   final box = GetStorage();
 
   @override
@@ -29,7 +29,7 @@ class StoryboardController extends GetxController {
       data: Block(
           id: 0,
           type: BlockType.story,
-          shortDescription: AppStrings.addStory,
+          shortDescription: "${AppStrings.addStory} ${maxId}",
           text: ''),
       isRoot: true,
     );
