@@ -5,12 +5,12 @@ import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:talecraft/view/createStory/finalize_story.dart';
 
 import '../model/Block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
+import '../view/createStory/story_publish.dart';
 
 class StoryboardController extends GetxController {
   final TextEditingController shortDesciptionController =
@@ -72,7 +72,7 @@ class StoryboardController extends GetxController {
       AppWidgets.showToast(AppStrings.moreThanTwoChoices);
     } else {
       saveProgress();
-      Get.to(() => FinalizeStory());
+      Get.to(() => StoryPublish());
     }
   }
 

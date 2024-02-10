@@ -7,11 +7,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:talecraft/controller/storyboard_controller.dart';
 
 import '../model/Block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
+import '../view/navBar/nav_bar.dart';
 import 'ai_story_controller.dart';
 
 class StoryPublishController extends GetxController {
@@ -29,7 +31,11 @@ class StoryPublishController extends GetxController {
   void onInit() {
     super.onInit();
 
-    getLastBlocks(Get.find<AiStoryController>().root);
+    lastBlockList.clear();
+    endingsList.clear();
+    getLastBlocks(Get.previousRoute == "/AiStoryPreview"
+        ? Get.find<AiStoryController>().root
+        : Get.find<StoryboardController>().root);
   }
 
   void validateImageUpload() {
@@ -43,8 +49,9 @@ class StoryPublishController extends GetxController {
 
   void publish() {
     validateImageUpload();
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate() && !isImagePathEmptyValidator) {
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
+      Get.offAll(() => const NavBar());
     }
   }
 
