@@ -73,6 +73,9 @@ class AiStory extends StatelessWidget {
                                           if (value == null ||
                                               value.trim().isEmpty) {
                                             return AppStrings.addSomeText;
+                                          } else if (value.length > 150) {
+                                            return AppStrings
+                                                .textShouldBeLessThan150;
                                           }
                                           return null;
                                         },

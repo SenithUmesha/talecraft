@@ -45,6 +45,7 @@ class AppStrings {
   static const addSomeText = "Please enter some text";
   static const textShouldBeLessThan40 = "Text should be less than 40";
   static const textShouldBeLessThan100 = "Text should be less than 100";
+  static const textShouldBeLessThan150 = "Text should be less than 150";
   static const enterShortDescription = "Please enter a shorter description";
   static const endWithStoryBlock =
       "All branches need to end with a story block";
