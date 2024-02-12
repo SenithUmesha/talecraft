@@ -226,9 +226,6 @@ class StoryboardController extends GetxController {
         block.addNext(nextNode);
       }
     }
-
-    setLoader(false);
-    AppWidgets.showToast(AppStrings.loadGeneratedStory);
   }
 
   Future<void> generate() async {
@@ -237,6 +234,8 @@ class StoryboardController extends GetxController {
         await generateStoryVM.getGeneratedStory(contextController.text);
     Map<String, dynamic> storyJson = jsonDecode(response);
     loadProgressAI(root, storyJson);
+    setLoader(false);
+    AppWidgets.showToast(AppStrings.loadGeneratedStory);
   }
 
   void showContextDialog() {
