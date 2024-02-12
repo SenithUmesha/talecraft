@@ -11,6 +11,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 import '../view/createStory/story_publish.dart';
+import '../viewModel/generateStory/generateStoryVM.dart';
 
 class StoryboardController extends GetxController {
   final TextEditingController shortDesciptionController =
@@ -21,6 +22,8 @@ class StoryboardController extends GetxController {
   late GraphNode<Block>? draggedBlock;
   int maxId = 1;
   final box = GetStorage();
+  bool isLoading = false;
+  GenerateStoryVM generateStoryVM = GenerateStoryVM();
 
   @override
   void onInit() {
@@ -60,7 +63,6 @@ class StoryboardController extends GetxController {
     root.data?.text = "";
     root.data?.shortDescription = AppStrings.addStory;
     box.erase();
-    AppWidgets.showToast(AppStrings.graphCleared);
     update();
   }
 
@@ -222,7 +224,29 @@ class StoryboardController extends GetxController {
         ),
       );
 
-  Future<void> generate() async {}
+  loadProgressAI(GraphNode<Block> block, Map<String, dynamic> json) {
+    block.data = Block.fromJson(json);
+
+    if (json.containsKey('nextList')) {
+      var nextListJson = json['nextList'] as List<dynamic>;
+      for (var nextNodeJson in nextListJson) {
+        var nextNode = GraphNode<Block>();
+        loadProgressAI(nextNode, nextNodeJson as Map<String, dynamic>);
+        block.addNext(nextNode);
+      }
+    }
+
+    setLoader(false);
+    AppWidgets.showToast(AppStrings.loadGeneratedStory);
+  }
+
+  Future<void> generate() async {
+    setLoader(true);
+    String response =
+        await generateStoryVM.getGeneratedStory(contextController.text);
+    Map<String, dynamic> storyJson = jsonDecode(response);
+    loadProgressAI(root, storyJson);
+  }
 
   void showContextDialog() {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -283,7 +307,7 @@ class StoryboardController extends GetxController {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Get.back();
                   },
                   child: AppWidgets.regularText(
                     text: AppStrings.cancel,
@@ -296,7 +320,13 @@ class StoryboardController extends GetxController {
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(AppColors.black)),
-                  onPressed: () => generate(),
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      clearAllBlocks();
+                      Get.back();
+                      generate();
+                    }
+                  },
                   child: AppWidgets.regularText(
                     text: AppStrings.generated,
                     size: 16.0,
@@ -331,42 +361,46 @@ class StoryboardController extends GetxController {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormField(
-                      controller: shortDesciptionController,
-                      maxLines: 1,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: AppColors.grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: AppColors.black, width: 2)),
-                        hintText: AppStrings.shortDescription,
-                        hintStyle: TextStyle(
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.0,
-                        ),
-                      ),
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.0,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return AppStrings.addSomeText;
-                        } else if (value.trim().length > 20) {
-                          return AppStrings.enterShortDescription;
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    block.type == BlockType.choice
+                        ? Container()
+                        : TextFormField(
+                            controller: shortDesciptionController,
+                            maxLines: 1,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: AppColors.grey)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: AppColors.black, width: 2)),
+                              hintText: AppStrings.shortDescription,
+                              hintStyle: TextStyle(
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: AppColors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14.0,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return AppStrings.addSomeText;
+                              } else if (value.trim().length > 20) {
+                                return AppStrings.enterShortDescription;
+                              }
+                              return null;
+                            },
+                          ),
+                    block.type == BlockType.choice
+                        ? Container()
+                        : SizedBox(
+                            height: 16,
+                          ),
                     TextFormField(
                       controller: textController,
                       maxLines: null,
@@ -489,5 +523,10 @@ class StoryboardController extends GetxController {
         );
       },
     );
+  }
+
+  setLoader(bool value) {
+    isLoading = value;
+    update();
   }
 }

@@ -124,7 +124,11 @@ class _StoryboardState extends State<Storyboard> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: () => controller.clearAllBlocks(),
+                                  onTap: () {
+                                    controller.clearAllBlocks();
+                                    AppWidgets.showToast(
+                                        AppStrings.graphCleared);
+                                  },
                                   child: Container(
                                     height: width * 0.12,
                                     padding:
@@ -203,72 +207,85 @@ class _StoryboardState extends State<Storyboard> {
                         color: AppColors.grey,
                       ),
                       Expanded(
-                        child: StatefulBuilder(
-                          builder: (context, setter) {
-                            return DraggableFlowGraphView<Block>(
-                              root: controller.root,
-                              direction: Axis.vertical,
-                              centerLayout: true,
-                              enableDelete: true,
-                              onConnect: (prevBlock, block) =>
-                                  controller.increaseMaxId(),
-                              willConnect: (block) {
-                                log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
-                                if (block.data?.type == BlockType.story) {
-                                  return controller.draggedBlock!.data?.type ==
-                                      BlockType.choice;
-                                } else if (block.data?.type ==
-                                    BlockType.choice) {
-                                  return controller.draggedBlock!.data?.type ==
-                                          BlockType.story &&
-                                      block.nextList.isEmpty;
-                                }
-                                return false;
-                              },
-                              builder: (context, block) {
-                                return GestureDetector(
-                                  onDoubleTap: () => controller
-                                      .showEditBlockDialog(block.data!),
-                                  onLongPress: () {
-                                    setter(() {
-                                      block.deleteSelf();
-                                    });
-                                  },
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: AppColors.white,
-                                          border: Border.all(
-                                              color:
-                                                  (block.data as Block).type ==
-                                                          BlockType.story
-                                                      ? AppColors.black
-                                                      : AppColors.red,
-                                              width: 2)),
-                                      padding: const EdgeInsets.all(12),
-                                      child: AppWidgets.regularText(
-                                          text: (block.data as Block)
-                                              .shortDescription,
-                                          size: 14.0,
-                                          alignment: TextAlign.center,
-                                          color: AppColors.black,
-                                          weight: FontWeight.w400,
-                                          textOverFlow: TextOverflow.ellipsis,
-                                          maxLines: 1)),
-                                );
-                              },
-                              onEdgeColor: (n1, n2) {
-                                if ((n1.data as Block).type ==
-                                    BlockType.story) {
-                                  return AppColors.black;
-                                } else {
-                                  return AppColors.red;
-                                }
-                              },
-                            );
-                          },
-                        ),
+                        child: controller.isLoading
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: AppColors.black,
+                                  ),
+                                ],
+                              )
+                            : StatefulBuilder(
+                                builder: (context, setter) {
+                                  return DraggableFlowGraphView<Block>(
+                                    root: controller.root,
+                                    direction: Axis.vertical,
+                                    centerLayout: true,
+                                    enableDelete: true,
+                                    onConnect: (prevBlock, block) =>
+                                        controller.increaseMaxId(),
+                                    willConnect: (block) {
+                                      log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
+                                      if (block.data?.type == BlockType.story) {
+                                        return controller
+                                                .draggedBlock!.data?.type ==
+                                            BlockType.choice;
+                                      } else if (block.data?.type ==
+                                          BlockType.choice) {
+                                        return controller
+                                                    .draggedBlock!.data?.type ==
+                                                BlockType.story &&
+                                            block.nextList.isEmpty;
+                                      }
+                                      return false;
+                                    },
+                                    builder: (context, block) {
+                                      return GestureDetector(
+                                        onDoubleTap: () => controller
+                                            .showEditBlockDialog(block.data!),
+                                        onLongPress: () {
+                                          setter(() {
+                                            block.deleteSelf();
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: AppColors.white,
+                                                border: Border.all(
+                                                    color: (block.data as Block)
+                                                                .type ==
+                                                            BlockType.story
+                                                        ? AppColors.black
+                                                        : AppColors.red,
+                                                    width: 2)),
+                                            padding: const EdgeInsets.all(12),
+                                            child: AppWidgets.regularText(
+                                                text: (block.data as Block)
+                                                    .shortDescription,
+                                                size: 14.0,
+                                                alignment: TextAlign.center,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w400,
+                                                textOverFlow:
+                                                    TextOverflow.ellipsis,
+                                                maxLines: 1)),
+                                      );
+                                    },
+                                    onEdgeColor: (n1, n2) {
+                                      if ((n1.data as Block).type ==
+                                          BlockType.story) {
+                                        return AppColors.black;
+                                      } else {
+                                        return AppColors.red;
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
                       )
                     ],
                   );

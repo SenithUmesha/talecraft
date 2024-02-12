@@ -81,4 +81,5 @@ class AppStrings {
   static const selectEnding = "Select an ending";
   static const getStartedWithAI = "Get Started with AI";
   static const clearGraph = "Clear Graph";
+  static const loadGeneratedStory = "Generated story loaded";
 }
