@@ -85,25 +85,30 @@ class AiStory extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 20),
-                                  child: GestureDetector(
-                                    onTap: () => controller.genarate(),
-                                    child: Container(
-                                      width: width * 0.4,
-                                      height: width * 0.14,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: AppColors.black,
-                                      ),
-                                      child: Center(
-                                        child: AppWidgets.regularText(
-                                          text: AppStrings.genarated,
-                                          size: 16.0,
-                                          color: AppColors.white,
-                                          weight: FontWeight.w500,
+                                  child: controller.isLoading
+                                      ? CircularProgressIndicator(
+                                          color: AppColors.black,
+                                        )
+                                      : GestureDetector(
+                                          onTap: () => controller.genarate(),
+                                          child: Container(
+                                            width: width * 0.4,
+                                            height: width * 0.14,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: AppColors.black,
+                                            ),
+                                            child: Center(
+                                              child: AppWidgets.regularText(
+                                                text: AppStrings.genarated,
+                                                size: 16.0,
+                                                color: AppColors.white,
+                                                weight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
                                 ),
                               ],
                             ),
