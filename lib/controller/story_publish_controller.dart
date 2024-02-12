@@ -18,6 +18,7 @@ import '../view/navBar/nav_bar.dart';
 class StoryPublishController extends GetxController {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final TextEditingController storyNameController = TextEditingController();
+  final TextEditingController readTimeController = TextEditingController();
   final TextEditingController storyDescriptionController =
       TextEditingController();
   String imagePath = "";

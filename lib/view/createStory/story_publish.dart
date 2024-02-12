@@ -172,6 +172,28 @@ class StoryPublish extends StatelessWidget {
                                       SizedBox(
                                         height: height * 0.01,
                                       ),
+                                      textFieldView(
+                                          name: AppStrings.readTime,
+                                          hintText: "",
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return AppStrings.addSomeText;
+                                            } else if (int.parse(value) > 60) {
+                                              return AppStrings
+                                                  .readTimeShouldBeLessThan60;
+                                            }
+                                            return null;
+                                          },
+                                          textEditingController:
+                                              controller.readTimeController,
+                                          keyBoardType: TextInputType.number,
+                                          height: height,
+                                          index: 2,
+                                          maxLines: 1),
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
                                       AppWidgets.regularText(
                                         text: AppStrings.achievementEnding,
                                         size: 16.0,
@@ -260,7 +282,8 @@ class StoryPublish extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 30),
+                                  padding: const EdgeInsets.only(
+                                      top: 30, bottom: 30),
                                   child: GestureDetector(
                                     onTap: () => controller.publish(),
                                     child: Container(

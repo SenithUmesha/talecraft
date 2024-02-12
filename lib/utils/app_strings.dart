@@ -82,4 +82,7 @@ class AppStrings {
   static const getStartedWithAI = "Get Started with AI";
   static const clearGraph = "Clear Graph";
   static const loadGeneratedStory = "Generated story loaded";
+  static const readTime = "Read Time";
+  static const readTimeShouldBeLessThan60 =
+      "Read time should be less than 60 minutes";
 }
