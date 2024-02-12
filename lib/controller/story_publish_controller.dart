@@ -68,7 +68,7 @@ class StoryPublishController extends GetxController {
   }
 
   String getFirstFewCharacters(String input) {
-    return input.length > 10 ? input.substring(0, 10) : input;
+    return input.length > 40 ? "${input.substring(0, 40)}..." : input;
   }
 
   void uploadImage() {

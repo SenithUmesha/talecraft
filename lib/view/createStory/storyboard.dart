@@ -111,7 +111,7 @@ class _StoryboardState extends State<Storyboard> {
                       ),
                       ExpandChildWidget(
                         arrowPadding: const EdgeInsets.only(bottom: 0),
-                        expand: false,
+                        expand: true,
                         arrowColor: AppColors.black,
                         child: Column(
                           children: [

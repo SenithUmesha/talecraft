@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/home_controller.dart';
+import 'package:talecraft/controller/nav_bar_controller.dart';
 import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
@@ -10,6 +11,7 @@ import 'package:talecraft/view/home/story_details.dart';
 
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
+import '../navBar/nav_bar.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -54,18 +56,24 @@ class Home extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(
                     top: 10, bottom: 5, left: 15, right: 15),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.find<NavBarController>().updateIndex(4);
+                    Get.to(() => const NavBar());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Image.asset(
+                      AppImages.bannerOne,
+                      fit: BoxFit.cover,
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    height: height * 0.17,
+                    width: width,
                   ),
-                  child: Image.asset(
-                    AppImages.bannerOne,
-                    fit: BoxFit.cover,
-                  ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  height: height * 0.17,
-                  width: width,
                 ),
               ),
               Expanded(
