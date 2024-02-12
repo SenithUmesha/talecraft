@@ -69,9 +69,8 @@ class _StoryboardState extends State<Storyboard> {
                               dataBuilder: () => Block(
                                   id: controller.maxId + 1,
                                   type: BlockType.story,
-                                  shortDescription:
-                                      "${AppStrings.addStory} ${controller.maxId + 1}",
-                                  text: ''),
+                                  text:
+                                      "${AppStrings.addStory} ${controller.maxId + 1}"),
                             ),
                             child: Card(
                               elevation: 2,
@@ -93,9 +92,8 @@ class _StoryboardState extends State<Storyboard> {
                               dataBuilder: () => Block(
                                   id: controller.maxId + 1,
                                   type: BlockType.choice,
-                                  shortDescription:
-                                      "${AppStrings.addChoice} ${controller.maxId + 1}",
-                                  text: ''),
+                                  text:
+                                      "${AppStrings.addChoice} ${controller.maxId + 1}"),
                             ),
                             child: Card(
                               elevation: 2,
@@ -264,8 +262,10 @@ class _StoryboardState extends State<Storyboard> {
                                                     width: 2)),
                                             padding: const EdgeInsets.all(12),
                                             child: AppWidgets.regularText(
-                                                text: (block.data as Block)
-                                                    .shortDescription,
+                                                text: controller
+                                                    .getFirstFewCharacters(
+                                                        (block.data as Block)
+                                                            .text),
                                                 size: 14.0,
                                                 alignment: TextAlign.center,
                                                 color: AppColors.black,

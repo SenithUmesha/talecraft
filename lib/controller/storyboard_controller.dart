@@ -14,8 +14,6 @@ import '../view/createStory/story_publish.dart';
 import '../viewModel/generateStory/generateStoryVM.dart';
 
 class StoryboardController extends GetxController {
-  final TextEditingController shortDesciptionController =
-      TextEditingController();
   final TextEditingController contextController = TextEditingController();
   final TextEditingController textController = TextEditingController();
   late GraphNode<Block> root;
@@ -33,8 +31,7 @@ class StoryboardController extends GetxController {
       data: Block(
           id: 0,
           type: BlockType.story,
-          shortDescription: "${AppStrings.addStory} ${maxId}",
-          text: ''),
+          text: "${AppStrings.addStory} ${maxId}"),
       isRoot: true,
     );
 
@@ -60,8 +57,7 @@ class StoryboardController extends GetxController {
   clearAllBlocks() {
     root.clearAllNext();
     maxId = 0;
-    root.data?.text = "";
-    root.data?.shortDescription = AppStrings.addStory;
+    root.data?.text = "${AppStrings.addStory} ${maxId}";
     box.erase();
     update();
   }
@@ -145,14 +141,9 @@ class StoryboardController extends GetxController {
             data: Block(
                 id: maxId + 1,
                 type: BlockType.choice,
-                shortDescription: AppStrings.addChoice,
-                text: ''))
+                text: AppStrings.addChoice))
         : GraphNode<Block>(
-            data: Block(
-                id: maxId + 1,
-                type: BlockType.story,
-                shortDescription: AppStrings.addStory,
-                text: ''));
+            data: Block(id: maxId + 1, type: BlockType.story, text: ''));
     update();
   }
 
@@ -340,7 +331,6 @@ class StoryboardController extends GetxController {
 
   void showEditBlockDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-    shortDesciptionController.text = block.shortDescription ?? "";
     textController.text = block.text;
 
     showDialog(
@@ -361,46 +351,6 @@ class StoryboardController extends GetxController {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    block.type == BlockType.choice
-                        ? Container()
-                        : TextFormField(
-                            controller: shortDesciptionController,
-                            maxLines: 1,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: AppColors.grey)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: AppColors.black, width: 2)),
-                              hintText: AppStrings.shortDescription,
-                              hintStyle: TextStyle(
-                                color: AppColors.grey,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: AppColors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.0,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return AppStrings.addSomeText;
-                              } else if (value.trim().length > 20) {
-                                return AppStrings.enterShortDescription;
-                              }
-                              return null;
-                            },
-                          ),
-                    block.type == BlockType.choice
-                        ? Container()
-                        : SizedBox(
-                            height: 16,
-                          ),
                     TextFormField(
                       controller: textController,
                       maxLines: null,
@@ -456,10 +406,7 @@ class StoryboardController extends GetxController {
                           MaterialStateProperty.all<Color>(AppColors.black)),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      block.updateText(
-                        shortDesciptionController.text,
-                        textController.text,
-                      );
+                      block.updateText(textController.text);
                       update();
                       Get.back();
                     }
@@ -523,6 +470,10 @@ class StoryboardController extends GetxController {
         );
       },
     );
+  }
+
+  String getFirstFewCharacters(String input) {
+    return input.length > 30 ? "${input.substring(0, 30)}..." : input;
   }
 
   setLoader(bool value) {

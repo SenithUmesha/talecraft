@@ -14,7 +14,6 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 import '../view/navBar/nav_bar.dart';
-import 'ai_story_controller.dart';
 
 class StoryPublishController extends GetxController {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -33,9 +32,7 @@ class StoryPublishController extends GetxController {
 
     lastBlockList.clear();
     endingsList.clear();
-    getLastBlocks(Get.previousRoute == "/AiStoryPreview"
-        ? Get.find<AiStoryController>().root
-        : Get.find<StoryboardController>().root);
+    getLastBlocks(Get.find<StoryboardController>().root);
   }
 
   void validateImageUpload() {
@@ -58,7 +55,7 @@ class StoryPublishController extends GetxController {
   bool getLastBlocks(GraphNode<Block> block) {
     if (block.nextList.isEmpty) {
       lastBlockList.add(block.data!);
-      endingsList.add(block.data!.shortDescription!);
+      endingsList.add(getFirstFewCharacters(block.data!.text));
       return block.data!.type == BlockType.story;
     } else {
       for (var branch in block.nextList) {
@@ -68,6 +65,10 @@ class StoryPublishController extends GetxController {
       }
       return true;
     }
+  }
+
+  String getFirstFewCharacters(String input) {
+    return input.length > 10 ? input.substring(0, 10) : input;
   }
 
   void uploadImage() {
