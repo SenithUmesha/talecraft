@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talecraft/viewModel/genarateStory/genarateStoryVM.dart';
+import 'package:talecraft/viewModel/generateStory/generateStoryVM.dart';
 
 import '../model/Block.dart';
 import '../utils/app_colors.dart';
@@ -19,7 +19,7 @@ class AiStoryController extends GetxController {
   final TextEditingController shortDesciptionController =
       TextEditingController();
   final TextEditingController textController = TextEditingController();
-  GenarateStoryVM genarateStoryVM = GenarateStoryVM();
+  GenerateStoryVM generateStoryVM = GenerateStoryVM();
 
   @override
   void onInit() {
@@ -47,11 +47,11 @@ class AiStoryController extends GetxController {
     Get.to(() => AiStoryPreview());
   }
 
-  Future<void> genarate() async {
+  Future<void> generate() async {
     if (formKey.currentState!.validate()) {
       setLoader(true);
       String response =
-          await genarateStoryVM.getGenaratedStory(contextController.text);
+          await generateStoryVM.getGeneratedStory(contextController.text);
       Map<String, dynamic> storyJson = jsonDecode(response);
       loadProgress(root, storyJson);
     }

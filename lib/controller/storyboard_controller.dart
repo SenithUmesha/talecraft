@@ -15,6 +15,7 @@ import '../view/createStory/story_publish.dart';
 class StoryboardController extends GetxController {
   final TextEditingController shortDesciptionController =
       TextEditingController();
+  final TextEditingController contextController = TextEditingController();
   final TextEditingController textController = TextEditingController();
   late GraphNode<Block> root;
   late GraphNode<Block>? draggedBlock;
@@ -220,6 +221,92 @@ class StoryboardController extends GetxController {
           ],
         ),
       );
+
+  Future<void> generate() async {}
+
+  void showContextDialog() {
+    GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+
+    showDialog(
+        barrierDismissible: false,
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+              title: AppWidgets.regularText(
+                text: AppStrings.aiGeneratedStory,
+                size: 20.0,
+                color: AppColors.black,
+                weight: FontWeight.w600,
+              ),
+              content: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: contextController,
+                      maxLines: 5,
+                      minLines: 5,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: AppColors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: AppColors.black, width: 1)),
+                        hintText: AppStrings.provideContext,
+                        hintStyle: TextStyle(
+                          color: AppColors.grey,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14.0,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return AppStrings.addSomeText;
+                        } else if (value.length > 150) {
+                          return AppStrings.textShouldBeLessThan150;
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: AppWidgets.regularText(
+                    text: AppStrings.cancel,
+                    size: 16.0,
+                    color: AppColors.black,
+                    weight: FontWeight.w400,
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(AppColors.black)),
+                  onPressed: () => generate(),
+                  child: AppWidgets.regularText(
+                    text: AppStrings.generated,
+                    size: 16.0,
+                    color: AppColors.white,
+                    weight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ));
+  }
 
   void showEditBlockDialog(Block block) {
     GlobalKey<FormState> formKey = new GlobalKey<FormState>();

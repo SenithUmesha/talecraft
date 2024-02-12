@@ -20,7 +20,7 @@ class AiStoryPreview extends StatelessWidget {
         child: SafeArea(
             child: Scaffold(
           appBar: CustomAppBar(
-            title: AppStrings.aiGenaratedStoryPreview,
+            title: AppStrings.aiGeneratedStoryPreview,
             actions: [
               IconButton(
                 icon: const Icon(

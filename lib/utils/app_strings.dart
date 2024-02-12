@@ -52,11 +52,11 @@ class AppStrings {
   static const atLeastTwoChoices = "Story must have at least 2 choice blocks";
   static const moreThanTwoChoices =
       "When branching, the story blocks must have at least two choice blocks";
-  static const aiGenaratedStory = "Create AI Genarated Story";
-  static const aiGenaratedStoryPreview = "Genarated AI Story Preview";
+  static const aiGeneratedStory = "Create AI Generated Story";
+  static const aiGeneratedStoryPreview = "Generated AI Story Preview";
   static const provideContext =
-      "Provide a starting point or context for your story";
-  static const genarated = "Generate";
+      "Provide a starting point or the context for your story";
+  static const generated = "Generate";
   static const publish = "Publish";
   static const bookmarkedStories = "Bookmarked Stories";
   static const search = "Search";
@@ -79,4 +79,6 @@ class AppStrings {
   static const achievementEnding = "Achievement Ending";
   static const pleaseSelectEnding = "Please select an ending";
   static const selectEnding = "Select an ending";
+  static const getStartedWithAI = "Get Started with AI";
+  static const clearGraph = "Clear Graph";
 }

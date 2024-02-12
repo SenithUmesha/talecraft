@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expand_view/expand_child_widget.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
 
@@ -22,7 +23,7 @@ class Storyboard extends StatefulWidget {
 class _StoryboardState extends State<Storyboard> {
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+    // var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Container(
       color: AppColors.white,
@@ -35,6 +36,13 @@ class _StoryboardState extends State<Storyboard> {
               title: AppStrings.newStory,
               cantGoBack: true,
               actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.help_outline_rounded,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {},
+                ),
                 IconButton(
                   icon: const Icon(
                     Icons.save_rounded,
@@ -50,87 +58,145 @@ class _StoryboardState extends State<Storyboard> {
                 builder: (controller) {
                   return Column(
                     children: [
-                      Container(
-                        height: height * 0.1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Draggable<GraphNodeFactory<Block>>(
-                              data: GraphNodeFactory(
-                                dataBuilder: () => Block(
-                                    id: controller.maxId + 1,
-                                    type: BlockType.story,
-                                    shortDescription:
-                                        "${AppStrings.addStory} ${controller.maxId + 1}",
-                                    text: ''),
-                              ),
-                              child: Card(
-                                elevation: 2,
-                                child: controller.storyBlock(width),
-                              ),
-                              feedback: Card(
-                                color: AppColors.white,
-                                elevation: 6,
-                                child: controller.storyBlock(width),
-                              ),
-                              onDragStarted: () =>
-                                  controller.onDraggedBlock(BlockType.story),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Draggable<GraphNodeFactory<Block>>(
-                              data: GraphNodeFactory(
-                                dataBuilder: () => Block(
-                                    id: controller.maxId + 1,
-                                    type: BlockType.choice,
-                                    shortDescription:
-                                        "${AppStrings.addChoice} ${controller.maxId + 1}",
-                                    text: ''),
-                              ),
-                              child: Card(
-                                elevation: 2,
-                                child: controller.choiceBlock(width),
-                              ),
-                              feedback: Card(
-                                color: AppColors.white,
-                                elevation: 6,
-                                child: controller.choiceBlock(width),
-                              ),
-                              onDragStarted: () =>
-                                  controller.onDraggedBlock(BlockType.choice),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                                onTap: () => controller.clearAllBlocks(),
-                                child: Image.asset(
-                                  AppIcons.erase,
-                                  scale: 4,
-                                ))
-                          ],
-                        ),
+                      SizedBox(
+                        height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.help,
-                            color: AppColors.grey,
-                            size: 14,
+                          Draggable<GraphNodeFactory<Block>>(
+                            data: GraphNodeFactory(
+                              dataBuilder: () => Block(
+                                  id: controller.maxId + 1,
+                                  type: BlockType.story,
+                                  shortDescription:
+                                      "${AppStrings.addStory} ${controller.maxId + 1}",
+                                  text: ''),
+                            ),
+                            child: Card(
+                              elevation: 2,
+                              child: controller.storyBlock(width),
+                            ),
+                            feedback: Card(
+                              color: AppColors.white,
+                              elevation: 6,
+                              child: controller.storyBlock(width),
+                            ),
+                            onDragStarted: () =>
+                                controller.onDraggedBlock(BlockType.story),
                           ),
                           SizedBox(
                             width: 5,
                           ),
-                          AppWidgets.regularText(
-                            text: AppStrings.storyboardHelp,
-                            size: 10.0,
-                            alignment: TextAlign.center,
-                            color: AppColors.grey,
-                            weight: FontWeight.w400,
+                          Draggable<GraphNodeFactory<Block>>(
+                            data: GraphNodeFactory(
+                              dataBuilder: () => Block(
+                                  id: controller.maxId + 1,
+                                  type: BlockType.choice,
+                                  shortDescription:
+                                      "${AppStrings.addChoice} ${controller.maxId + 1}",
+                                  text: ''),
+                            ),
+                            child: Card(
+                              elevation: 2,
+                              child: controller.choiceBlock(width),
+                            ),
+                            feedback: Card(
+                              color: AppColors.white,
+                              elevation: 6,
+                              child: controller.choiceBlock(width),
+                            ),
+                            onDragStarted: () =>
+                                controller.onDraggedBlock(BlockType.choice),
                           ),
                         ],
+                      ),
+                      ExpandChildWidget(
+                        arrowPadding: const EdgeInsets.only(bottom: 0),
+                        expand: false,
+                        arrowColor: AppColors.black,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => controller.clearAllBlocks(),
+                                  child: Container(
+                                    height: width * 0.12,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppColors.white,
+                                        border: Border.all(
+                                            color: AppColors.black, width: 2)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          AppIcons.clear,
+                                          scale: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        AppWidgets.regularText(
+                                            text: AppStrings.clearGraph,
+                                            size: 13.5,
+                                            alignment: TextAlign.center,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w400)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () => controller.showContextDialog(),
+                                  child: Container(
+                                    height: width * 0.12,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppColors.white,
+                                        border: Border.all(
+                                            color: AppColors.black, width: 2)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          AppIcons.star,
+                                          scale: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        AppWidgets.regularText(
+                                            text: AppStrings.getStartedWithAI,
+                                            size: 13.5,
+                                            alignment: TextAlign.center,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w400)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ),
                       ),
                       Divider(
                         thickness: 1,

@@ -18,7 +18,7 @@ class AiStory extends StatelessWidget {
         child: SafeArea(
             child: Scaffold(
           appBar: CustomAppBar(
-            title: AppStrings.aiGenaratedStory,
+            title: AppStrings.aiGeneratedStory,
           ),
           body: GetBuilder<AiStoryController>(
               init: AiStoryController(),
@@ -90,7 +90,7 @@ class AiStory extends StatelessWidget {
                                           color: AppColors.black,
                                         )
                                       : GestureDetector(
-                                          onTap: () => controller.genarate(),
+                                          onTap: () => controller.generate(),
                                           child: Container(
                                             width: width * 0.4,
                                             height: width * 0.14,
@@ -101,7 +101,7 @@ class AiStory extends StatelessWidget {
                                             ),
                                             child: Center(
                                               child: AppWidgets.regularText(
-                                                text: AppStrings.genarated,
+                                                text: AppStrings.generated,
                                                 size: 16.0,
                                                 color: AppColors.white,
                                                 weight: FontWeight.w500,

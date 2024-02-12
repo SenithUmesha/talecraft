@@ -48,6 +48,7 @@ dependencies:
   permission_handler: ^11.0.1
   dropdown_button2: ^2.3.9
   dio: ^5.4.0
+  flutter_expand_view: ^1.6.2
 
 dev_dependencies:
   flutter_test:

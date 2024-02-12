@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../network/api_client.dart';
 
-class GenarateStoryAPI {
+class GenerateStoryAPI {
   final Dio apiClient = ApiClient().client;
 
   Future<Response> genarateStory(String context) async {
