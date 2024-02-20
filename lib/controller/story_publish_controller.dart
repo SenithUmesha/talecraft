@@ -56,7 +56,7 @@ class StoryPublishController extends GetxController {
   bool getLastBlocks(GraphNode<Block> block) {
     if (block.nextList.isEmpty) {
       lastBlockList.add(block.data!);
-      endingsList.add(getFirstFewCharacters(block.data!.text));
+      endingsList.add(getFirstFewCharacters(block.data!.text, block.data!.id));
       return block.data!.type == BlockType.story;
     } else {
       for (var branch in block.nextList) {
@@ -68,8 +68,10 @@ class StoryPublishController extends GetxController {
     }
   }
 
-  String getFirstFewCharacters(String input) {
-    return input.length > 40 ? "${input.substring(0, 40)}..." : input;
+  String getFirstFewCharacters(String text, int id) {
+    return text.length > 40
+        ? "${text.substring(0, 40)}... - $id"
+        : "$text - $id";
   }
 
   void uploadImage() {
