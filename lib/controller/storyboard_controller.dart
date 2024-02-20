@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
@@ -18,20 +19,17 @@ class StoryboardController extends GetxController {
   final TextEditingController textController = TextEditingController();
   late GraphNode<Block> root;
   late GraphNode<Block>? draggedBlock;
-  int maxId = 1;
   final box = GetStorage();
   bool isLoading = false;
   GenerateStoryVM generateStoryVM = GenerateStoryVM();
+  int id = 0;
 
   @override
   void onInit() {
     super.onInit();
 
     root = GraphNode<Block>(
-      data: Block(
-          id: 0,
-          type: BlockType.story,
-          text: "${AppStrings.addStory} ${maxId}"),
+      data: Block(id: 0, type: BlockType.story, text: AppStrings.addStory),
       isRoot: true,
     );
 
@@ -49,16 +47,11 @@ class StoryboardController extends GetxController {
     }
   }
 
-  increaseMaxId() {
-    maxId += 1;
-    update();
-  }
-
   clearAllBlocks() {
     root.clearAllNext();
-    maxId = 0;
-    root.data?.text = "${AppStrings.addStory} ${maxId}";
+    root.data?.text = AppStrings.addStory;
     box.erase();
+    id = 0;
     update();
   }
 
@@ -135,15 +128,23 @@ class StoryboardController extends GetxController {
     }
   }
 
+  int getId() {
+    int timestampInSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int randomSixDigitNumber = math.Random().nextInt(900000) + 100000;
+    id = timestampInSeconds * 1000000 + randomSixDigitNumber;
+    log("ID: ${id}");
+    return id;
+  }
+
   onDraggedBlock(BlockType type) {
+    getId();
+
     draggedBlock = type == BlockType.choice
         ? GraphNode<Block>(
             data: Block(
-                id: maxId + 1,
-                type: BlockType.choice,
-                text: AppStrings.addChoice))
+                id: id, type: BlockType.choice, text: AppStrings.addChoice))
         : GraphNode<Block>(
-            data: Block(id: maxId + 1, type: BlockType.story, text: ''));
+            data: Block(id: id, type: BlockType.story, text: ''));
     update();
   }
 

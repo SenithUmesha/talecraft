@@ -67,10 +67,9 @@ class _StoryboardState extends State<Storyboard> {
                           Draggable<GraphNodeFactory<Block>>(
                             data: GraphNodeFactory(
                               dataBuilder: () => Block(
-                                  id: controller.maxId + 1,
+                                  id: controller.id,
                                   type: BlockType.story,
-                                  text:
-                                      "${AppStrings.addStory} ${controller.maxId + 1}"),
+                                  text: AppStrings.addStory),
                             ),
                             child: Card(
                               elevation: 2,
@@ -90,10 +89,9 @@ class _StoryboardState extends State<Storyboard> {
                           Draggable<GraphNodeFactory<Block>>(
                             data: GraphNodeFactory(
                               dataBuilder: () => Block(
-                                  id: controller.maxId + 1,
+                                  id: controller.id,
                                   type: BlockType.choice,
-                                  text:
-                                      "${AppStrings.addChoice} ${controller.maxId + 1}"),
+                                  text: AppStrings.addChoice),
                             ),
                             child: Card(
                               elevation: 2,
@@ -222,8 +220,6 @@ class _StoryboardState extends State<Storyboard> {
                                     direction: Axis.vertical,
                                     centerLayout: true,
                                     enableDelete: true,
-                                    onConnect: (prevBlock, block) =>
-                                        controller.increaseMaxId(),
                                     willConnect: (block) {
                                       log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
                                       if (block.data?.type == BlockType.story) {
