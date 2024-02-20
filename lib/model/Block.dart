@@ -1,3 +1,5 @@
+import 'dart:math';
+
 enum BlockType { story, choice }
 
 class Block {
@@ -12,8 +14,9 @@ class Block {
   }
 
   factory Block.fromJson(Map<String, dynamic> json) {
+    int generatedId = Block.getId();
     return Block(
-        id: json['id'],
+        id: json['id'] == 0 ? 0 : generatedId,
         type: json['type'] == 'BlockType.story'
             ? BlockType.story
             : BlockType.choice,
@@ -22,5 +25,12 @@ class Block {
 
   void updateText(String text) {
     this.text = text;
+  }
+
+  static int getId() {
+    int timestampInSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int randomSixDigitNumber = Random().nextInt(900000) + 100000;
+    int id = timestampInSeconds * 1000000 + randomSixDigitNumber;
+    return id;
   }
 }

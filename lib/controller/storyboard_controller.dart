@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:math' as math;
 
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
@@ -128,16 +127,8 @@ class StoryboardController extends GetxController {
     }
   }
 
-  int getId() {
-    int timestampInSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    int randomSixDigitNumber = math.Random().nextInt(900000) + 100000;
-    id = timestampInSeconds * 1000000 + randomSixDigitNumber;
-    log("ID: ${id}");
-    return id;
-  }
-
   onDraggedBlock(BlockType type) {
-    getId();
+    id = Block.getId();
 
     draggedBlock = type == BlockType.choice
         ? GraphNode<Block>(
