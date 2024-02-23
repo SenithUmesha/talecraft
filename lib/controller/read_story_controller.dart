@@ -48,7 +48,7 @@ class ReadStoryController extends GetxController {
 
   void addStoryBlock(GraphNode<Block> block) {
     widgetList.add(AppWidgets.regularText(
-        text: "          ${block.data!.text}",
+        text: block.data!.text,
         size: 17.0,
         alignment: TextAlign.justify,
         color: AppColors.black,
@@ -58,7 +58,9 @@ class ReadStoryController extends GetxController {
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
     }
+
     update();
+    scrollDown();
   }
 
   void addChoiceBlock(List<GraphNode> nextList) {
@@ -124,5 +126,16 @@ class ReadStoryController extends GetxController {
         ),
       ),
     );
+  }
+
+  void scrollDown() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients)
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
+        );
+    });
   }
 }
