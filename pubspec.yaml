@@ -49,6 +49,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   dio: ^5.4.0
   flutter_expand_view: ^1.6.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

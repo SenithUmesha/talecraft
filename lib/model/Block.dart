@@ -21,6 +21,16 @@ class Block {
   }
 
   factory Block.fromJson(Map<String, dynamic> json) {
+    return json['type'] == 'BlockType.choice'
+        ? Block(id: json['id'], type: BlockType.choice, text: json['text'])
+        : Block(
+            id: json['id'],
+            type: BlockType.story,
+            text: json['text'],
+            isPicked: json['is_picked'] == null ? false : json['is_picked']);
+  }
+
+  factory Block.fromJsonAssignId(Map<String, dynamic> json) {
     int generatedId = Block.getId();
     return json['type'] == 'BlockType.choice'
         ? Block(

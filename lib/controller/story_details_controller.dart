@@ -17,7 +17,7 @@ class StoryDetailsController extends GetxController {
             "https://edit.org/img/blog/xk5-1024-free-ebook-cover-templates-download-online.webp",
         genres: ["Fiction", "Action"],
         isBookmarked: false,
-        achievementEndingId: 0,
+        achievementEndingId: 7,
         storyJson: {
           "id": 0,
           "type": "BlockType.story",

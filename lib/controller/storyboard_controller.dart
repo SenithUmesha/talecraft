@@ -208,7 +208,7 @@ class StoryboardController extends GetxController {
       );
 
   loadProgressAI(GraphNode<Block> block, Map<String, dynamic> json) {
-    block.data = Block.fromJson(json);
+    block.data = Block.fromJsonAssignId(json);
 
     if (json.containsKey('nextList')) {
       var nextListJson = json['nextList'] as List<dynamic>;

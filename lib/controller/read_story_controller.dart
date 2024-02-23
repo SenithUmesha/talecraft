@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -13,6 +16,8 @@ class ReadStoryController extends GetxController {
   List<Widget> widgetList = [];
   late GraphNode<Block> root;
   late Story story;
+  final confettiController = ConfettiController();
+  bool isPlanning = false;
 
   @override
   void onInit() {
@@ -101,6 +106,15 @@ class ReadStoryController extends GetxController {
                     ),
                   ),
                 ));
+                if (nextList[index].nextList[0].nextList.isEmpty &&
+                    (nextList[index].data as Block).id ==
+                        story.achievementEndingId) {
+                  confettiController.play();
+
+                  Timer(const Duration(seconds: 1), () {
+                    confettiController.stop();
+                  });
+                }
                 addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
               },
               child: Container(
