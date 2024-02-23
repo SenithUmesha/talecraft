@@ -52,6 +52,7 @@ class ReadStoryController extends GetxController {
   }
 
   void addStoryBlock(GraphNode<Block> block) {
+    var width = MediaQuery.of(Get.context!).size.width;
     widgetList.add(AppWidgets.regularText(
         text: block.data!.text,
         size: 17.0,
@@ -62,6 +63,20 @@ class ReadStoryController extends GetxController {
 
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
+    } else {
+      widgetList.add(Container(
+        width: width,
+        margin: const EdgeInsets.symmetric(vertical: 15),
+        child: Center(
+          child: AppWidgets.regularText(
+            text: AppStrings.theEnd,
+            alignment: TextAlign.center,
+            size: 14,
+            color: AppColors.black,
+            weight: FontWeight.w600,
+          ),
+        ),
+      ));
     }
 
     update();
@@ -113,6 +128,7 @@ class ReadStoryController extends GetxController {
 
                   Timer(const Duration(seconds: 1), () {
                     confettiController.stop();
+                    AppWidgets.showToast(AppStrings.secretEndingAchieved);
                   });
                 }
                 addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);

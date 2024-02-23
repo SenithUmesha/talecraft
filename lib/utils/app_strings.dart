@@ -86,4 +86,6 @@ class AppStrings {
   static const readTimeShouldBeLessThan60 =
       "Read time should be less than 60 minutes";
   static const whatToDoNext = "What To Do Next?";
+  static const theEnd = "- The End -";
+  static const secretEndingAchieved = "Secret ending achieved!";
 }
