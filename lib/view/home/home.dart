@@ -203,7 +203,7 @@ class Home extends StatelessWidget {
                       weight: FontWeight.w600,
                     ),
                     AppWidgets.regularText(
-                      text: story.author,
+                      text: story.authorName,
                       size: 14.0,
                       color: AppColors.black,
                       weight: FontWeight.w400,

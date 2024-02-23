@@ -6,6 +6,7 @@ import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/home.dart';
+import 'package:talecraft/view/readStory/readStory.dart';
 
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
@@ -73,7 +74,7 @@ class StoryDetails extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         AppWidgets.regularText(
-                                          text: story.author,
+                                          text: story.authorName,
                                           size: 14.0,
                                           color: AppColors.black,
                                           weight: FontWeight.w400,
@@ -193,22 +194,27 @@ class StoryDetails extends StatelessWidget {
                                         SizedBox(
                                           width: width * 0.025,
                                         ),
-                                        Container(
-                                          width: width * 0.4,
-                                          height: width * 0.14,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: AppColors.white,
-                                              border: Border.all(
-                                                  color: AppColors.black,
-                                                  width: 2)),
-                                          child: Center(
-                                            child: AppWidgets.regularText(
-                                              text: AppStrings.read,
-                                              size: 16.0,
-                                              color: AppColors.black,
-                                              weight: FontWeight.w500,
+                                        GestureDetector(
+                                          onTap: () => Get.to(() => ReadStory(
+                                                story: story,
+                                              )),
+                                          child: Container(
+                                            width: width * 0.4,
+                                            height: width * 0.14,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: AppColors.white,
+                                                border: Border.all(
+                                                    color: AppColors.black,
+                                                    width: 2)),
+                                            child: Center(
+                                              child: AppWidgets.regularText(
+                                                text: AppStrings.read,
+                                                size: 16.0,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w500,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -273,6 +279,7 @@ class StoryDetails extends StatelessWidget {
                                     ),
                                     Container(
                                       height: height * 0.29,
+                                      alignment: Alignment.centerLeft,
                                       child: ListView.builder(
                                         physics: BouncingScrollPhysics(),
                                         shrinkWrap: true,

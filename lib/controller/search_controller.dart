@@ -7,7 +7,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 1,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
@@ -19,7 +19,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 2,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
@@ -31,7 +31,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 3,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
@@ -43,7 +43,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 4,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
@@ -55,7 +55,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 5,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
@@ -67,7 +67,7 @@ class SearchStoryController extends GetxController {
     Story(
         id: 6,
         name: "The Adventure Begins",
-        author: "John Doe",
+        authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",
         readTime: "30 min",
