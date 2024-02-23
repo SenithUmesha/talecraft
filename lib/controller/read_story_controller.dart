@@ -55,17 +55,21 @@ class ReadStoryController extends GetxController {
         weight: FontWeight.w500,
         height: 2.0));
 
-    addChoiceBlock(block.nextList);
+    if (!block.nextList.isEmpty) {
+      addChoiceBlock(block.nextList);
+    }
+    update();
   }
 
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
+
     widgetList.add(
       Container(
         margin: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: AppColors.black.withOpacity(0.2),
+          color: AppColors.black.withOpacity(0.1),
         ),
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
@@ -73,20 +77,46 @@ class ReadStoryController extends GetxController {
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
           itemCount: nextList.length,
           itemBuilder: (context, index) {
-            return Container(
-              width: width,
-              height: width * 0.14,
-              margin: EdgeInsets.only(top: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: AppColors.black,
-              ),
-              child: Center(
-                child: AppWidgets.regularText(
-                  text: (nextList[index].data as Block).text,
-                  size: 16,
-                  color: AppColors.white,
-                  weight: FontWeight.w500,
+            return GestureDetector(
+              onTap: () {
+                (nextList[index].data as Block).updateChoice(true);
+                widgetList.removeLast();
+                widgetList.add(Container(
+                  width: width,
+                  margin: const EdgeInsets.symmetric(vertical: 15),
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: AppColors.black.withOpacity(0.1),
+                  ),
+                  child: Center(
+                    child: AppWidgets.regularText(
+                      text: (nextList[index].data as Block).text,
+                      alignment: TextAlign.center,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w500,
+                    ),
+                  ),
+                ));
+                addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
+              },
+              child: Container(
+                width: width,
+                margin: EdgeInsets.only(top: 15),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: AppColors.black,
+                ),
+                child: Center(
+                  child: AppWidgets.regularText(
+                    text: (nextList[index].data as Block).text,
+                    alignment: TextAlign.center,
+                    size: 16,
+                    color: AppColors.white,
+                    weight: FontWeight.w500,
+                  ),
                 ),
               ),
             );
@@ -94,7 +124,5 @@ class ReadStoryController extends GetxController {
         ),
       ),
     );
-
-    update();
   }
 }
