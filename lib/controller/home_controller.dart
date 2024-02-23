@@ -28,7 +28,102 @@ class HomeController extends GetxController {
         genres: ["Fiction", "Action"],
         isBookmarked: false,
         achievementEndingId: 0,
-        storyJson: {}),
+        storyJson: {
+          "id": 0,
+          "type": "BlockType.story",
+          "text":
+              "Once upon a time, in a land far away, a brave knight set out on a quest to save the princess from the clutches of an evil sorcerer. As he journeyed through the kingdom, he found himself traversing a vast desert. The scorching sun beat down upon him, and the sands seemed never-ending. The knight knew he must press on to reach the sorcerer's lair where the princess was held captive. What should the knight do next?",
+          "nextList": [
+            {
+              "id": 1,
+              "type": "BlockType.choice",
+              "text": "Press on through the desert",
+              "nextList": [
+                {
+                  "id": 3,
+                  "type": "BlockType.story",
+                  "text":
+                      "The knight pushed forward, his determination unwavering. Despite the harsh conditions, he forged ahead, driven by his need to rescue the princess. After what seemed like an eternity, he finally reached the sorcerer's lair. What should he do now?",
+                  "nextList": [
+                    {
+                      "id": 7,
+                      "type": "BlockType.choice",
+                      "text": "Confront the sorcerer immediately",
+                      "nextList": [
+                        {
+                          "id": 9,
+                          "type": "BlockType.story",
+                          "text":
+                              "The knight stormed into the sorcerer's chamber, ready to face whatever challenges awaited him. The sorcerer stood before him, a wicked gleam in his eye. A fierce battle ensued, but in the end, the knight emerged victorious, freeing the princess from her chains. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                          "nextList": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 8,
+                      "type": "BlockType.choice",
+                      "text": "Wait and devise a plan",
+                      "nextList": [
+                        {
+                          "id": 10,
+                          "type": "BlockType.story",
+                          "text":
+                              "The knight chose to bide his time and come up with a strategy to outwit the sorcerer. As he hid and observed, he noticed a secret passage leading into the lair. Taking advantage of this knowledge, he was able to sneak in and catch the sorcerer off guard. A fierce battle ensued, but in the end, the knight emerged victorious, freeing the princess from her chains. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                          "nextList": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "type": "BlockType.choice",
+              "text": "Look for an alternative route",
+              "nextList": [
+                {
+                  "id": 4,
+                  "type": "BlockType.story",
+                  "text":
+                      "The knight decided to search for an alternative route through the desert, hoping to avoid the harsh conditions and potential dangers. After exploring for a while, he stumbled upon a hidden oasis where he could rest and replenish his supplies. Feeling refreshed, he continued his journey towards the sorcerer's lair. What should he do next?",
+                  "nextList": [
+                    {
+                      "id": 11,
+                      "type": "BlockType.choice",
+                      "text":
+                          "Approach the sorcerer's lair from the rear entrance",
+                      "nextList": [
+                        {
+                          "id": 12,
+                          "type": "BlockType.story",
+                          "text":
+                              "The knight snuck around to the rear entrance of the sorcerer's lair, avoiding detection. He found the princess locked in a tower, guarded by magical beasts. With skill and bravery, he faced the creatures and defeated them, freeing the princess. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                          "nextList": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": 1,
+                      "type": "BlockType.choice",
+                      "text":
+                          "Continue towards the front entrance of the sorcerer's lair",
+                      "nextList": [
+                        {
+                          "id": 2,
+                          "type": "BlockType.story",
+                          "text":
+                              "The knight decided to approach the sorcerer's lair from the front entrance, braving the challenges that lay in wait. As he entered, he was met with traps and guardians set by the sorcerer. With quick thinking and sword skills, he overcame each obstacle until he reached the princess. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                          "nextList": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }),
   ];
 
   @override

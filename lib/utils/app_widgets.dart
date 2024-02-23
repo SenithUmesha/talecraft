@@ -15,16 +15,17 @@ class AppWidgets {
       decoration,
       weight,
       maxLines,
-      textOverFlow}) {
+      textOverFlow,
+      height}) {
     return Text(
       text,
       style: TextStyle(
-        decoration: decoration ?? TextDecoration.none,
-        fontSize: size,
-        color: color,
-        fontFamily: "Regular",
-        fontWeight: weight,
-      ),
+          decoration: decoration ?? TextDecoration.none,
+          fontSize: size,
+          color: color,
+          fontFamily: "Regular",
+          fontWeight: weight,
+          height: height),
       overflow: textOverFlow,
       maxLines: maxLines,
       textAlign: alignment ?? TextAlign.start,
