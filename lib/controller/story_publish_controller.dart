@@ -69,8 +69,8 @@ class StoryPublishController extends GetxController {
   }
 
   String getFirstFewCharacters(String text, int id) {
-    return text.length > 40
-        ? "${text.substring(0, 40)}... - $id"
+    return text.length > 30
+        ? "${text.substring(0, 30)}... - ${id.toString().substring(12, 16)}"
         : "$text - $id";
   }
 

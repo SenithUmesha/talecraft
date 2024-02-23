@@ -178,7 +178,7 @@ class StoryboardController extends GetxController {
   }
 
   Widget storyBlock(double width) => Container(
-        width: width * 0.4,
+        width: width * 0.45,
         padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -193,7 +193,7 @@ class StoryboardController extends GetxController {
       );
 
   Widget choiceBlock(double width) => Container(
-        width: width * 0.4,
+        width: width * 0.45,
         padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisSize: MainAxisSize.min,

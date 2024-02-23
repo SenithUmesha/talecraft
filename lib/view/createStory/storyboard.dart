@@ -23,271 +23,257 @@ class Storyboard extends StatefulWidget {
 class _StoryboardState extends State<Storyboard> {
   @override
   Widget build(BuildContext context) {
-    // var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Container(
-      color: AppColors.white,
-      child: SafeArea(
-        child: WillPopScope(
-          onWillPop: () =>
-              Get.find<StoryboardController>().showExitConfirmationDialog(),
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title: AppStrings.newStory,
-              cantGoBack: true,
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.help_outline_rounded,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.save_rounded,
-                    color: Colors.black,
-                  ),
-                  onPressed: () =>
-                      Get.find<StoryboardController>().saveProgress(),
-                ),
-              ],
+    return WillPopScope(
+      onWillPop: () =>
+          Get.find<StoryboardController>().showExitConfirmationDialog(),
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: AppStrings.newStory,
+          cantGoBack: true,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.help_outline_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () {},
             ),
-            body: GetBuilder<StoryboardController>(
-                init: StoryboardController(),
-                builder: (controller) {
-                  return Column(
+            IconButton(
+              icon: const Icon(
+                Icons.save_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () => Get.find<StoryboardController>().saveProgress(),
+            ),
+          ],
+        ),
+        body: GetBuilder<StoryboardController>(
+            init: StoryboardController(),
+            builder: (controller) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Draggable<GraphNodeFactory<Block>>(
+                        data: GraphNodeFactory(
+                          dataBuilder: () => Block(
+                              id: controller.id,
+                              type: BlockType.story,
+                              text: AppStrings.addStory),
+                        ),
+                        child: Card(
+                          elevation: 2,
+                          child: controller.storyBlock(width),
+                        ),
+                        feedback: Card(
+                          color: AppColors.white,
+                          elevation: 6,
+                          child: controller.storyBlock(width),
+                        ),
+                        onDragStarted: () =>
+                            controller.onDraggedBlock(BlockType.story),
+                      ),
                       SizedBox(
-                        height: 5,
+                        width: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Draggable<GraphNodeFactory<Block>>(
-                            data: GraphNodeFactory(
-                              dataBuilder: () => Block(
-                                  id: controller.id,
-                                  type: BlockType.story,
-                                  text: AppStrings.addStory),
-                            ),
-                            child: Card(
-                              elevation: 2,
-                              child: controller.storyBlock(width),
-                            ),
-                            feedback: Card(
-                              color: AppColors.white,
-                              elevation: 6,
-                              child: controller.storyBlock(width),
-                            ),
-                            onDragStarted: () =>
-                                controller.onDraggedBlock(BlockType.story),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Draggable<GraphNodeFactory<Block>>(
-                            data: GraphNodeFactory(
-                              dataBuilder: () => Block(
-                                  id: controller.id,
-                                  type: BlockType.choice,
-                                  text: AppStrings.addChoice),
-                            ),
-                            child: Card(
-                              elevation: 2,
-                              child: controller.choiceBlock(width),
-                            ),
-                            feedback: Card(
-                              color: AppColors.white,
-                              elevation: 6,
-                              child: controller.choiceBlock(width),
-                            ),
-                            onDragStarted: () =>
-                                controller.onDraggedBlock(BlockType.choice),
-                          ),
-                        ],
+                      Draggable<GraphNodeFactory<Block>>(
+                        data: GraphNodeFactory(
+                          dataBuilder: () => Block(
+                              id: controller.id,
+                              type: BlockType.choice,
+                              text: AppStrings.addChoice),
+                        ),
+                        child: Card(
+                          elevation: 2,
+                          child: controller.choiceBlock(width),
+                        ),
+                        feedback: Card(
+                          color: AppColors.white,
+                          elevation: 6,
+                          child: controller.choiceBlock(width),
+                        ),
+                        onDragStarted: () =>
+                            controller.onDraggedBlock(BlockType.choice),
                       ),
-                      ExpandChildWidget(
-                        arrowPadding: const EdgeInsets.only(bottom: 0),
-                        expand: true,
-                        arrowColor: AppColors.black,
-                        child: Column(
+                    ],
+                  ),
+                  ExpandChildWidget(
+                    arrowPadding: const EdgeInsets.only(bottom: 0),
+                    expand: true,
+                    arrowColor: AppColors.black,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.clearAllBlocks();
-                                    AppWidgets.showToast(
-                                        AppStrings.graphCleared);
-                                  },
-                                  child: Container(
-                                    height: width * 0.12,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: AppColors.white,
-                                        border: Border.all(
-                                            color: AppColors.black, width: 2)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          AppIcons.clear,
-                                          scale: 5,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        AppWidgets.regularText(
-                                            text: AppStrings.clearGraph,
-                                            size: 13.5,
-                                            alignment: TextAlign.center,
-                                            color: AppColors.black,
-                                            weight: FontWeight.w400)
-                                      ],
+                            GestureDetector(
+                              onTap: () {
+                                controller.clearAllBlocks();
+                                AppWidgets.showToast(AppStrings.graphCleared);
+                              },
+                              child: Container(
+                                height: width * 0.12,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.white,
+                                    border: Border.all(
+                                        color: AppColors.black, width: 2)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.clear,
+                                      scale: 5,
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () => controller.showContextDialog(),
-                                  child: Container(
-                                    height: width * 0.12,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: AppColors.white,
-                                        border: Border.all(
-                                            color: AppColors.black, width: 2)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          AppIcons.star,
-                                          scale: 5,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        AppWidgets.regularText(
-                                            text: AppStrings.getStartedWithAI,
-                                            size: 13.5,
-                                            alignment: TextAlign.center,
-                                            color: AppColors.black,
-                                            weight: FontWeight.w400)
-                                      ],
+                                    SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
+                                    AppWidgets.regularText(
+                                        text: AppStrings.clearGraph,
+                                        size: 13.5,
+                                        alignment: TextAlign.center,
+                                        color: AppColors.black,
+                                        weight: FontWeight.w400)
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                             SizedBox(
-                              height: 5,
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () => controller.showContextDialog(),
+                              child: Container(
+                                height: width * 0.12,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.white,
+                                    border: Border.all(
+                                        color: AppColors.black, width: 2)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.star,
+                                      scale: 5,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    AppWidgets.regularText(
+                                        text: AppStrings.getStartedWithAI,
+                                        size: 13.5,
+                                        alignment: TextAlign.center,
+                                        color: AppColors.black,
+                                        weight: FontWeight.w400)
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: AppColors.grey,
-                      ),
-                      Expanded(
-                        child: controller.isLoading
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    color: AppColors.black,
-                                  ),
-                                ],
-                              )
-                            : StatefulBuilder(
-                                builder: (context, setter) {
-                                  return DraggableFlowGraphView<Block>(
-                                    root: controller.root,
-                                    direction: Axis.vertical,
-                                    centerLayout: true,
-                                    enableDelete: true,
-                                    willConnect: (block) {
-                                      log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
-                                      if (block.data?.type == BlockType.story) {
-                                        return controller
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    color: AppColors.grey,
+                  ),
+                  Expanded(
+                    child: controller.isLoading
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: AppColors.black,
+                              ),
+                            ],
+                          )
+                        : StatefulBuilder(
+                            builder: (context, setter) {
+                              return DraggableFlowGraphView<Block>(
+                                root: controller.root,
+                                direction: Axis.vertical,
+                                centerLayout: true,
+                                enableDelete: true,
+                                willConnect: (block) {
+                                  log("Will Connect: ${block.data!.id} and ${controller.draggedBlock!.data!.id}");
+                                  if (block.data?.type == BlockType.story) {
+                                    return controller
+                                            .draggedBlock!.data?.type ==
+                                        BlockType.choice;
+                                  } else if (block.data?.type ==
+                                      BlockType.choice) {
+                                    return controller
                                                 .draggedBlock!.data?.type ==
-                                            BlockType.choice;
-                                      } else if (block.data?.type ==
-                                          BlockType.choice) {
-                                        return controller
-                                                    .draggedBlock!.data?.type ==
-                                                BlockType.story &&
-                                            block.nextList.isEmpty;
-                                      }
-                                      return false;
+                                            BlockType.story &&
+                                        block.nextList.isEmpty;
+                                  }
+                                  return false;
+                                },
+                                builder: (context, block) {
+                                  return GestureDetector(
+                                    onDoubleTap: () => controller
+                                        .showEditBlockDialog(block.data!),
+                                    onLongPress: () {
+                                      setter(() {
+                                        block.deleteSelf();
+                                      });
                                     },
-                                    builder: (context, block) {
-                                      return GestureDetector(
-                                        onDoubleTap: () => controller
-                                            .showEditBlockDialog(block.data!),
-                                        onLongPress: () {
-                                          setter(() {
-                                            block.deleteSelf();
-                                          });
-                                        },
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: AppColors.white,
-                                                border: Border.all(
-                                                    color: (block.data as Block)
-                                                                .type ==
-                                                            BlockType.story
-                                                        ? AppColors.black
-                                                        : AppColors.red,
-                                                    width: 2)),
-                                            padding: const EdgeInsets.all(12),
-                                            child: AppWidgets.regularText(
-                                                text: controller
-                                                    .getFirstFewCharacters(
-                                                        (block.data as Block)
-                                                            .text),
-                                                size: 14.0,
-                                                alignment: TextAlign.center,
-                                                color: AppColors.black,
-                                                weight: FontWeight.w400,
-                                                textOverFlow:
-                                                    TextOverflow.ellipsis,
-                                                maxLines: 1)),
-                                      );
-                                    },
-                                    onEdgeColor: (n1, n2) {
-                                      if ((n1.data as Block).type ==
-                                          BlockType.story) {
-                                        return AppColors.black;
-                                      } else {
-                                        return AppColors.red;
-                                      }
-                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: AppColors.white,
+                                            border: Border.all(
+                                                color: (block.data as Block)
+                                                            .type ==
+                                                        BlockType.story
+                                                    ? AppColors.black
+                                                    : AppColors.red,
+                                                width: 2)),
+                                        padding: const EdgeInsets.all(12),
+                                        child: AppWidgets.regularText(
+                                            text: controller
+                                                .getFirstFewCharacters(
+                                                    (block.data as Block).text),
+                                            size: 14.0,
+                                            alignment: TextAlign.center,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w400,
+                                            textOverFlow: TextOverflow.ellipsis,
+                                            maxLines: 1)),
                                   );
                                 },
-                              ),
-                      )
-                    ],
-                  );
-                }),
-          ),
-        ),
+                                onEdgeColor: (n1, n2) {
+                                  if ((n1.data as Block).type ==
+                                      BlockType.story) {
+                                    return AppColors.black;
+                                  } else {
+                                    return AppColors.red;
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                  )
+                ],
+              );
+            }),
       ),
     );
   }
