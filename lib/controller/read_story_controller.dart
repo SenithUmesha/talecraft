@@ -66,7 +66,7 @@ class ReadStoryController extends GetxController {
     } else {
       widgetList.add(Container(
         width: width,
-        margin: const EdgeInsets.symmetric(vertical: 15),
+        margin: const EdgeInsets.only(top: 30, bottom: 15),
         child: Center(
           child: AppWidgets.regularText(
             text: AppStrings.theEnd,
