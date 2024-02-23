@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:talecraft/controller/story_details.dart';
+import 'package:talecraft/controller/story_details_controller.dart';
 import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
@@ -195,9 +195,11 @@ class StoryDetails extends StatelessWidget {
                                           width: width * 0.025,
                                         ),
                                         GestureDetector(
-                                          onTap: () => Get.to(() => ReadStory(
-                                                story: story,
-                                              )),
+                                          onTap: () => Get.to(
+                                              () => ReadStory(
+                                                    name: story.name!,
+                                                  ),
+                                              arguments: [story]),
                                           child: Container(
                                             width: width * 0.4,
                                             height: width * 0.14,
