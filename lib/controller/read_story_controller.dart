@@ -21,11 +21,12 @@ class ReadStoryController extends GetxController {
   late Story story;
   final confettiController = ConfettiController();
   String readText = "";
-  late FlutterTts flutterTts;
+  FlutterTts flutterTts = FlutterTts();
   double volume = 0.7;
   double pitch = 1.0;
   double rate = 0.4;
   TtsState ttsState = TtsState.stopped;
+  bool isListening = false;
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
@@ -47,6 +48,8 @@ class ReadStoryController extends GetxController {
     );
 
     story = Get.arguments[0];
+    isListening = Get.arguments[1];
+
     jsonToGraph(root, story.storyJson!);
     addStoryBlock(root);
     initTts();
@@ -59,8 +62,6 @@ class ReadStoryController extends GetxController {
   }
 
   initTts() {
-    flutterTts = FlutterTts();
-
     flutterTts.setCompletionHandler(() {
       ttsState = TtsState.waiting;
       update();
@@ -163,46 +164,51 @@ class ReadStoryController extends GetxController {
           itemCount: nextList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () {
-                (nextList[index].data as Block).updateChoice(true);
-                widgetList.removeLast();
-                widgetList.add(Container(
-                  width: width,
-                  margin: const EdgeInsets.symmetric(vertical: 15),
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.black.withOpacity(0.1),
-                  ),
-                  child: Center(
-                    child: AppWidgets.regularText(
-                      text: (nextList[index].data as Block).text,
-                      alignment: TextAlign.center,
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w500,
-                    ),
-                  ),
-                ));
-                if (nextList[index].nextList[0].nextList.isEmpty &&
-                    (nextList[index].data as Block).id ==
-                        story.achievementEndingId) {
-                  confettiController.play();
+              onTap: isListening
+                  ? () {}
+                  : () {
+                      (nextList[index].data as Block).updateChoice(true);
+                      widgetList.removeLast();
+                      widgetList.add(Container(
+                        width: width,
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: AppColors.black.withOpacity(0.1),
+                        ),
+                        child: Center(
+                          child: AppWidgets.regularText(
+                            text: (nextList[index].data as Block).text,
+                            alignment: TextAlign.center,
+                            size: 16,
+                            color: AppColors.black,
+                            weight: FontWeight.w500,
+                          ),
+                        ),
+                      ));
+                      if (nextList[index].nextList[0].nextList.isEmpty &&
+                          (nextList[index].data as Block).id ==
+                              story.achievementEndingId) {
+                        confettiController.play();
 
-                  Timer(const Duration(seconds: 1), () {
-                    confettiController.stop();
-                    AppWidgets.showToast(AppStrings.secretEndingAchieved);
-                  });
-                }
-                addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
-              },
+                        Timer(const Duration(seconds: 1), () {
+                          confettiController.stop();
+                          AppWidgets.showToast(AppStrings.secretEndingAchieved);
+                        });
+                      }
+                      addStoryBlock(
+                          nextList[index].nextList[0] as GraphNode<Block>);
+                    },
               child: Container(
                 width: width,
                 margin: EdgeInsets.only(top: 15),
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: AppColors.black,
+                  color: isListening
+                      ? AppColors.black.withOpacity(0.5)
+                      : AppColors.black,
                 ),
                 child: Center(
                   child: AppWidgets.regularText(

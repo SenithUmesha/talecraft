@@ -11,7 +11,6 @@ import 'package:talecraft/view/readStory/read_story.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
-import '../listenStory/listen_story.dart';
 
 class StoryDetails extends StatelessWidget {
   final Story story;
@@ -184,8 +183,9 @@ class StoryDetails extends StatelessWidget {
                                     onTap: () => Get.to(
                                         () => ReadStory(
                                               name: story.name!,
+                                              isListening: false,
                                             ),
-                                        arguments: [story]),
+                                        arguments: [story, false]),
                                     child: Container(
                                       width: width * 0.4,
                                       height: width * 0.14,
@@ -216,10 +216,11 @@ class StoryDetails extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () => Get.to(
-                                        () => ListenStory(
+                                        () => ReadStory(
                                               name: story.name!,
+                                              isListening: true,
                                             ),
-                                        arguments: [story]),
+                                        arguments: [story, true]),
                                     child: Container(
                                       width: width * 0.4 +
                                           width * 0.14 +
