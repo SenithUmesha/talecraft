@@ -6,11 +6,12 @@ import 'package:talecraft/model/Story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/home.dart';
-import 'package:talecraft/view/readStory/readStory.dart';
+import 'package:talecraft/view/readStory/read_story.dart';
 
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
+import '../listenStory/listen_story.dart';
 
 class StoryDetails extends StatelessWidget {
   final Story story;
@@ -213,21 +214,28 @@ class StoryDetails extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    width: width * 0.4 +
-                                        width * 0.14 +
-                                        width * 0.025,
-                                    height: width * 0.14,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: AppColors.black,
-                                    ),
-                                    child: Center(
-                                      child: AppWidgets.regularText(
-                                        text: AppStrings.listen,
-                                        size: 16.0,
-                                        color: AppColors.white,
-                                        weight: FontWeight.w500,
+                                  GestureDetector(
+                                    onTap: () => Get.to(
+                                        () => ListenStory(
+                                              name: story.name!,
+                                            ),
+                                        arguments: [story]),
+                                    child: Container(
+                                      width: width * 0.4 +
+                                          width * 0.14 +
+                                          width * 0.025,
+                                      height: width * 0.14,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppColors.black,
+                                      ),
+                                      child: Center(
+                                        child: AppWidgets.regularText(
+                                          text: AppStrings.listen,
+                                          size: 16.0,
+                                          color: AppColors.white,
+                                          weight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ),

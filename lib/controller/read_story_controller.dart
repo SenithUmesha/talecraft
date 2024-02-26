@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/model/Story.dart';
 
@@ -11,13 +12,25 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
+enum TtsState { playing, stopped, paused, waiting }
+
 class ReadStoryController extends GetxController {
   final scrollController = ScrollController();
   List<Widget> widgetList = [];
   late GraphNode<Block> root;
   late Story story;
   final confettiController = ConfettiController();
-  bool isPlanning = false;
+  String readText = "";
+  late FlutterTts flutterTts;
+  double volume = 0.7;
+  double pitch = 1.0;
+  double rate = 0.4;
+  TtsState ttsState = TtsState.stopped;
+
+  get isPlaying => ttsState == TtsState.playing;
+  get isStopped => ttsState == TtsState.stopped;
+  get isPaused => ttsState == TtsState.paused;
+  get isWaiting => ttsState == TtsState.waiting;
 
   @override
   void onInit() {
@@ -36,6 +49,49 @@ class ReadStoryController extends GetxController {
     story = Get.arguments[0];
     jsonToGraph(root, story.storyJson!);
     addStoryBlock(root);
+    initTts();
+  }
+
+  @override
+  void onClose() {
+    flutterTts.stop();
+    super.onClose();
+  }
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    flutterTts.setCompletionHandler(() {
+      ttsState = TtsState.waiting;
+      update();
+    });
+  }
+
+  Future speak() async {
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+
+    var result = await flutterTts.speak(readText);
+    if (result == 1) ttsState = TtsState.playing;
+    update();
+  }
+
+  Future pause() async {
+    var result = await flutterTts.pause();
+    if (result == 1) ttsState = TtsState.paused;
+    update();
+  }
+
+  Future stop() async {
+    var result = await flutterTts.stop();
+    if (result == 1) ttsState = TtsState.stopped;
+    update();
+  }
+
+  void setReadText(String text) {
+    readText += text;
+    update();
   }
 
   void jsonToGraph(GraphNode<Block> block, Map<String, dynamic> json) {
@@ -61,6 +117,8 @@ class ReadStoryController extends GetxController {
         weight: FontWeight.w500,
         height: 2.0));
 
+    setReadText(block.data!.text);
+
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
     } else {
@@ -85,6 +143,11 @@ class ReadStoryController extends GetxController {
 
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
+
+    for (var i = 0; i < nextList.length; i++) {
+      setReadText((nextList[i].data as Block).text);
+      if (i != nextList.length - 1) setReadText(" or ");
+    }
 
     widgetList.add(
       Container(

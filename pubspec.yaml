@@ -50,6 +50,7 @@ dependencies:
   dio: ^5.4.0
   flutter_expand_view: ^1.6.2
   confetti: ^0.7.0
+  flutter_tts: ^3.8.5
 
 dev_dependencies:
   flutter_test:
