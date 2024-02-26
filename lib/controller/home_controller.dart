@@ -31,8 +31,7 @@ class HomeController extends GetxController {
         storyJson: {
           "id": 0,
           "type": "BlockType.story",
-          "text":
-              "Once upon a time, in a land far away, a brave knight set out on a quest to save the princess from the clutches of an evil sorcerer. As he journeyed through the kingdom, he found himself traversing a vast desert. The scorching sun beat down upon him, and the sands seemed never-ending. The knight knew he must press on to reach the sorcerer's lair where the princess was held captive. What should the knight do next?",
+          "text": "What should the knight do next?",
           "nextList": [
             {
               "id": 1,

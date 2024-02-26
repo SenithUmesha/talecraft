@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
@@ -52,20 +53,18 @@ class ReadStoryController extends GetxController {
 
     jsonToGraph(root, story.storyJson!);
     addStoryBlock(root);
-    initTts();
+
+    flutterTts.setCompletionHandler(() {
+      ttsState = TtsState.waiting;
+      update();
+      log("TTS state: " + ttsState.toString());
+    });
   }
 
   @override
   void onClose() {
     flutterTts.stop();
     super.onClose();
-  }
-
-  initTts() {
-    flutterTts.setCompletionHandler(() {
-      ttsState = TtsState.waiting;
-      update();
-    });
   }
 
   Future speak() async {
@@ -76,18 +75,21 @@ class ReadStoryController extends GetxController {
     var result = await flutterTts.speak(readText);
     if (result == 1) ttsState = TtsState.playing;
     update();
+    log("TTS state: " + ttsState.toString());
   }
 
   Future pause() async {
     var result = await flutterTts.pause();
     if (result == 1) ttsState = TtsState.paused;
     update();
+    log("TTS state: " + ttsState.toString());
   }
 
   Future stop() async {
     var result = await flutterTts.stop();
     if (result == 1) ttsState = TtsState.stopped;
     update();
+    log("TTS state: " + ttsState.toString());
   }
 
   void setReadText(String text) {
@@ -145,10 +147,15 @@ class ReadStoryController extends GetxController {
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
 
+    String choiceText = "";
+
     for (var i = 0; i < nextList.length; i++) {
-      setReadText((nextList[i].data as Block).text);
-      if (i != nextList.length - 1) setReadText(" or ");
+      choiceText += "Choice ${i + 1} - ";
+      choiceText += (nextList[i].data as Block).text;
+      if (i != nextList.length - 1) choiceText += " or ";
     }
+
+    setReadText(choiceText);
 
     widgetList.add(
       Container(
