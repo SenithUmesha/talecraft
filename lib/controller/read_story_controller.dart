@@ -13,7 +13,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
-enum TtsState { playing, stopped, paused, waiting }
+enum TtsState { playing, stopped, paused, ended }
 
 class ReadStoryController extends GetxController {
   final scrollController = ScrollController();
@@ -22,17 +22,18 @@ class ReadStoryController extends GetxController {
   late Story story;
   final confettiController = ConfettiController();
   String readText = "";
-  FlutterTts flutterTts = FlutterTts();
+  late FlutterTts flutterTts;
   double volume = 0.7;
   double pitch = 1.0;
   double rate = 0.4;
   TtsState ttsState = TtsState.stopped;
   bool isListening = false;
+  List<GraphNode>? currentChoiceList;
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
   get isPaused => ttsState == TtsState.paused;
-  get isWaiting => ttsState == TtsState.waiting;
+  get isEnded => ttsState == TtsState.ended;
 
   @override
   void onInit() {
@@ -52,13 +53,72 @@ class ReadStoryController extends GetxController {
     isListening = Get.arguments[1];
 
     jsonToGraph(root, story.storyJson!);
+    initTts();
     addStoryBlock(root);
+    speak();
+  }
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    flutterTts.setStartHandler(() {
+      ttsState = TtsState.playing;
+      update();
+      log("TTS State: " + ttsState.toString());
+    });
 
     flutterTts.setCompletionHandler(() {
-      ttsState = TtsState.waiting;
-      update();
-      log("TTS state: " + ttsState.toString());
+      if (currentChoiceList!.isEmpty) {
+        ttsState = TtsState.ended;
+        readText = "";
+        update();
+        log("TTS State: " + ttsState.toString());
+      } else {
+        ttsState = TtsState.stopped;
+        readText = "";
+        update();
+        log("TTS State: " + ttsState.toString());
+
+        Timer(const Duration(seconds: 2), () {
+          resumeStory(0);
+        });
+      }
     });
+
+    flutterTts.setCancelHandler(() {
+      ttsState = TtsState.stopped;
+      update();
+      log("TTS State: " + ttsState.toString());
+    });
+
+    flutterTts.setPauseHandler(() {
+      ttsState = TtsState.paused;
+      update();
+      log("TTS State: " + ttsState.toString());
+    });
+
+    flutterTts.setErrorHandler((msg) {
+      log("TTS Error: $msg");
+      ttsState = TtsState.stopped;
+      update();
+      log("TTS State: " + ttsState.toString());
+    });
+  }
+
+  Future speak() async {
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+
+    if (readText.isNotEmpty) {
+      await flutterTts.speak(readText);
+    }
+  }
+
+  Future pause() async {
+    var result = await flutterTts.pause();
+    if (result == 1) ttsState = TtsState.paused;
+    update();
   }
 
   @override
@@ -67,34 +127,69 @@ class ReadStoryController extends GetxController {
     super.onClose();
   }
 
-  Future speak() async {
-    await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
+  void setReadText(dynamic list, bool isChoice) {
+    if (isChoice) {
+      String choiceText = "";
+      currentChoiceList = list;
 
-    var result = await flutterTts.speak(readText);
-    if (result == 1) ttsState = TtsState.playing;
+      for (var i = 0; i < list.length; i++) {
+        choiceText += "Choice ${i + 1} - ";
+        choiceText += (list[i].data as Block).text;
+        if (i != list.length - 1) choiceText += " or ";
+      }
+
+      readText += choiceText;
+    } else {
+      readText += list.data!.text;
+
+      if (list.nextList.isEmpty) {
+        readText += " The End.";
+        currentChoiceList = [];
+      }
+    }
     update();
-    log("TTS state: " + ttsState.toString());
+
+    if (!isChoice && list.nextList.isEmpty) {
+      speak();
+    } else {
+      speak();
+    }
   }
 
-  Future pause() async {
-    var result = await flutterTts.pause();
-    if (result == 1) ttsState = TtsState.paused;
-    update();
-    log("TTS state: " + ttsState.toString());
-  }
+  void resumeStory(int index) {
+    var width = MediaQuery.of(Get.context!).size.width;
+    List<GraphNode> nextList = currentChoiceList!;
 
-  Future stop() async {
-    var result = await flutterTts.stop();
-    if (result == 1) ttsState = TtsState.stopped;
-    update();
-    log("TTS state: " + ttsState.toString());
-  }
+    (nextList[index].data as Block).updateChoice(true);
+    widgetList.removeLast();
+    widgetList.add(Container(
+      width: width,
+      margin: const EdgeInsets.symmetric(vertical: 15),
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: AppColors.black.withOpacity(0.1),
+      ),
+      child: Center(
+        child: AppWidgets.regularText(
+          text: (nextList[index].data as Block).text,
+          alignment: TextAlign.center,
+          size: 16,
+          color: AppColors.black,
+          weight: FontWeight.w500,
+        ),
+      ),
+    ));
+    if (nextList[index].nextList[0].nextList.isEmpty &&
+        (nextList[index].data as Block).id == story.achievementEndingId) {
+      confettiController.play();
 
-  void setReadText(String text) {
-    readText += text;
-    update();
+      Timer(const Duration(seconds: 1), () {
+        confettiController.stop();
+        AppWidgets.showToast(AppStrings.secretEndingAchieved);
+      });
+    }
+    addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
   }
 
   void jsonToGraph(GraphNode<Block> block, Map<String, dynamic> json) {
@@ -120,7 +215,7 @@ class ReadStoryController extends GetxController {
         weight: FontWeight.w500,
         height: 2.0));
 
-    setReadText(block.data!.text);
+    setReadText(block, false);
 
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
@@ -147,15 +242,7 @@ class ReadStoryController extends GetxController {
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
 
-    String choiceText = "";
-
-    for (var i = 0; i < nextList.length; i++) {
-      choiceText += "Choice ${i + 1} - ";
-      choiceText += (nextList[i].data as Block).text;
-      if (i != nextList.length - 1) choiceText += " or ";
-    }
-
-    setReadText(choiceText);
+    setReadText(nextList, true);
 
     widgetList.add(
       Container(
@@ -172,7 +259,7 @@ class ReadStoryController extends GetxController {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: isListening
-                  ? () {}
+                  ? null
                   : () {
                       (nextList[index].data as Block).updateChoice(true);
                       widgetList.removeLast();

@@ -60,37 +60,39 @@ class ReadStory extends StatelessWidget {
                       ),
                     ),
                     isListening
-                        ? Container(
-                            width: width,
-                            height: height * 0.07,
-                            color: AppColors.black.withOpacity(0.1),
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: controller.isPlaying
-                                      ? Icon(
-                                          Icons.pause_rounded,
-                                          color: AppColors.black,
-                                        )
-                                      : controller.isWaiting
+                        ? controller.isEnded
+                            ? Container()
+                            : Container(
+                                width: width,
+                                height: height * 0.07,
+                                color: AppColors.black.withOpacity(0.1),
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: controller.isPlaying
                                           ? Icon(
-                                              Icons.mic_rounded,
-                                              color: AppColors.red,
-                                            )
-                                          : Icon(
-                                              Icons.play_arrow_rounded,
+                                              Icons.pause_rounded,
                                               color: AppColors.black,
-                                            ),
-                                  onPressed: () => controller.isPlaying
-                                      ? controller.pause()
-                                      : controller.isWaiting
-                                          ? null
-                                          : controller.speak(),
-                                )
-                              ],
-                            ),
-                          )
+                                            )
+                                          : controller.isStopped
+                                              ? Icon(
+                                                  Icons.mic_rounded,
+                                                  color: AppColors.red,
+                                                )
+                                              : Icon(
+                                                  Icons.play_arrow_rounded,
+                                                  color: AppColors.black,
+                                                ),
+                                      onPressed: () => controller.isPlaying
+                                          ? controller.pause()
+                                          : controller.isStopped
+                                              ? null
+                                              : controller.speak(),
+                                    )
+                                  ],
+                                ),
+                              )
                         : Container(),
                   ],
                 ),
