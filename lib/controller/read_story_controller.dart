@@ -13,7 +13,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 
-enum TtsState { playing, stopped, paused, ended }
+enum TtsState { playing, stopped, paused, ended, yetToPlay }
 
 class ReadStoryController extends GetxController {
   final scrollController = ScrollController();
@@ -26,7 +26,7 @@ class ReadStoryController extends GetxController {
   double volume = 0.7;
   double pitch = 1.0;
   double rate = 0.4;
-  TtsState ttsState = TtsState.stopped;
+  TtsState ttsState = TtsState.yetToPlay;
   bool isListening = false;
   List<GraphNode>? currentChoiceList;
 
@@ -34,6 +34,7 @@ class ReadStoryController extends GetxController {
   get isStopped => ttsState == TtsState.stopped;
   get isPaused => ttsState == TtsState.paused;
   get isEnded => ttsState == TtsState.ended;
+  get isyetToPlay => ttsState == TtsState.yetToPlay;
 
   @override
   void onInit() {
@@ -55,7 +56,6 @@ class ReadStoryController extends GetxController {
     jsonToGraph(root, story.storyJson!);
     isListening ? initTts() : (flutterTts = FlutterTts());
     addStoryBlock(root);
-    isListening ? speak() : null;
   }
 
   initTts() {
@@ -93,6 +93,12 @@ class ReadStoryController extends GetxController {
 
     flutterTts.setPauseHandler(() {
       ttsState = TtsState.paused;
+      update();
+      log("TTS State: " + ttsState.toString());
+    });
+
+    flutterTts.setContinueHandler(() {
+      ttsState = TtsState.playing;
       update();
       log("TTS State: " + ttsState.toString());
     });
@@ -152,7 +158,9 @@ class ReadStoryController extends GetxController {
     if (!isChoice && list.nextList.isEmpty) {
       speak();
     } else {
-      speak();
+      if (isChoice && !list[0].prevList[0].prevList.isEmpty) {
+        speak();
+      }
     }
   }
 
