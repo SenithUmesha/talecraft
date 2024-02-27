@@ -40,6 +40,7 @@ class NavBar extends StatelessWidget {
                   backgroundColor: controller.bottomNavIndex == 4
                       ? AppColors.black
                       : AppColors.red,
+                  shape: const CircleBorder(),
                   child: controller.bottomNavIndex == 4
                       ? Icon(
                           Icons.arrow_forward_rounded,
