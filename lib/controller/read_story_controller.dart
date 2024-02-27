@@ -53,9 +53,9 @@ class ReadStoryController extends GetxController {
     isListening = Get.arguments[1];
 
     jsonToGraph(root, story.storyJson!);
-    initTts();
+    isListening ? initTts() : (flutterTts = FlutterTts());
     addStoryBlock(root);
-    speak();
+    isListening ? speak() : null;
   }
 
   initTts() {
@@ -215,7 +215,7 @@ class ReadStoryController extends GetxController {
         weight: FontWeight.w500,
         height: 2.0));
 
-    setReadText(block, false);
+    isListening ? setReadText(block, false) : null;
 
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
@@ -242,7 +242,7 @@ class ReadStoryController extends GetxController {
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
 
-    setReadText(nextList, true);
+    isListening ? setReadText(nextList, true) : null;
 
     widgetList.add(
       Container(
