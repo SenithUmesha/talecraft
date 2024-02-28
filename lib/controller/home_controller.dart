@@ -31,8 +31,7 @@ class HomeController extends GetxController {
         storyJson: {
           "id": 0,
           "type": "BlockType.story",
-          "text":
-              "Once upon a time, in a land far away, a brave knight set out on a quest to save the princess from the clutches of an evil sorcerer. As he journeyed through the kingdom, he found himself traversing a vast desert. The scorching sun beat down upon him, and the sands seemed never-ending. The knight knew he must press on to reach the sorcerer's lair where the princess was held captive. What should the knight do next?",
+          "text": "What should the knight do next?",
           "nextList": [
             {
               "id": 1,
@@ -42,8 +41,7 @@ class HomeController extends GetxController {
                 {
                   "id": 3,
                   "type": "BlockType.story",
-                  "text":
-                      "The knight pushed forward, his determination unwavering. Despite the harsh conditions, he forged ahead, driven by his need to rescue the princess. After what seemed like an eternity, he finally reached the sorcerer's lair. What should he do now?",
+                  "text": "What should he do now?",
                   "nextList": [
                     {
                       "id": 7,
@@ -53,8 +51,7 @@ class HomeController extends GetxController {
                         {
                           "id": 9,
                           "type": "BlockType.story",
-                          "text":
-                              "The knight stormed into the sorcerer's chamber, ready to face whatever challenges awaited him. The sorcerer stood before him, a wicked gleam in his eye. A fierce battle ensued, but in the end, the knight emerged victorious, freeing the princess from her chains. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                          "text": "The princess was safe at last.",
                           "nextList": []
                         }
                       ]
@@ -68,7 +65,7 @@ class HomeController extends GetxController {
                           "id": 10,
                           "type": "BlockType.story",
                           "text":
-                              "The knight chose to bide his time and come up with a strategy to outwit the sorcerer. As he hid and observed, he noticed a secret passage leading into the lair. Taking advantage of this knowledge, he was able to sneak in and catch the sorcerer off guard. A fierce battle ensued, but in the end, the knight emerged victorious, freeing the princess from her chains. Together, they made their way back to the kingdom, where they were hailed as heroes. The princess was safe at last.",
+                              "The knight chose to bide his time and come up with a strategy to outwit the sorcerer.",
                           "nextList": []
                         }
                       ]

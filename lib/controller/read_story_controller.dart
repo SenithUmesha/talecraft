@@ -80,7 +80,7 @@ class ReadStoryController extends GetxController {
         log("TTS State: " + ttsState.toString());
 
         Timer(const Duration(seconds: 2), () {
-          resumeStory(0);
+          // resumeStory(0);
         });
       }
     });

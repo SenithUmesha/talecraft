@@ -52,6 +52,8 @@ dependencies:
   confetti: ^0.7.0
   flutter_tts: ^3.8.5
   lottie: ^2.6.0
+  speech_to_text: ^6.6.0
+  avatar_glow: ^3.0.1
 
 dev_dependencies:
   flutter_test:

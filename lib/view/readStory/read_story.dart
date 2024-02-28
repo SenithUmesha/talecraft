@@ -1,8 +1,11 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:talecraft/utils/app_colors.dart';
+import 'package:talecraft/utils/app_images.dart';
 
 import '../../controller/read_story_controller.dart';
 import '../../utils/custom_app_bar.dart';
@@ -68,6 +71,7 @@ class ReadStory extends StatelessWidget {
                                 color: AppColors.black.withOpacity(0.1),
                                 padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     IconButton(
                                       icon: controller.isyetToPlay
@@ -81,9 +85,13 @@ class ReadStory extends StatelessWidget {
                                                   color: AppColors.black,
                                                 )
                                               : controller.isStopped
-                                                  ? Icon(
-                                                      Icons.mic_rounded,
-                                                      color: AppColors.red,
+                                                  ? AvatarGlow(
+                                                      glowColor: AppColors.red,
+                                                      curve: Curves.ease,
+                                                      child: Icon(
+                                                        Icons.mic_rounded,
+                                                        color: AppColors.red,
+                                                      ),
                                                     )
                                                   : Icon(
                                                       Icons.play_arrow_rounded,
@@ -96,6 +104,22 @@ class ReadStory extends StatelessWidget {
                                               : controller.isStopped
                                                   ? null
                                                   : controller.speak(),
+                                    ),
+                                    Expanded(
+                                      child: controller.isyetToPlay
+                                          ? Container()
+                                          : controller.isPlaying
+                                              ? Lottie.asset(
+                                                  AppImages.playing,
+                                                  fit: BoxFit.fill,
+                                                )
+                                              : controller.isStopped
+                                                  ? Container()
+                                                  : Lottie.asset(
+                                                      AppImages.playing,
+                                                      animate: false,
+                                                      fit: BoxFit.fill,
+                                                    ),
                                     )
                                   ],
                                 ),

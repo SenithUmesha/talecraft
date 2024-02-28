@@ -67,7 +67,7 @@ class Home extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Image.asset(
-                      AppImages.bannerOne,
+                      AppImages.banner,
                       fit: BoxFit.cover,
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
