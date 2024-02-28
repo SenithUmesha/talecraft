@@ -88,4 +88,6 @@ class AppStrings {
   static const whatToDoNext = "What To Do Next?";
   static const theEnd = "- The End -";
   static const secretEndingAchieved = "Secret ending achieved!";
+  static const speechRecognitionNotAvailable =
+      "Speech recognition not available on this device";
 }

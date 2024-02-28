@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/model/Story.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../model/Block.dart';
 import '../utils/app_colors.dart';
@@ -27,8 +28,11 @@ class ReadStoryController extends GetxController {
   double pitch = 1.0;
   double rate = 0.4;
   TtsState ttsState = TtsState.yetToPlay;
-  bool isListening = false;
+  bool isListeningMode = false;
   List<GraphNode>? currentChoiceList;
+  late stt.SpeechToText speech;
+  bool isListening = false;
+  bool canRetry = false;
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
@@ -51,11 +55,147 @@ class ReadStoryController extends GetxController {
     );
 
     story = Get.arguments[0];
-    isListening = Get.arguments[1];
+    isListeningMode = Get.arguments[1];
 
     jsonToGraph(root, story.storyJson!);
-    isListening ? initTts() : (flutterTts = FlutterTts());
+    isListeningMode ? initTts() : (flutterTts = FlutterTts());
+    speech = stt.SpeechToText();
     addStoryBlock(root);
+  }
+
+  Future<void> startListening() async {
+    if (!isListening) {
+      bool available = await speech.initialize(
+        finalTimeout: Duration(minutes: 5),
+        onStatus: (val) {
+          log('STT Status: $val');
+          if (val.toString() == "notListening" ||
+              val.toString() == "done" && isListening) {
+            stopListening();
+          }
+        },
+        onError: (val) {
+          log('STT Status: $val');
+          stopListening();
+        },
+      );
+      if (available) {
+        isListening = true;
+        canRetry = false;
+        update();
+
+        speech.listen(
+          listenOptions: stt.SpeechListenOptions(enableHapticFeedback: true),
+          listenFor: Duration(minutes: 5),
+          onResult: (result) {
+            String spokenWord = result.recognizedWords;
+            List<String> wordList = generateWordList(currentChoiceList!.length);
+
+            if (spokenWord != "") {
+              log('Spoken Words: $spokenWord');
+
+              String matchingPortion = wordList.firstWhere(
+                (word) => spokenWord
+                    .toLowerCase()
+                    .split(' ')
+                    .any((spokenWordPart) => spokenWordPart.contains(word)),
+                orElse: () => '',
+              );
+
+              if (matchingPortion.isNotEmpty &&
+                  wordToNumber(matchingPortion) != 0) {
+                log('Picked choice: $matchingPortion - ${wordToNumber(matchingPortion)}');
+                speech.stop();
+                isListening = false;
+                update();
+                resumeStory(wordToNumber(matchingPortion) - 1);
+              } else {
+                stopListening();
+              }
+            } else {
+              stopListening();
+            }
+          },
+        );
+      } else {
+        AppWidgets.showSnackBar(AppStrings.speechRecognitionNotAvailable);
+        Get.back();
+      }
+    } else {
+      stopListening();
+    }
+  }
+
+  void stopListening() {
+    speech.stop();
+    isListening = false;
+    canRetry = true;
+    update();
+  }
+
+  List<String> generateWordList(int length) {
+    List<String> wordList = [];
+    for (int i = 1; i <= length; i++) {
+      wordList.add(i.toString());
+      wordList.addAll(numberToWord(i));
+    }
+    return wordList;
+  }
+
+  List<String> numberToWord(int number) {
+    switch (number) {
+      case 1:
+        return ['one'];
+      case 2:
+        return ['two', 'to'];
+      case 3:
+        return ['three'];
+      case 4:
+        return ['four', 'for'];
+      case 5:
+        return ['five'];
+      case 6:
+        return ['six'];
+      case 7:
+        return ['seven'];
+      case 8:
+        return ['eight'];
+      case 9:
+        return ['nine'];
+      case 10:
+        return ['ten'];
+      default:
+        return [''];
+    }
+  }
+
+  int wordToNumber(String word) {
+    switch (word.toLowerCase()) {
+      case 'one':
+        return 1;
+      case 'two':
+      case 'to':
+        return 2;
+      case 'three':
+        return 3;
+      case 'four':
+      case 'for':
+        return 4;
+      case 'five':
+        return 5;
+      case 'six':
+        return 6;
+      case 'seven':
+        return 7;
+      case 'eight':
+        return 8;
+      case 'nine':
+        return 9;
+      case 'ten':
+        return 10;
+      default:
+        return 0;
+    }
   }
 
   initTts() {
@@ -67,7 +207,7 @@ class ReadStoryController extends GetxController {
       log("TTS State: " + ttsState.toString());
     });
 
-    flutterTts.setCompletionHandler(() {
+    flutterTts.setCompletionHandler(() async {
       if (currentChoiceList!.isEmpty) {
         ttsState = TtsState.ended;
         readText = "";
@@ -79,9 +219,15 @@ class ReadStoryController extends GetxController {
         update();
         log("TTS State: " + ttsState.toString());
 
-        Timer(const Duration(seconds: 2), () {
-          // resumeStory(0);
-        });
+        if (await speech.hasPermission) {
+          startListening();
+        } else {
+          AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+          Get.back();
+        }
+        // Timer(const Duration(seconds: 2), () {
+        //   resumeStory(0);
+        // });
       }
     });
 
@@ -223,7 +369,7 @@ class ReadStoryController extends GetxController {
         weight: FontWeight.w500,
         height: 2.0));
 
-    isListening ? setReadText(block, false) : null;
+    isListeningMode ? setReadText(block, false) : null;
 
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
@@ -250,7 +396,7 @@ class ReadStoryController extends GetxController {
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
 
-    isListening ? setReadText(nextList, true) : null;
+    isListeningMode ? setReadText(nextList, true) : null;
 
     widgetList.add(
       Container(
@@ -266,7 +412,7 @@ class ReadStoryController extends GetxController {
           itemCount: nextList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: isListening
+              onTap: isListeningMode
                   ? null
                   : () {
                       (nextList[index].data as Block).updateChoice(true);
@@ -308,7 +454,7 @@ class ReadStoryController extends GetxController {
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: isListening
+                  color: isListeningMode
                       ? AppColors.black.withOpacity(0.5)
                       : AppColors.black,
                 ),

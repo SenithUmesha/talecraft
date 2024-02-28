@@ -3,11 +3,10 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:talecraft/utils/app_colors.dart';
-import 'package:talecraft/utils/app_images.dart';
 
 import '../../controller/read_story_controller.dart';
+import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
 
 class ReadStory extends StatelessWidget {
@@ -84,7 +83,7 @@ class ReadStory extends StatelessWidget {
                                                   Icons.pause_rounded,
                                                   color: AppColors.black,
                                                 )
-                                              : controller.isStopped
+                                              : controller.isListening
                                                   ? AvatarGlow(
                                                       glowColor: AppColors.red,
                                                       curve: Curves.ease,
@@ -93,34 +92,42 @@ class ReadStory extends StatelessWidget {
                                                         color: AppColors.red,
                                                       ),
                                                     )
-                                                  : Icon(
-                                                      Icons.play_arrow_rounded,
-                                                      color: AppColors.black,
-                                                    ),
+                                                  : controller.canRetry
+                                                      ? Icon(
+                                                          Icons.replay,
+                                                          color: AppColors.red,
+                                                        )
+                                                      : controller.isPaused
+                                                          ? Icon(
+                                                              Icons
+                                                                  .play_arrow_rounded,
+                                                              color: AppColors
+                                                                  .black,
+                                                            )
+                                                          : Icon(
+                                                              Icons.replay,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
                                       onPressed: () => controller.isyetToPlay
                                           ? controller.speak()
                                           : controller.isPlaying
                                               ? controller.pause()
-                                              : controller.isStopped
+                                              : controller.isListening
                                                   ? null
-                                                  : controller.speak(),
+                                                  : controller.canRetry
+                                                      ? controller
+                                                          .startListening()
+                                                      : controller.speak(),
                                     ),
                                     Expanded(
-                                      child: controller.isyetToPlay
-                                          ? Container()
-                                          : controller.isPlaying
-                                              ? Lottie.asset(
-                                                  AppImages.playing,
-                                                  fit: BoxFit.fill,
-                                                )
-                                              : controller.isStopped
-                                                  ? Container()
-                                                  : Lottie.asset(
-                                                      AppImages.playing,
-                                                      animate: false,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                    )
+                                        child: AppWidgets.regularText(
+                                      text:
+                                          "Pick choices by saying choice one, two ...",
+                                      size: 14.0,
+                                      color: AppColors.black,
+                                      weight: FontWeight.w500,
+                                    ))
                                   ],
                                 ),
                               )
