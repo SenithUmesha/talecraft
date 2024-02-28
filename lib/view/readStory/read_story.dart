@@ -3,7 +3,9 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:talecraft/utils/app_colors.dart';
+import 'package:talecraft/utils/app_images.dart';
 
 import '../../controller/read_story_controller.dart';
 import '../../utils/app_widgets.dart';
@@ -121,13 +123,22 @@ class ReadStory extends StatelessWidget {
                                                       : controller.speak(),
                                     ),
                                     Expanded(
-                                        child: AppWidgets.regularText(
-                                      text:
-                                          "Pick choices by saying choice one, two ...",
-                                      size: 14.0,
-                                      color: AppColors.black,
-                                      weight: FontWeight.w500,
-                                    ))
+                                        child: controller.isPlaying
+                                            ? Lottie.asset(
+                                                AppImages.playing,
+                                                fit: BoxFit.fill,
+                                              )
+                                            : controller.isListening
+                                                ? AppWidgets.regularText(
+                                                    text:
+                                                        "Pick choices by saying choice 1, 2...",
+                                                    size: 15.0,
+                                                    alignment:
+                                                        TextAlign.justify,
+                                                    color: AppColors.black,
+                                                    weight: FontWeight.w500,
+                                                    height: 2.0)
+                                                : Container())
                                   ],
                                 ),
                               )

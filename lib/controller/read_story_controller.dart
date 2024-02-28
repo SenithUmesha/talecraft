@@ -119,7 +119,7 @@ class ReadStoryController extends GetxController {
         );
       } else {
         AppWidgets.showSnackBar(AppStrings.speechRecognitionNotAvailable);
-        Get.back();
+        stopListening();
       }
     } else {
       stopListening();
@@ -223,11 +223,8 @@ class ReadStoryController extends GetxController {
           startListening();
         } else {
           AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
-          Get.back();
+          stopListening();
         }
-        // Timer(const Duration(seconds: 2), () {
-        //   resumeStory(0);
-        // });
       }
     });
 
