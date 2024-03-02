@@ -26,6 +26,16 @@ class StoryPublishController extends GetxController {
   List<Block> lastBlockList = [];
   List<String> endingsList = [];
   String? selectedEnding;
+  List<String> allGenres = [
+    "Action",
+    "Adventure",
+    "Comedy",
+    "Drama",
+    "Fantasy",
+    "Sci-Fi"
+  ];
+  List<String> selectedGenres = [];
+  bool genreValidationError = true;
 
   @override
   void onInit() {
@@ -45,12 +55,44 @@ class StoryPublishController extends GetxController {
     update();
   }
 
+  void validateGenres() {
+    if (selectedGenres.isEmpty) {
+      genreValidationError = true;
+    } else {
+      genreValidationError = false;
+    }
+    update();
+  }
+
   void publish() {
     validateImageUpload();
-    if (formKey.currentState!.validate() && !isImagePathEmptyValidator) {
+    validateGenres();
+    if (formKey.currentState!.validate() &&
+        !isImagePathEmptyValidator &&
+        !genreValidationError) {
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
       Get.offAll(() => const NavBar());
     }
+  }
+
+  Widget buildChoiceChip(String label) {
+    return ChoiceChip(
+      label: AppWidgets.regularText(
+        text: label,
+        size: 12.0,
+        color: AppColors.black,
+        weight: FontWeight.w400,
+      ),
+      selected: selectedGenres.contains(label),
+      onSelected: (selected) {
+        if (selected) {
+          selectedGenres.add(label);
+        } else {
+          selectedGenres.remove(label);
+        }
+        update();
+      },
+    );
   }
 
   bool getLastBlocks(GraphNode<Block> block) {

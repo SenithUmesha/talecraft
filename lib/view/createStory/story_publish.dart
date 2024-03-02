@@ -66,7 +66,7 @@ class StoryPublish extends StatelessWidget {
                                             border: Border.all(
                                                 color: controller
                                                         .isImagePathEmptyValidator
-                                                    ? AppColors.red
+                                                    ? AppColors.errorRed
                                                     : AppColors.black,
                                                 width: 2),
                                           ),
@@ -98,7 +98,7 @@ class StoryPublish extends StatelessWidget {
                                               child: CircleAvatar(
                                                 backgroundColor: controller
                                                         .isImagePathEmptyValidator
-                                                    ? AppColors.red
+                                                    ? AppColors.errorRed
                                                     : AppColors.black,
                                                 child: SizedBox(
                                                   width: 36,
@@ -270,6 +270,35 @@ class StoryPublish extends StatelessWidget {
                                       height: height,
                                       index: 2,
                                       maxLines: 1),
+                                  SizedBox(
+                                    height: height * 0.01,
+                                  ),
+                                  AppWidgets.regularText(
+                                    text: AppStrings.genres,
+                                    size: 16.0,
+                                    color: AppColors.black,
+                                    weight: FontWeight.w400,
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.01,
+                                  ),
+                                  Wrap(
+                                    spacing: 8.0,
+                                    runSpacing: 8.0,
+                                    children: controller.allGenres
+                                        .map((genre) =>
+                                            controller.buildChoiceChip(genre))
+                                        .toList(),
+                                  ),
+                                  if (controller.genreValidationError)
+                                    Text(
+                                      AppStrings.pickAtLeastOneGenre,
+                                      style: TextStyle(
+                                        color: AppColors.errorRed,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),
@@ -335,19 +364,25 @@ class StoryPublish extends StatelessWidget {
             maxLines: maxLines,
             keyboardType: keyBoardType,
             decoration: InputDecoration(
-              helperText: helperText,
-              border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: AppColors.grey)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: AppColors.black, width: 1)),
-              hintText: hintText,
-              hintStyle: TextStyle(
-                color: AppColors.grey,
-                fontWeight: FontWeight.w400,
-                fontSize: 14.0,
-              ),
-            ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                prefix: const Padding(padding: EdgeInsets.only(left: 15.0)),
+                helperText: helperText,
+                border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: AppColors.grey)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(color: AppColors.black, width: 1)),
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  color: AppColors.grey,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.0,
+                ),
+                errorStyle: TextStyle(
+                  color: AppColors.errorRed,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12.0,
+                )),
             textAlign: TextAlign.start,
             style: TextStyle(
               color: AppColors.black,
