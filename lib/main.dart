@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:talecraft/utils/app_colors.dart';
 
 import 'view/onBoarding/splash_screen.dart';
 
@@ -35,6 +36,9 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFF0E0D0D, color),
+        primaryColor: AppColors.black,
+        scaffoldBackgroundColor: AppColors.white,
+        indicatorColor: AppColors.black,
         useMaterial3: true,
         textSelectionTheme: const TextSelectionThemeData(),
       ),

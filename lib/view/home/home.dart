@@ -26,7 +26,7 @@ class Home extends StatelessWidget {
           return Column(
             children: [
               SizedBox(
-                height: height * 0.015,
+                height: height * 0.07,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

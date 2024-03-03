@@ -35,7 +35,7 @@ class StoryPublishController extends GetxController {
     "Sci-Fi"
   ];
   List<String> selectedGenres = [];
-  bool genreValidationError = true;
+  bool genreValidationError = false;
 
   @override
   void onInit() {
