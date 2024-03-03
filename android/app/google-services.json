@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "797952816159",
+    "project_id": "talecraft-storytelling",
+    "storage_bucket": "talecraft-storytelling.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797952816159:android:90de7633fdc0e0e785912a",
+        "android_client_info": {
+          "package_name": "com.blackeyedghoul.talecraft"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVJov1jvLAq9jfXltGsbGdmx9qlbh5ums"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
