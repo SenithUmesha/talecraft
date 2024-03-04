@@ -48,8 +48,8 @@ class RegistrationController extends GetxController {
             bookmarkedStories: [],
             publishedStories: [],
             achievementStories: []);
-        authRepo.createUser(reader);
-        box.write('current_user', reader);
+        await authRepo.createUser(reader);
+        await box.write('current_user', reader);
 
         AppWidgets.showSnackBar(
             AppStrings.success, AppStrings.accountCreationSuccess);

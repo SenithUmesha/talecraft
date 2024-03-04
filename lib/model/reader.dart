@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:talecraft/model/saved_progress.dart';
 
 class Reader {
@@ -21,16 +22,18 @@ class Reader {
     this.achievementStories,
   });
 
-  factory Reader.fromJson(Map<String, dynamic> json) {
+  factory Reader.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data()!;
     return Reader(
-      uid: json['uid'] ?? "",
-      name: json['name'] ?? "",
-      email: json['email'] ?? "",
-      readingStories: List<SavedProgress>.from(json['readingStories'] ?? []),
-      readStories: List<String>.from(json['readStories'] ?? []),
-      bookmarkedStories: List<String>.from(json['bookmarkedStories'] ?? []),
-      publishedStories: List<String>.from(json['publishedStories'] ?? []),
-      achievementStories: List<String>.from(json['achievementStories'] ?? []),
+      uid: data['uid'] ?? "",
+      name: data['name'] ?? "",
+      email: data['email'] ?? "",
+      readingStories: List<SavedProgress>.from(data['readingStories'] ?? []),
+      readStories: List<String>.from(data['readStories'] ?? []),
+      bookmarkedStories: List<String>.from(data['bookmarkedStories'] ?? []),
+      publishedStories: List<String>.from(data['publishedStories'] ?? []),
+      achievementStories: List<String>.from(data['achievementStories'] ?? []),
     );
   }
 

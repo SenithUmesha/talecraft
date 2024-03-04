@@ -19,4 +19,11 @@ class AuthRepository extends GetxController {
       log("AuthRepository: ${onError.toString()}");
     });
   }
+
+  fetchUser(String email) async {
+    final snapshot =
+        await db.collection("users").where("email", isEqualTo: email).get();
+    final user = snapshot.docs.map((e) => Reader.fromFirestore(e)).single;
+    return user;
+  }
 }
