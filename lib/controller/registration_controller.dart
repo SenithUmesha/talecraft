@@ -24,22 +24,30 @@ class RegistrationController extends GetxController {
   }
 
   register() async {
+    setLoader(true);
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        AppWidgets.showSnackBar(AppStrings.error, AppStrings.weakPassword);
-      } else if (e.code == 'email-already-in-use') {
+      )
+          .then((value) async {
+        User? user = value.user;
+        await user?.updateDisplayName(nameController.text.trim());
+
         AppWidgets.showSnackBar(
-            AppStrings.error, AppStrings.accountAlreadyExists);
-      } else {
-        AppWidgets.showSnackBar(AppStrings.error, e.message.toString());
-      }
+            AppStrings.success, AppStrings.accountCreationSuccess);
+      });
+    } on FirebaseAuthException catch (e) {
+      AppWidgets.showSnackBar(AppStrings.error, e.message.toString());
     } catch (e) {
       print(e);
     }
+    setLoader(false);
+  }
+
+  setLoader(bool value) {
+    isLoading = value;
+    update();
   }
 }

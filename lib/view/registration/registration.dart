@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/utils/app_widgets.dart';
@@ -9,6 +8,7 @@ import '../../controller/registration_controller.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
 import '../../utils/custom_app_bar.dart';
+import '../../utils/loading_overlay.dart';
 
 class Registration extends StatelessWidget {
   Registration({super.key});
@@ -33,141 +33,157 @@ class Registration extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(left: 20, right: 20, top: 20),
                         child: SingleChildScrollView(
-                          child: Observer(builder: (context) {
-                            return Form(
-                              key: formKey,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              child: Column(
-                                children: [
-                                  textFieldView(
-                                      name: AppStrings.name,
-                                      hintText: AppStrings.name,
-                                      validator: validateName,
-                                      textEditingController:
-                                          controller.nameController,
-                                      keyBoardType: TextInputType.text,
-                                      context: context,
-                                      controller: controller,
-                                      obscureText: false,
-                                      suffixIcon: false,
-                                      index: 0),
-                                  textFieldView(
-                                      name: AppStrings.email,
-                                      hintText: AppStrings.email,
-                                      validator: validateEmail,
-                                      textEditingController:
-                                          controller.emailController,
-                                      keyBoardType: TextInputType.emailAddress,
-                                      context: context,
-                                      controller: controller,
-                                      obscureText: false,
-                                      suffixIcon: false,
-                                      index: 1),
-                                  textFieldView(
-                                      name: AppStrings.password,
-                                      hintText: AppStrings.password,
-                                      validator: validatePassword,
-                                      textEditingController:
-                                          controller.passwordController,
-                                      keyBoardType:
-                                          TextInputType.visiblePassword,
-                                      context: context,
-                                      controller: controller,
-                                      obscureText:
-                                          controller.passwordObscureText,
-                                      suffixIcon: true,
-                                      index: 2,
-                                      helperText:
-                                          AppStrings.passwordHelperText),
-                                  textFieldView(
-                                      name: AppStrings.confirmPassword,
-                                      hintText: AppStrings.confirmPassword,
-                                      validator: (value) =>
-                                          validateConfirmPasswordRegistration(
-                                              controller
-                                                  .passwordController.text,
-                                              value),
-                                      textEditingController:
-                                          controller.confirmPasswordController,
-                                      keyBoardType:
-                                          TextInputType.visiblePassword,
-                                      context: context,
-                                      controller: controller,
-                                      obscureText:
-                                          controller.confirmPasswordObscureText,
-                                      suffixIcon: true,
-                                      index: 3),
-                                  SizedBox(
-                                    height: height * 0.04,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      if (formKey.currentState!.validate()) {}
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: AppColors.black,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 16, horizontal: 20),
-                                        child: SizedBox(
-                                          width: width,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets
-                                                    .symmetric(),
-                                                child: AppWidgets.regularText(
-                                                  text: AppStrings.register,
-                                                  size: 22,
-                                                  color: AppColors.white,
-                                                  weight: FontWeight.w600,
+                            child: controller.isLoading
+                                ? Padding(
+                                    padding:
+                                        EdgeInsets.only(top: height * 0.35),
+                                    child: LoadingOverlay(),
+                                  )
+                                : Form(
+                                    key: formKey,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    child: Column(
+                                      children: [
+                                        textFieldView(
+                                            name: AppStrings.name,
+                                            hintText: AppStrings.name,
+                                            validator: validateName,
+                                            textEditingController:
+                                                controller.nameController,
+                                            keyBoardType: TextInputType.text,
+                                            context: context,
+                                            controller: controller,
+                                            obscureText: false,
+                                            suffixIcon: false,
+                                            index: 0),
+                                        textFieldView(
+                                            name: AppStrings.email,
+                                            hintText: AppStrings.email,
+                                            validator: validateEmail,
+                                            textEditingController:
+                                                controller.emailController,
+                                            keyBoardType:
+                                                TextInputType.emailAddress,
+                                            context: context,
+                                            controller: controller,
+                                            obscureText: false,
+                                            suffixIcon: false,
+                                            index: 1),
+                                        textFieldView(
+                                            name: AppStrings.password,
+                                            hintText: AppStrings.password,
+                                            validator: validatePassword,
+                                            textEditingController:
+                                                controller.passwordController,
+                                            keyBoardType:
+                                                TextInputType.visiblePassword,
+                                            context: context,
+                                            controller: controller,
+                                            obscureText:
+                                                controller.passwordObscureText,
+                                            suffixIcon: true,
+                                            index: 2,
+                                            helperText:
+                                                AppStrings.passwordHelperText),
+                                        textFieldView(
+                                            name: AppStrings.confirmPassword,
+                                            hintText:
+                                                AppStrings.confirmPassword,
+                                            validator: (value) =>
+                                                validateConfirmPasswordRegistration(
+                                                    controller
+                                                        .passwordController
+                                                        .text,
+                                                    value),
+                                            textEditingController: controller
+                                                .confirmPasswordController,
+                                            keyBoardType:
+                                                TextInputType.visiblePassword,
+                                            context: context,
+                                            controller: controller,
+                                            obscureText: controller
+                                                .confirmPasswordObscureText,
+                                            suffixIcon: true,
+                                            index: 3),
+                                        SizedBox(
+                                          height: height * 0.04,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              controller.register();
+                                            }
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: AppColors.black,
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                      horizontal: 20),
+                                              child: SizedBox(
+                                                width: width,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(),
+                                                      child: AppWidgets
+                                                          .regularText(
+                                                        text:
+                                                            AppStrings.register,
+                                                        size: 22,
+                                                        color: AppColors.white,
+                                                        weight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.04,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      AppWidgets.regularText(
-                                        text: AppStrings.alreadyHaveAnAccount,
-                                        size: 18.0,
-                                        color: AppColors.black,
-                                        weight: FontWeight.w500,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Get.back();
-                                        },
-                                        child: AppWidgets.regularText(
-                                          text: AppStrings.login,
-                                          size: 18.0,
-                                          color: AppColors.red,
-                                          weight: FontWeight.w500,
+                                        SizedBox(
+                                          height: height * 0.04,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height * 0.05,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        )),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            AppWidgets.regularText(
+                                              text: AppStrings
+                                                  .alreadyHaveAnAccount,
+                                              size: 18.0,
+                                              color: AppColors.black,
+                                              weight: FontWeight.w500,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Get.back();
+                                              },
+                                              child: AppWidgets.regularText(
+                                                text: AppStrings.login,
+                                                size: 18.0,
+                                                color: AppColors.red,
+                                                weight: FontWeight.w500,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.05,
+                                        ),
+                                      ],
+                                    ),
+                                  ))),
                   ),
                 ],
               ),

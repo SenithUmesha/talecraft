@@ -94,9 +94,5 @@ class AppStrings {
   static const pickAtLeastOneGenre = "Please select at least one genre.";
   static const error = "Error";
   static const success = "Success";
-  static const weakPassword = "The password provided is too weak.";
-  static const noUser = "No user found for that email.";
-  static const incorrect = "Incorrect email or password.";
-  static const accountAlreadyExists =
-      "The account already exists for that email.";
+  static const accountCreationSuccess = "Account created successfully.";
 }

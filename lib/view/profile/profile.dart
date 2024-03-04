@@ -52,13 +52,13 @@ class Profile extends StatelessWidget {
                     height: height * 0.015,
                   ),
                   AppWidgets.regularText(
-                    text: "Senith Umesha",
+                    text: controller.user!.displayName,
                     size: 16.0,
                     color: AppColors.black,
                     weight: FontWeight.w600,
                   ),
                   AppWidgets.regularText(
-                    text: "34senith@gmail.com",
+                    text: controller.user!.email,
                     size: 14.0,
                     color: AppColors.black,
                     weight: FontWeight.w500,

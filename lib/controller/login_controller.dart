@@ -4,12 +4,11 @@ import 'package:get/get.dart';
 
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
-import '../utils/loading_overlay.dart';
+import '../view/navBar/nav_bar.dart';
 
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final LoadingOverlay loadingOverlay = LoadingOverlay();
 
   String code = "+91";
   bool passwordObscureText = true;
@@ -23,9 +22,11 @@ class LoginController extends GetxController {
   login() async {
     setLoader(true);
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim())
+          .then((value) => Get.offAll(() => const NavBar()));
     } on FirebaseAuthException catch (e) {
       AppWidgets.showSnackBar(AppStrings.error, e.message.toString());
     }
