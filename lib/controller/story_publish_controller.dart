@@ -1,13 +1,17 @@
 import 'dart:io';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/controller/storyboard_controller.dart';
+import 'package:talecraft/model/story.dart';
+import 'package:talecraft/repository/storyRepository/story_repository.dart';
 
 import '../model/block.dart';
 import '../utils/app_colors.dart';
@@ -32,10 +36,14 @@ class StoryPublishController extends GetxController {
     "Comedy",
     "Drama",
     "Fantasy",
-    "Sci-Fi"
+    "Sci-Fi",
+    "AI"
   ];
   List<String> selectedGenres = [];
   bool genreValidationError = false;
+  final box = GetStorage();
+  final storyRepo = Get.put(StoryRepository());
+  bool isLoading = false;
 
   @override
   void onInit() {
@@ -64,12 +72,34 @@ class StoryPublishController extends GetxController {
     update();
   }
 
-  void publish() {
+  Future<void> publish() async {
     validateImageUpload();
     validateGenres();
     if (formKey.currentState!.validate() &&
         !isImagePathEmptyValidator &&
         !genreValidationError) {
+      setLoader(true);
+      final user = FirebaseAuth.instance.currentUser;
+      int position = endingsList.indexOf(selectedEnding!);
+      Map<String, dynamic> graphJson = box.read('saved_graph');
+      Story story = Story(
+          id: "",
+          name: storyNameController.text,
+          authorId: user?.uid,
+          authorName: user?.displayName,
+          description: storyDescriptionController.text,
+          readTime: "${readTimeController.text} min read",
+          rating: 0.0,
+          image: await storyRepo.uploadImage(imagePath),
+          genres: selectedGenres,
+          achievementEndingId: lastBlockList[position].id,
+          storyJson: graphJson,
+          createdAt: DateTime.now());
+
+      await storyRepo.createStory(story);
+
+      setLoader(false);
+
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
       Get.offAll(() => const NavBar());
     }
@@ -252,6 +282,11 @@ class StoryPublishController extends GetxController {
 
   updateEndings(String? value) {
     selectedEnding = value;
+    update();
+  }
+
+  setLoader(bool value) {
+    isLoading = value;
     update();
   }
 }

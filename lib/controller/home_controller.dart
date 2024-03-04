@@ -15,9 +15,9 @@ class HomeController extends GetxController {
   ];
   List<Story> storyList = [
     Story(
-        id: 0,
+        id: "",
         name: "The Adventure Ends",
-        authorId: 0,
+        authorId: "",
         authorName: "John Doe",
         description:
             "Follow the thrilling adventure of our hero as they embark on a journey into the unknown.",

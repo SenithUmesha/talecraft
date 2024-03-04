@@ -3,8 +3,10 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
+import '../../model/story.dart';
 import '../../model/reader.dart';
 
 class AuthRepository extends GetxController {
@@ -13,7 +15,8 @@ class AuthRepository extends GetxController {
   createUser(Reader reader) async {
     await db
         .collection("users")
-        .add(reader.toJson())
+        .doc(reader.uid)
+        .set(reader.toJson())
         .whenComplete(() => log("AuthRepository: Data Saved"))
         .catchError((onError) {
       log("AuthRepository: ${onError.toString()}");
@@ -25,5 +28,19 @@ class AuthRepository extends GetxController {
         await db.collection("users").where("email", isEqualTo: email).get();
     final user = snapshot.docs.map((e) => Reader.fromFirestore(e)).single;
     return user;
+  }
+
+  addIdToPublishedStories(Story story) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await db
+        .collection("users")
+        .doc(user?.uid)
+        .update({
+          'publishedStories': FieldValue.arrayUnion([story.id]),
+        })
+        .then((_) => log("AuthRepository: Published Stories Updated"))
+        .catchError((onError) {
+          log("AuthRepository: ${onError.toString()}");
+        });
   }
 }

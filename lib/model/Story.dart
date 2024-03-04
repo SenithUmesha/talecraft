@@ -1,7 +1,7 @@
 class Story {
-  int? id;
+  String? id;
   String? name;
-  int? authorId;
+  String? authorId;
   String? authorName;
   String? description;
   String? readTime;
@@ -27,7 +27,7 @@ class Story {
       this.createdAt});
 
   factory Story.fromJson(Map<String, dynamic> json) => new Story(
-      id: json["id"] ?? 0,
+      id: json["id"] ?? "",
       name: json["name"] ?? "",
       authorId: json["author_id"] ?? "",
       authorName: json["author_name"] ?? "",

@@ -223,18 +223,6 @@ class AppWidgets {
   }
 
   static showSnackBar(String title, String message) {
-    // final snackBar = SnackBar(
-    //   content: Text(message),
-    //   behavior: SnackBarBehavior.floating,
-    //   action: SnackBarAction(
-    //     label: AppStrings.close,
-    //     textColor: AppColors.red,
-    //     onPressed: () {},
-    //   ),
-    // );
-
-    // ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
-
     Get.snackbar(
       title,
       message,
