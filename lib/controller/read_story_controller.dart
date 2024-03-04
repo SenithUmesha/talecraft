@@ -118,7 +118,8 @@ class ReadStoryController extends GetxController {
           },
         );
       } else {
-        AppWidgets.showSnackBar(AppStrings.speechRecognitionNotAvailable);
+        AppWidgets.showSnackBar(
+            AppStrings.error, AppStrings.speechRecognitionNotAvailable);
         stopListening();
       }
     } else {
@@ -222,7 +223,8 @@ class ReadStoryController extends GetxController {
         if (await speech.hasPermission) {
           startListening();
         } else {
-          AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+          AppWidgets.showSnackBar(
+              AppStrings.error, AppStrings.permissionNotGranted);
           stopListening();
         }
       }

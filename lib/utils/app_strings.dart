@@ -14,7 +14,7 @@ class AppStrings {
   static const name = "Name";
   static const register = "Register";
   static const passwordHelperText =
-      "Password must have at least one uppercase letter, one lowercase letter, one number, and 8 digits long";
+      "Password must have at least one uppercase letter, one lowercase letter, one number, and 8 digits long.";
   static const recommendedForYou = "Recommended For You";
   static const read = "Read";
   static const listen = "Listen";
@@ -48,14 +48,14 @@ class AppStrings {
   static const textShouldBeLessThan150 = "Text should be less than 150";
   static const enterShortDescription = "Please enter a shorter description";
   static const endWithStoryBlock =
-      "All branches need to end with a story block";
-  static const atLeastTwoChoices = "Story must have at least 2 choice blocks";
+      "All branches need to end with a story block.";
+  static const atLeastTwoChoices = "Story must have at least 2 choice blocks.";
   static const moreThanTwoChoices =
-      "When branching, the story blocks must have at least two choice blocks";
+      "When branching, the story blocks must have at least two choice blocks.";
   static const aiGeneratedStory = "Create AI Generated Story";
   static const aiGeneratedStoryPreview = "Generated AI Story Preview";
   static const provideContext =
-      "Provide a starting point or the context for your story";
+      "Provide a starting point or the context for your story.";
   static const generated = "Generate";
   static const publish = "Publish";
   static const bookmarkedStories = "Bookmarked Stories";
@@ -73,7 +73,7 @@ class AppStrings {
   static const takePhoto = "Take a Photo";
   static const chooseFromGallery = "Choose from Gallery";
   static const permissionNotGranted = "Permission not granted";
-  static const errorWhenPickingFile = "An error occurred when picking a file";
+  static const errorWhenPickingFile = "An error occurred when picking a file.";
   static const errorWhenTakingPicture =
       "An error occurred when taking a picture";
   static const achievementEnding = "Achievement Ending";
@@ -92,4 +92,11 @@ class AppStrings {
       "Speech recognition not available on this device";
   static const genres = "Genres";
   static const pickAtLeastOneGenre = "Please select at least one genre.";
+  static const error = "Error";
+  static const success = "Success";
+  static const weakPassword = "The password provided is too weak.";
+  static const noUser = "No user found for that email.";
+  static const incorrect = "Incorrect email or password.";
+  static const accountAlreadyExists =
+      "The account already exists for that email.";
 }

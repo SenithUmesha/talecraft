@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_widgets.dart';
-import 'package:talecraft/view/navBar/nav_bar.dart';
 import 'package:talecraft/view/registration/registration.dart';
 
 import '../../controller/login_controller.dart';
@@ -119,7 +118,10 @@ class Login extends StatelessWidget {
                                 // if (formKey.currentState!.validate()) {
                                 //   Get.to(() => const NavBar());
                                 // }
-                                Get.to(() => const NavBar());
+
+                                if (formKey.currentState!.validate()) {
+                                  controller.login();
+                                }
                               },
                               child: Container(
                                 decoration: BoxDecoration(

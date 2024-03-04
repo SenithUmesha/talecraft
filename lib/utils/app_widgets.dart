@@ -222,17 +222,39 @@ class AppWidgets {
         fontSize: 16.0);
   }
 
-  static showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      behavior: SnackBarBehavior.floating,
-      action: SnackBarAction(
-        label: AppStrings.close,
-        textColor: AppColors.red,
-        onPressed: () {},
-      ),
-    );
+  static showSnackBar(String title, String message) {
+    // final snackBar = SnackBar(
+    //   content: Text(message),
+    //   behavior: SnackBarBehavior.floating,
+    //   action: SnackBarAction(
+    //     label: AppStrings.close,
+    //     textColor: AppColors.red,
+    //     onPressed: () {},
+    //   ),
+    // );
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    // ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      forwardAnimationCurve: Curves.easeInOutCubic,
+      reverseAnimationCurve: Curves.easeInOutCubic,
+      backgroundColor:
+          title == AppStrings.error ? AppColors.red : AppColors.green,
+      colorText: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      icon: title != AppStrings.error
+          ? const Icon(
+              Icons.check_circle_rounded,
+              color: Colors.white,
+            )
+          : const Icon(
+              Icons.error_rounded,
+              color: Colors.white,
+            ),
+      duration: const Duration(milliseconds: 3000),
+    );
   }
 }

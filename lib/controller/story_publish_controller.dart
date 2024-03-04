@@ -142,7 +142,8 @@ class StoryPublishController extends GetxController {
                   if (hasFilePermission) {
                     takePhoto();
                   } else {
-                    AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+                    AppWidgets.showSnackBar(
+                        AppStrings.error, AppStrings.permissionNotGranted);
                   }
                 }
                 Get.back();
@@ -162,7 +163,8 @@ class StoryPublishController extends GetxController {
                   if (hasFilePermission) {
                     pickImageFromGallery();
                   } else {
-                    AppWidgets.showSnackBar(AppStrings.permissionNotGranted);
+                    AppWidgets.showSnackBar(
+                        AppStrings.error, AppStrings.permissionNotGranted);
                   }
                 }
                 Get.back();
@@ -218,7 +220,8 @@ class StoryPublishController extends GetxController {
         update();
       }
     } catch (e) {
-      AppWidgets.showSnackBar(AppStrings.errorWhenTakingPicture);
+      AppWidgets.showSnackBar(
+          AppStrings.error, AppStrings.errorWhenTakingPicture);
     }
   }
 
@@ -242,7 +245,8 @@ class StoryPublishController extends GetxController {
         update();
       }
     } catch (e) {
-      AppWidgets.showSnackBar(AppStrings.errorWhenPickingFile);
+      AppWidgets.showSnackBar(
+          AppStrings.error, AppStrings.errorWhenPickingFile);
     }
   }
 

@@ -139,7 +139,7 @@ class Profile extends StatelessWidget {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () => controller.logout(),
                           child: Row(
                             children: [
                               Icon(
