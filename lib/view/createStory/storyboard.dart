@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
 
 import '../../controller/storyboard_controller.dart';
-import '../../model/Block.dart';
+import '../../model/block.dart';
 import '../../utils/app_icons.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_widgets.dart';

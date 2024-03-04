@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import '../model/Block.dart';
+import '../model/block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';

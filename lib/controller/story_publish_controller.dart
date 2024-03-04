@@ -9,7 +9,7 @@ import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/controller/storyboard_controller.dart';
 
-import '../model/Block.dart';
+import '../model/block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';

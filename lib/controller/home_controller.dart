@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:talecraft/model/Story.dart';
+import 'package:talecraft/model/story.dart';
 
 class HomeController extends GetxController {
   bool isLoading = false;
@@ -26,7 +26,6 @@ class HomeController extends GetxController {
         image:
             "https://edit.org/img/blog/xk5-1024-free-ebook-cover-templates-download-online.webp",
         genres: ["Fiction", "Action"],
-        isBookmarked: false,
         achievementEndingId: 7,
         storyJson: {
           "id": 0,

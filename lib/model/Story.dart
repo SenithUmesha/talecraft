@@ -8,9 +8,9 @@ class Story {
   double? rating;
   String? image;
   List<String>? genres;
-  bool? isBookmarked;
   int? achievementEndingId;
   Map<String, dynamic>? storyJson;
+  DateTime? createdAt;
 
   Story(
       {this.id,
@@ -22,9 +22,9 @@ class Story {
       this.rating,
       this.image,
       this.genres,
-      this.isBookmarked,
       this.achievementEndingId,
-      this.storyJson});
+      this.storyJson,
+      this.createdAt});
 
   factory Story.fromJson(Map<String, dynamic> json) => new Story(
       id: json["id"] ?? 0,
@@ -36,9 +36,9 @@ class Story {
       rating: json["rating"].toDouble() ?? 0.0,
       image: json["image"] ?? "",
       genres: json["genres"] != null ? List<String>.from(json["genres"]) : [],
-      isBookmarked: json["is_bookmarked"] ?? false,
       achievementEndingId: json["achievement_ending_id"] ?? 0,
-      storyJson: json["story_json"] ?? {});
+      storyJson: json["story_json"] ?? {},
+      createdAt: json["created_at"] ?? DateTime.now());
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -50,8 +50,8 @@ class Story {
         "rating": rating,
         "image": image,
         "genres": genres,
-        "is_bookmarked": isBookmarked,
         "achievement_ending_id": achievementEndingId,
-        "story_json": storyJson
+        "story_json": storyJson,
+        "created_at": createdAt
       };
 }

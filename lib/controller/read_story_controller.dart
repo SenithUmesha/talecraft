@@ -6,10 +6,10 @@ import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:talecraft/model/Story.dart';
+import 'package:talecraft/model/story.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../model/Block.dart';
+import '../model/block.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';

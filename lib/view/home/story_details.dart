@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/story_details_controller.dart';
-import 'package:talecraft/model/Story.dart';
+import 'package:talecraft/model/story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/home.dart';
@@ -139,8 +139,7 @@ class StoryDetails extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () =>
                                         controller.updateIsBookmarked(story),
-                                    child: story.isBookmarked == null ||
-                                            story.isBookmarked == false
+                                    child: controller.isBookmarked
                                         ? Container(
                                             width: width * 0.14,
                                             height: width * 0.14,

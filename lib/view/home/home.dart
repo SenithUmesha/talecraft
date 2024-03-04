@@ -4,7 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/home_controller.dart';
 import 'package:talecraft/controller/nav_bar_controller.dart';
-import 'package:talecraft/model/Story.dart';
+import 'package:talecraft/model/story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/story_details.dart';

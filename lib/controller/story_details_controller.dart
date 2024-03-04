@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 
-import '../model/Story.dart';
+import '../model/story.dart';
 
 class StoryDetailsController extends GetxController {
+  bool isBookmarked = false;
   List<Story> storyList = [
     Story(
         id: 0,
@@ -16,7 +17,6 @@ class StoryDetailsController extends GetxController {
         image:
             "https://edit.org/img/blog/xk5-1024-free-ebook-cover-templates-download-online.webp",
         genres: ["Fiction", "Action"],
-        isBookmarked: false,
         achievementEndingId: 7,
         storyJson: {
           "id": 0,
@@ -117,7 +117,7 @@ class StoryDetailsController extends GetxController {
   ];
 
   void updateIsBookmarked(Story story) {
-    story.isBookmarked = !(story.isBookmarked ?? false);
-    update();
+    // story.isBookmarked = !(story.isBookmarked ?? false);
+    // update();
   }
 }
