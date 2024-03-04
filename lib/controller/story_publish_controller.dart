@@ -18,6 +18,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
 import '../view/navBar/nav_bar.dart';
+import 'nav_bar_controller.dart';
 
 class StoryPublishController extends GetxController {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -101,6 +102,7 @@ class StoryPublishController extends GetxController {
       setLoader(false);
 
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
+      Get.find<NavBarController>().updateIndex(0);
       Get.offAll(() => const NavBar());
     }
   }
