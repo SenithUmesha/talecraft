@@ -43,4 +43,18 @@ class AuthRepository extends GetxController {
           log("AuthRepository: ${onError.toString()}");
         });
   }
+
+  Future<void> addIdToBookmarkedStories(Story story) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await db
+        .collection("users")
+        .doc(user?.uid)
+        .update({
+          'bookmarkedStories': FieldValue.arrayUnion([story.id]),
+        })
+        .then((_) => log("AuthRepository: Bookmarked Stories Updated"))
+        .catchError((onError) {
+          log("AuthRepository: ${onError.toString()}");
+        });
+  }
 }
