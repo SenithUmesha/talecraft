@@ -257,48 +257,51 @@ class StoryDetails extends StatelessWidget {
                                 padding: EdgeInsets.only(top: height * 0.03),
                                 child: LoadingOverlay(),
                               )
-                            : Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: height * 0.02,
+                            : controller.storyList.isEmpty
+                                ? Container()
+                                : Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: height * 0.02,
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: AppWidgets.regularText(
+                                            text: AppStrings.moreFromAuther,
+                                            size: 20.0,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.02,
+                                        ),
+                                        Container(
+                                          height: height * 0.29,
+                                          alignment: Alignment.centerLeft,
+                                          child: ListView.builder(
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                                controller.storyList.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15),
+                                                child: getMoreStoryItem(
+                                                    controller.storyList[index],
+                                                    height,
+                                                    width),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: AppWidgets.regularText(
-                                        text: AppStrings.moreFromAuther,
-                                        size: 20.0,
-                                        color: AppColors.black,
-                                        weight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.02,
-                                    ),
-                                    Container(
-                                      height: height * 0.29,
-                                      alignment: Alignment.centerLeft,
-                                      child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: controller.storyList.length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
-                                            child: getMoreStoryItem(
-                                                controller.storyList[index],
-                                                height,
-                                                width),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
                       ],
                     ),
                   ),
