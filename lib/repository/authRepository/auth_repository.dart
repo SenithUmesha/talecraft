@@ -12,7 +12,7 @@ import '../../model/reader.dart';
 class AuthRepository extends GetxController {
   final db = FirebaseFirestore.instance;
 
-  createUser(Reader reader) async {
+  Future<void> createUser(Reader reader) async {
     await db
         .collection("users")
         .doc(reader.uid)
@@ -23,14 +23,14 @@ class AuthRepository extends GetxController {
     });
   }
 
-  fetchUser(String email) async {
+  Future<Reader> fetchUser(String email) async {
     final snapshot =
         await db.collection("users").where("email", isEqualTo: email).get();
     final user = snapshot.docs.map((e) => Reader.fromFirestore(e)).single;
     return user;
   }
 
-  addIdToPublishedStories(Story story) async {
+  Future<void> addIdToPublishedStories(Story story) async {
     final user = FirebaseAuth.instance.currentUser;
     await db
         .collection("users")

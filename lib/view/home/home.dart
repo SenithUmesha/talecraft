@@ -9,6 +9,7 @@ import 'package:talecraft/view/home/story_details.dart';
 
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
+import '../../utils/loading_overlay.dart';
 import '../navBar/nav_bar.dart';
 
 class Home extends StatelessWidget {
@@ -79,169 +80,200 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.only(
                       top: 10, bottom: 0, left: 15, right: 15),
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: height * 0.04,
-                          child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: controller.genreList.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: getGenreItem(
-                                    controller.genreList[index], width),
-                              );
-                            },
+                    child: controller.isLoading
+                        ? Padding(
+                            padding: EdgeInsets.only(top: height * 0.25),
+                            child: LoadingOverlay(),
+                          )
+                        : Column(
+                            children: [
+                              Container(
+                                height: height * 0.04,
+                                child: ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: controller.genreList.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: getGenreItem(
+                                          controller.genreList[index], width),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: height * 0.008,
+                              ),
+                              !controller.recommendedStoriesList.isEmpty
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: AppWidgets.regularText(
+                                                text: AppStrings
+                                                    .recommendedForYou,
+                                                size: 18.0,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: height * 0.3,
+                                          width: width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.only(
+                                                bottom: height * 0.008,
+                                                top: height * 0.008),
+                                            controller: controller
+                                                .recommendedScrollController,
+                                            itemCount: controller
+                                                .recommendedStoriesList.length,
+                                            itemBuilder: (context, index) {
+                                              return getStoryItem(
+                                                  height,
+                                                  width,
+                                                  controller
+                                                          .recommendedStoriesList[
+                                                      index]);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              !controller.continueStoriesList.isEmpty
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: AppWidgets.regularText(
+                                                text:
+                                                    AppStrings.continueStories,
+                                                size: 18.0,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: height * 0.3,
+                                          width: width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.only(
+                                                bottom: height * 0.008,
+                                                top: height * 0.008),
+                                            controller: controller
+                                                .continueScrollController,
+                                            itemCount: controller
+                                                .continueStoriesList.length,
+                                            itemBuilder: (context, index) {
+                                              return getStoryItem(
+                                                  height,
+                                                  width,
+                                                  controller
+                                                          .continueStoriesList[
+                                                      index]);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              !controller.yourStoriesList.isEmpty
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: AppWidgets.regularText(
+                                                text: AppStrings.yourStories,
+                                                size: 18.0,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: height * 0.35,
+                                          width: width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.only(
+                                                bottom: height * 0.008,
+                                                top: height * 0.008),
+                                            controller: controller
+                                                .publishedScrollController,
+                                            itemCount: controller
+                                                .yourStoriesList.length,
+                                            itemBuilder: (context, index) {
+                                              return getStoryItem(
+                                                  height,
+                                                  width,
+                                                  controller
+                                                      .yourStoriesList[index]);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                            ],
                           ),
-                        ),
-                        SizedBox(
-                          height: height * 0.008,
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: AppWidgets.regularText(
-                                    text: AppStrings.recommendedForYou,
-                                    size: 18.0,
-                                    color: AppColors.black,
-                                    weight: FontWeight.w600,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.black,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: height * 0.3,
-                              width: width,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                padding: EdgeInsets.only(
-                                    bottom: height * 0.008,
-                                    top: height * 0.008),
-                                controller:
-                                    controller.recommendedScrollController,
-                                itemCount: controller.storyList.length,
-                                itemBuilder: (context, index) {
-                                  return getStoryItem(height, width,
-                                      controller.storyList[index]);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: AppWidgets.regularText(
-                                    text: AppStrings.continueStories,
-                                    size: 18.0,
-                                    color: AppColors.black,
-                                    weight: FontWeight.w600,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.black,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: height * 0.3,
-                              width: width,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                padding: EdgeInsets.only(
-                                    bottom: height * 0.008,
-                                    top: height * 0.008),
-                                controller: controller.continueScrollController,
-                                itemCount: controller.storyList.length,
-                                itemBuilder: (context, index) {
-                                  return getStoryItem(height, width,
-                                      controller.storyList[index]);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: AppWidgets.regularText(
-                                    text: AppStrings.yourStories,
-                                    size: 18.0,
-                                    color: AppColors.black,
-                                    weight: FontWeight.w600,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.black,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: height * 0.35,
-                              width: width,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                padding: EdgeInsets.only(
-                                    bottom: height * 0.008,
-                                    top: height * 0.008),
-                                controller:
-                                    controller.publishedScrollController,
-                                itemCount: controller.storyList.length,
-                                itemBuilder: (context, index) {
-                                  return getStoryItem(height, width,
-                                      controller.storyList[index]);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ),
@@ -301,6 +333,7 @@ class Home extends StatelessWidget {
                 text: story.name,
                 size: 14.0,
                 maxLines: 2,
+                textOverFlow: TextOverflow.ellipsis,
                 color: AppColors.black,
                 weight: FontWeight.w600,
               ),
@@ -309,6 +342,8 @@ class Home extends StatelessWidget {
                 size: 12.0,
                 color: AppColors.black,
                 weight: FontWeight.w400,
+                maxLines: 1,
+                textOverFlow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Story {
   String? id;
   String? name;
@@ -26,19 +28,22 @@ class Story {
       this.storyJson,
       this.createdAt});
 
-  factory Story.fromJson(Map<String, dynamic> json) => new Story(
-      id: json["id"] ?? "",
-      name: json["name"] ?? "",
-      authorId: json["author_id"] ?? "",
-      authorName: json["author_name"] ?? "",
-      description: json["description"] ?? "",
-      readTime: json["read_time"] ?? "0 min",
-      rating: json["rating"].toDouble() ?? 0.0,
-      image: json["image"] ?? "",
-      genres: json["genres"] != null ? List<String>.from(json["genres"]) : [],
-      achievementEndingId: json["achievement_ending_id"] ?? 0,
-      storyJson: json["story_json"] ?? {},
-      createdAt: json["created_at"] ?? DateTime.now());
+  factory Story.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data()!;
+    return Story(
+        id: data["id"] ?? "",
+        name: data["name"] ?? "",
+        authorId: data["author_id"] ?? "",
+        authorName: data["author_name"] ?? "",
+        description: data["description"] ?? "",
+        readTime: data["read_time"] ?? "0 min",
+        rating: data["rating"].toDouble() ?? 0.0,
+        image: data["image"] ?? "",
+        genres: data["genres"] != null ? List<String>.from(data["genres"]) : [],
+        achievementEndingId: data["achievement_ending_id"] ?? 0,
+        storyJson: data["story_json"] ?? {},
+        createdAt: data["created_at"].toDate() ?? DateTime.now());
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,

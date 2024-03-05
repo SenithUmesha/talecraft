@@ -1,9 +1,8 @@
-// ignore_for_file: body_might_complete_normally_catch_error
-
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/model/story.dart';
@@ -12,7 +11,7 @@ import 'package:talecraft/repository/authRepository/auth_repository.dart';
 class StoryRepository extends GetxController {
   final db = FirebaseFirestore.instance;
 
-  createStory(Story story) async {
+  Future<void> createStory(Story story) async {
     story.id = db.collection("stories").doc().id;
 
     await db
@@ -38,5 +37,28 @@ class StoryRepository extends GetxController {
     final snapshot = await uploadTask.whenComplete(() {});
     final url = await snapshot.ref.getDownloadURL();
     return url;
+  }
+
+  Future<dynamic> getStories(String type) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final reader = await Get.put(AuthRepository()).fetchUser(user!.email!);
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot = await storiesCollection
+          .where('id',
+              whereIn: type == "publish"
+                  ? reader.publishedStories
+                  : reader.readingStories)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
   }
 }
