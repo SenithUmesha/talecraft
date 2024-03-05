@@ -5,9 +5,17 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:talecraft/model/saved_progress.dart';
 
 import '../../model/story.dart';
 import '../../model/reader.dart';
+
+enum ProgressState {
+  DocDoesNotExist,
+  Completed,
+  IncompleteEmptyChoices,
+  IncompleteNonEmptyChoices,
+}
 
 class AuthRepository extends GetxController {
   final db = FirebaseFirestore.instance;
@@ -56,5 +64,83 @@ class AuthRepository extends GetxController {
         .catchError((onError) {
           log("AuthRepository: ${onError.toString()}");
         });
+  }
+
+  Future<void> createSavedProgress(SavedProgress savedProgress) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final documentReference = db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(savedProgress.id);
+
+    final documentSnapshot = await documentReference.get();
+    if (!documentSnapshot.exists) {
+      await documentReference
+          .set(savedProgress.toJson(), SetOptions(merge: true))
+          .whenComplete(() => log("AuthRepository: Data Saved"))
+          .catchError((onError) {
+        log("AuthRepository: ${onError.toString()}");
+      });
+    }
+  }
+
+  Future<void> addChoiceIdToSavedProgress(
+      String storyId, int pickedChoiceId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(storyId)
+        .update({
+          'picked_choices': FieldValue.arrayUnion([pickedChoiceId]),
+        })
+        .then((_) => log("AuthRepository: Choice ID added"))
+        .catchError((onError) {
+          log("AuthRepository: ${onError.toString()}");
+        });
+  }
+
+  Future<void> addCompletedToSavedProgress(String storyId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(storyId)
+        .update({
+          'is_completed': true,
+        })
+        .then((_) => log("AuthRepository: Completed added"))
+        .catchError((onError) {
+          log("AuthRepository: ${onError.toString()}");
+        });
+  }
+
+  Future<ProgressState> checkSavedProgress(String storyId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final documentReference = db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(storyId);
+
+    final documentSnapshot = await documentReference.get();
+    if (!documentSnapshot.exists) {
+      return ProgressState.DocDoesNotExist;
+    } else {
+      final isCompleted = documentSnapshot['isCompleted'] ?? false;
+      final pickedChoices =
+          List<int>.from(documentSnapshot['pickedChoices'] ?? []);
+
+      if (isCompleted) {
+        return ProgressState.Completed;
+      } else if (pickedChoices.isEmpty) {
+        return ProgressState.IncompleteEmptyChoices;
+      } else {
+        return ProgressState.IncompleteNonEmptyChoices;
+      }
+    }
   }
 }

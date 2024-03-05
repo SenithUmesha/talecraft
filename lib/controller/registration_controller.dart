@@ -43,7 +43,6 @@ class RegistrationController extends GetxController {
             uid: user?.uid,
             name: nameController.text.trim(),
             email: user?.email,
-            readingStories: [],
             readStories: [],
             bookmarkedStories: [],
             publishedStories: [],

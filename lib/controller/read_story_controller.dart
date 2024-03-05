@@ -6,10 +6,12 @@ import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../model/block.dart';
+import '../repository/authRepository/auth_repository.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_widgets.dart';
@@ -17,6 +19,7 @@ import '../utils/app_widgets.dart';
 enum TtsState { playing, stopped, paused, ended, yetToPlay }
 
 class ReadStoryController extends GetxController {
+  bool isLoading = false;
   final scrollController = ScrollController();
   List<Widget> widgetList = [];
   late GraphNode<Block> root;
@@ -33,6 +36,7 @@ class ReadStoryController extends GetxController {
   late stt.SpeechToText speech;
   bool isListening = false;
   bool canRetry = false;
+  final authRepo = Get.put(AuthRepository());
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
@@ -43,11 +47,6 @@ class ReadStoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.position.pixels) {}
-    });
 
     root = GraphNode<Block>(
       data: Block(id: 0, type: BlockType.story, text: AppStrings.addStory),
@@ -60,7 +59,26 @@ class ReadStoryController extends GetxController {
     jsonToGraph(root, story.storyJson!);
     isListeningMode ? initTts() : (flutterTts = FlutterTts());
     speech = stt.SpeechToText();
-    addStoryBlock(root);
+
+    startStoryProcess();
+  }
+
+  Future<void> startStoryProcess() async {
+    ProgressState status = await authRepo.checkSavedProgress(story.id!);
+    if (status == ProgressState.DocDoesNotExist ||
+        status == ProgressState.IncompleteEmptyChoices) {
+      addStoryBlock(root);
+      createSavedProgress();
+    } else {
+      loadPickedChoice();
+    }
+  }
+
+  Future<void> loadPickedChoice() async {}
+
+  Future<void> createSavedProgress() async {
+    await authRepo.createSavedProgress(
+        SavedProgress(id: story.id, pickedChoices: [], isCompleted: false));
   }
 
   Future<void> startListening() async {
@@ -309,10 +327,12 @@ class ReadStoryController extends GetxController {
     }
   }
 
-  void resumeStory(int index) {
+  Future<void> resumeStory(int index) async {
     var width = MediaQuery.of(Get.context!).size.width;
     List<GraphNode> nextList = currentChoiceList!;
 
+    await authRepo.addChoiceIdToSavedProgress(
+        story.id!, (nextList[index].data as Block).id);
     widgetList.removeLast();
     widgetList.add(Container(
       width: width,
@@ -358,7 +378,7 @@ class ReadStoryController extends GetxController {
     }
   }
 
-  void addStoryBlock(GraphNode<Block> block) {
+  Future<void> addStoryBlock(GraphNode<Block> block) async {
     var width = MediaQuery.of(Get.context!).size.width;
     widgetList.add(AppWidgets.regularText(
         text: block.data!.text,
@@ -373,6 +393,8 @@ class ReadStoryController extends GetxController {
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
     } else {
+      await authRepo.addCompletedToSavedProgress(story.id!);
+
       widgetList.add(Container(
         width: width,
         margin: const EdgeInsets.only(top: 30, bottom: 15),
@@ -413,7 +435,9 @@ class ReadStoryController extends GetxController {
             return GestureDetector(
               onTap: isListeningMode
                   ? null
-                  : () {
+                  : () async {
+                      await authRepo.addChoiceIdToSavedProgress(
+                          story.id!, (nextList[index].data as Block).id);
                       widgetList.removeLast();
                       widgetList.add(Container(
                         width: width,
@@ -482,5 +506,10 @@ class ReadStoryController extends GetxController {
           curve: Curves.fastOutSlowIn,
         );
     });
+  }
+
+  setLoader(bool value) {
+    isLoading = value;
+    update();
   }
 }

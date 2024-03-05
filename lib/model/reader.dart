@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:talecraft/model/saved_progress.dart';
 
 class Reader {
   String? uid;
   String? name;
   String? email;
-  List<SavedProgress>? readingStories;
   List<String>? readStories;
   List<String>? bookmarkedStories;
   List<String>? publishedStories;
@@ -15,7 +13,6 @@ class Reader {
     this.uid,
     this.name,
     this.email,
-    this.readingStories,
     this.readStories,
     this.bookmarkedStories,
     this.publishedStories,
@@ -29,7 +26,6 @@ class Reader {
       uid: data['uid'] ?? "",
       name: data['name'] ?? "",
       email: data['email'] ?? "",
-      readingStories: List<SavedProgress>.from(data['readingStories'] ?? []),
       readStories: List<String>.from(data['readStories'] ?? []),
       bookmarkedStories: List<String>.from(data['bookmarkedStories'] ?? []),
       publishedStories: List<String>.from(data['publishedStories'] ?? []),
@@ -42,7 +38,6 @@ class Reader {
       'uid': uid,
       'name': name,
       'email': email,
-      'readingStories': readingStories,
       'readStories': readStories,
       'bookmarkedStories': bookmarkedStories,
       'publishedStories': publishedStories,

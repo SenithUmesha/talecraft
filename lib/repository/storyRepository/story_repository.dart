@@ -50,9 +50,7 @@ class StoryRepository extends GetxController {
           .where('id',
               whereIn: type == "published"
                   ? reader.publishedStories
-                  : type == "bookmarked"
-                      ? reader.publishedStories
-                      : reader.readingStories)
+                  : reader.publishedStories)
           .get();
       return querySnapshot.docs
           .map((doc) => Story.fromFirestore(
