@@ -11,6 +11,7 @@ import 'package:talecraft/view/readStory/read_story.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
+import '../../utils/loading_overlay.dart';
 
 class StoryDetails extends StatelessWidget {
   final Story story;
@@ -251,47 +252,53 @@ class StoryDetails extends StatelessWidget {
                           thickness: 1,
                           color: AppColors.grey,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: AppWidgets.regularText(
-                                  text: AppStrings.moreFromAuther,
-                                  size: 20.0,
-                                  color: AppColors.black,
-                                  weight: FontWeight.w600,
+                        controller.isLoading
+                            ? Padding(
+                                padding: EdgeInsets.only(top: height * 0.03),
+                                child: LoadingOverlay(),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: height * 0.02,
+                                    ),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: AppWidgets.regularText(
+                                        text: AppStrings.moreFromAuther,
+                                        size: 20.0,
+                                        color: AppColors.black,
+                                        weight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.02,
+                                    ),
+                                    Container(
+                                      height: height * 0.29,
+                                      alignment: Alignment.centerLeft,
+                                      child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: controller.storyList.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15),
+                                            child: getMoreStoryItem(
+                                                controller.storyList[index],
+                                                height,
+                                                width),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Container(
-                                height: height * 0.29,
-                                alignment: Alignment.centerLeft,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: controller.storyList.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 15),
-                                      child: getMoreStoryItem(
-                                          controller.storyList[index],
-                                          height,
-                                          width),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -305,7 +312,15 @@ class StoryDetails extends StatelessWidget {
   getMoreStoryItem(Story moreStory, double height, double width) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => StoryDetails(story: moreStory), preventDuplicates: false);
+        StoryDetailsController storyDetailsController =
+            Get.find<StoryDetailsController>();
+        storyDetailsController.onInit();
+        Get.to(
+            () => StoryDetails(
+                  story: moreStory,
+                ),
+            arguments: [moreStory],
+            preventDuplicates: false);
       },
       child: Column(
         children: [
