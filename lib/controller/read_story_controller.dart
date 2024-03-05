@@ -37,6 +37,7 @@ class ReadStoryController extends GetxController {
   bool isListening = false;
   bool canRetry = false;
   final authRepo = Get.put(AuthRepository());
+  ProgressState status = ProgressState.DocDoesNotExist;
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
@@ -64,17 +65,10 @@ class ReadStoryController extends GetxController {
   }
 
   Future<void> startStoryProcess() async {
-    ProgressState status = await authRepo.checkSavedProgress(story.id!);
-    if (status == ProgressState.DocDoesNotExist ||
-        status == ProgressState.IncompleteEmptyChoices) {
-      addStoryBlock(root);
-      createSavedProgress();
-    } else {
-      loadPickedChoice();
-    }
+    status = await authRepo.checkSavedProgress(story.id!);
+    addStoryBlock(root);
+    createSavedProgress();
   }
-
-  Future<void> loadPickedChoice() async {}
 
   Future<void> createSavedProgress() async {
     await authRepo.createSavedProgress(

@@ -130,9 +130,9 @@ class AuthRepository extends GetxController {
     if (!documentSnapshot.exists) {
       return ProgressState.DocDoesNotExist;
     } else {
-      final isCompleted = documentSnapshot['isCompleted'] ?? false;
+      final isCompleted = documentSnapshot['is_completed'] ?? false;
       final pickedChoices =
-          List<int>.from(documentSnapshot['pickedChoices'] ?? []);
+          List<int>.from(documentSnapshot['picked_choices'] ?? []);
 
       if (isCompleted) {
         return ProgressState.Completed;
