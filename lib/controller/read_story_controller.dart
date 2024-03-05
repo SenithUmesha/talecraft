@@ -313,7 +313,6 @@ class ReadStoryController extends GetxController {
     var width = MediaQuery.of(Get.context!).size.width;
     List<GraphNode> nextList = currentChoiceList!;
 
-    (nextList[index].data as Block).updateChoice(true);
     widgetList.removeLast();
     widgetList.add(Container(
       width: width,
@@ -415,7 +414,6 @@ class ReadStoryController extends GetxController {
               onTap: isListeningMode
                   ? null
                   : () {
-                      (nextList[index].data as Block).updateChoice(true);
                       widgetList.removeLast();
                       widgetList.add(Container(
                         width: width,

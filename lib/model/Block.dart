@@ -6,50 +6,34 @@ class Block {
   int id;
   BlockType type;
   String text;
-  bool? isPicked;
 
-  Block(
-      {required this.id,
-      required this.type,
-      required this.text,
-      this.isPicked});
+  Block({required this.id, required this.type, required this.text});
 
   Map<String, dynamic> toJson() {
-    return type == BlockType.choice
-        ? {'id': id, 'type': type.toString(), 'text': text, 'isPicked': false}
-        : {'id': id, 'type': type.toString(), 'text': text};
+    return {'id': id, 'type': type.toString(), 'text': text};
   }
 
   factory Block.fromJson(Map<String, dynamic> json) {
-    return json['type'] == 'BlockType.choice'
-        ? Block(id: json['id'], type: BlockType.choice, text: json['text'])
-        : Block(
-            id: json['id'],
-            type: BlockType.story,
-            text: json['text'],
-            isPicked: json['is_picked'] == null ? false : json['is_picked']);
+    return Block(
+        id: json['id'],
+        type: json['type'] == 'BlockType.choice'
+            ? BlockType.choice
+            : BlockType.story,
+        text: json['text']);
   }
 
   factory Block.fromJsonAssignId(Map<String, dynamic> json) {
     int generatedId = Block.getId();
-    return json['type'] == 'BlockType.choice'
-        ? Block(
-            id: json['id'] == 0 ? 0 : generatedId,
-            type: BlockType.choice,
-            text: json['text'])
-        : Block(
-            id: json['id'] == 0 ? 0 : generatedId,
-            type: BlockType.story,
-            text: json['text'],
-            isPicked: json['is_picked'] == null ? false : json['is_picked']);
+    return Block(
+        id: json['id'] == 0 ? 0 : generatedId,
+        type: json['type'] == 'BlockType.choice'
+            ? BlockType.choice
+            : BlockType.story,
+        text: json['text']);
   }
 
   void updateText(String text) {
     this.text = text;
-  }
-
-  void updateChoice(bool choice) {
-    this.isPicked = choice;
   }
 
   static int getId() {
