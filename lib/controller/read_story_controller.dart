@@ -38,6 +38,7 @@ class ReadStoryController extends GetxController {
   bool canRetry = false;
   final authRepo = Get.put(AuthRepository());
   ProgressState status = ProgressState.DocDoesNotExist;
+  SavedProgress? progress;
 
   get isPlaying => ttsState == TtsState.playing;
   get isStopped => ttsState == TtsState.stopped;
@@ -66,6 +67,7 @@ class ReadStoryController extends GetxController {
 
   Future<void> startStoryProcess() async {
     status = await authRepo.checkSavedProgress(story.id!);
+    progress = await authRepo.getSavedProgress(story.id!);
     addStoryBlock(root);
     createSavedProgress();
   }
@@ -232,12 +234,17 @@ class ReadStoryController extends GetxController {
         update();
         log("TTS State: " + ttsState.toString());
 
-        if (await speech.hasPermission) {
-          startListening();
+        if (progress != null && hasMatchingChoices(currentChoiceList!) != -1) {
+          int id = hasMatchingChoices(currentChoiceList!);
+          resumeStory(id);
         } else {
-          AppWidgets.showSnackBar(
-              AppStrings.error, AppStrings.permissionNotGranted);
-          stopListening();
+          if (await speech.hasPermission) {
+            startListening();
+          } else {
+            AppWidgets.showSnackBar(
+                AppStrings.error, AppStrings.permissionNotGranted);
+            stopListening();
+          }
         }
       }
     });
@@ -295,10 +302,12 @@ class ReadStoryController extends GetxController {
       String choiceText = "";
       currentChoiceList = list;
 
-      for (var i = 0; i < list.length; i++) {
-        choiceText += "Choice ${i + 1} - ";
-        choiceText += (list[i].data as Block).text;
-        if (i != list.length - 1) choiceText += " or ";
+      if (list!.length > 1) {
+        for (var i = 0; i < list.length; i++) {
+          choiceText += "Choice ${i + 1} - ";
+          choiceText += (list[i].data as Block).text;
+          if (i != list.length - 1) choiceText += " or ";
+        }
       }
 
       readText += choiceText;
@@ -325,38 +334,63 @@ class ReadStoryController extends GetxController {
     var width = MediaQuery.of(Get.context!).size.width;
     List<GraphNode> nextList = currentChoiceList!;
 
-    await authRepo.addChoiceIdToSavedProgress(
-        story.id!, (nextList[index].data as Block).id);
-    widgetList.removeLast();
-    widgetList.add(Container(
-      width: width,
-      margin: const EdgeInsets.symmetric(vertical: 15),
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: AppColors.black.withOpacity(0.1),
-      ),
-      child: Center(
-        child: AppWidgets.regularText(
-          text: (nextList[index].data as Block).text,
-          alignment: TextAlign.center,
-          size: 16,
-          color: AppColors.black,
-          weight: FontWeight.w500,
-        ),
-      ),
-    ));
-    if (nextList[index].nextList[0].nextList.isEmpty &&
-        (nextList[index].nextList[0].data as Block).id ==
-            story.achievementEndingId) {
-      confettiController.play();
+    if (progress != null && hasMatchingChoices(nextList) != -1) {
+      int id = hasMatchingChoices(nextList);
 
-      Timer(const Duration(seconds: 1), () {
-        confettiController.stop();
-        AppWidgets.showToast(AppStrings.secretEndingAchieved);
-      });
+      widgetList.add(Container(
+        width: width,
+        margin: const EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: AppColors.black.withOpacity(0.1),
+        ),
+        child: Center(
+          child: AppWidgets.regularText(
+            text: (nextList[id].data as Block).text,
+            alignment: TextAlign.center,
+            size: 16,
+            color: AppColors.black,
+            weight: FontWeight.w500,
+          ),
+        ),
+      ));
+
+      addStoryBlock(nextList[id].nextList[0] as GraphNode<Block>);
+    } else {
+      await authRepo.addChoiceIdToSavedProgress(
+          story.id!, (nextList[index].data as Block).id);
+      widgetList.removeLast();
+      widgetList.add(Container(
+        width: width,
+        margin: const EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: AppColors.black.withOpacity(0.1),
+        ),
+        child: Center(
+          child: AppWidgets.regularText(
+            text: (nextList[index].data as Block).text,
+            alignment: TextAlign.center,
+            size: 16,
+            color: AppColors.black,
+            weight: FontWeight.w500,
+          ),
+        ),
+      ));
+      if (nextList[index].nextList[0].nextList.isEmpty &&
+          (nextList[index].nextList[0].data as Block).id ==
+              story.achievementEndingId) {
+        confettiController.play();
+
+        Timer(const Duration(seconds: 1), () {
+          confettiController.stop();
+          AppWidgets.showToast(AppStrings.secretEndingAchieved);
+        });
+      }
+      addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
     }
-    addStoryBlock(nextList[index].nextList[0] as GraphNode<Block>);
   }
 
   void jsonToGraph(GraphNode<Block> block, Map<String, dynamic> json) {
@@ -408,87 +442,126 @@ class ReadStoryController extends GetxController {
     scrollDown();
   }
 
+  int hasMatchingChoices(List<GraphNode> nextList) {
+    for (int i = 0; i < progress!.pickedChoices!.length; i++) {
+      int pickedChoiceId = progress!.pickedChoices![i];
+      for (int j = 0; j < nextList.length; j++) {
+        if ((nextList[j].data as Block).id == pickedChoiceId) {
+          return j;
+        }
+      }
+    }
+    return -1;
+  }
+
   void addChoiceBlock(List<GraphNode> nextList) {
     var width = MediaQuery.of(Get.context!).size.width;
 
-    isListeningMode ? setReadText(nextList, true) : null;
+    if (progress != null && hasMatchingChoices(nextList) != -1) {
+      int id = hasMatchingChoices(nextList);
+      isListeningMode ? setReadText([nextList[id]], true) : null;
 
-    widgetList.add(
-      Container(
+      widgetList.add(Container(
+        width: width,
         margin: const EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: AppColors.black.withOpacity(0.1),
         ),
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-          itemCount: nextList.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: isListeningMode
-                  ? null
-                  : () async {
-                      await authRepo.addChoiceIdToSavedProgress(
-                          story.id!, (nextList[index].data as Block).id);
-                      widgetList.removeLast();
-                      widgetList.add(Container(
-                        width: width,
-                        margin: const EdgeInsets.symmetric(vertical: 15),
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.black.withOpacity(0.1),
-                        ),
-                        child: Center(
-                          child: AppWidgets.regularText(
-                            text: (nextList[index].data as Block).text,
-                            alignment: TextAlign.center,
-                            size: 16,
-                            color: AppColors.black,
-                            weight: FontWeight.w500,
-                          ),
-                        ),
-                      ));
-                      if (nextList[index].nextList[0].nextList.isEmpty &&
-                          (nextList[index].nextList[0].data as Block).id ==
-                              story.achievementEndingId) {
-                        confettiController.play();
+        child: Center(
+          child: AppWidgets.regularText(
+            text: (nextList[id].data as Block).text,
+            alignment: TextAlign.center,
+            size: 16,
+            color: AppColors.black,
+            weight: FontWeight.w500,
+          ),
+        ),
+      ));
 
-                        Timer(const Duration(seconds: 1), () {
-                          confettiController.stop();
-                          AppWidgets.showToast(AppStrings.secretEndingAchieved);
-                        });
-                      }
-                      addStoryBlock(
-                          nextList[index].nextList[0] as GraphNode<Block>);
-                    },
-              child: Container(
-                width: width,
-                margin: EdgeInsets.only(top: 15),
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: isListeningMode
-                      ? AppColors.black.withOpacity(0.5)
-                      : AppColors.black,
-                ),
-                child: Center(
-                  child: AppWidgets.regularText(
-                    text: (nextList[index].data as Block).text,
-                    alignment: TextAlign.center,
-                    size: 16,
-                    color: AppColors.white,
-                    weight: FontWeight.w500,
+      addStoryBlock(nextList[id].nextList[0] as GraphNode<Block>);
+    } else {
+      isListeningMode ? setReadText(nextList, true) : null;
+
+      widgetList.add(
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: AppColors.black.withOpacity(0.1),
+          ),
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            itemCount: nextList.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: isListeningMode
+                    ? null
+                    : () async {
+                        await authRepo.addChoiceIdToSavedProgress(
+                            story.id!, (nextList[index].data as Block).id);
+                        widgetList.removeLast();
+                        widgetList.add(Container(
+                          width: width,
+                          margin: const EdgeInsets.symmetric(vertical: 15),
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: AppColors.black.withOpacity(0.1),
+                          ),
+                          child: Center(
+                            child: AppWidgets.regularText(
+                              text: (nextList[index].data as Block).text,
+                              alignment: TextAlign.center,
+                              size: 16,
+                              color: AppColors.black,
+                              weight: FontWeight.w500,
+                            ),
+                          ),
+                        ));
+                        if (nextList[index].nextList[0].nextList.isEmpty &&
+                            (nextList[index].nextList[0].data as Block).id ==
+                                story.achievementEndingId) {
+                          confettiController.play();
+
+                          Timer(const Duration(seconds: 1), () {
+                            confettiController.stop();
+                            AppWidgets.showToast(
+                                AppStrings.secretEndingAchieved);
+                          });
+                        }
+                        addStoryBlock(
+                            nextList[index].nextList[0] as GraphNode<Block>);
+                      },
+                child: Container(
+                  width: width,
+                  margin: EdgeInsets.only(top: 15),
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: isListeningMode
+                        ? AppColors.black.withOpacity(0.5)
+                        : AppColors.black,
+                  ),
+                  child: Center(
+                    child: AppWidgets.regularText(
+                      text: (nextList[index].data as Block).text,
+                      alignment: TextAlign.center,
+                      size: 16,
+                      color: AppColors.white,
+                      weight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void scrollDown() {

@@ -102,7 +102,9 @@ class StoryPublishController extends GetxController {
       setLoader(false);
 
       AppWidgets.showToast(AppStrings.storyPublishedSuccessfully);
-      Get.find<NavBarController>().updateIndex(0);
+      Get.isRegistered<NavBarController>()
+          ? Get.find<NavBarController>().updateIndex(0)
+          : Get.put(NavBarController()).updateIndex(0);
       Get.offAll(() => const NavBar());
     }
   }

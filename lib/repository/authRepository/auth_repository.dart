@@ -143,4 +143,21 @@ class AuthRepository extends GetxController {
       }
     }
   }
+
+  Future<SavedProgress?> getSavedProgress(String storyId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final documentReference = db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(storyId);
+
+    final documentSnapshot = await documentReference.get();
+    if (documentSnapshot.exists) {
+      return SavedProgress.fromJson(
+          documentSnapshot.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
 }
