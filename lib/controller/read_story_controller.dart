@@ -73,8 +73,11 @@ class ReadStoryController extends GetxController {
   }
 
   Future<void> createSavedProgress() async {
-    await authRepo.createSavedProgress(
-        SavedProgress(id: story.id, pickedChoices: [], isCompleted: false));
+    await authRepo.createSavedProgress(SavedProgress(
+        id: story.id,
+        pickedChoices: [],
+        isCompleted: false,
+        achievementDone: false));
   }
 
   Future<void> startListening() async {
@@ -383,6 +386,7 @@ class ReadStoryController extends GetxController {
           (nextList[index].nextList[0].data as Block).id ==
               story.achievementEndingId) {
         confettiController.play();
+        await authRepo.addAchievementToSavedProgress(story.id!);
 
         Timer(const Duration(seconds: 1), () {
           confettiController.stop();
@@ -526,6 +530,8 @@ class ReadStoryController extends GetxController {
                             (nextList[index].nextList[0].data as Block).id ==
                                 story.achievementEndingId) {
                           confettiController.play();
+                          await authRepo
+                              .addAchievementToSavedProgress(story.id!);
 
                           Timer(const Duration(seconds: 1), () {
                             confettiController.stop();

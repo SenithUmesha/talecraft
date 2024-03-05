@@ -118,6 +118,22 @@ class AuthRepository extends GetxController {
         });
   }
 
+  Future<void> addAchievementToSavedProgress(String storyId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .doc(storyId)
+        .update({
+          'achievement_done': true,
+        })
+        .then((_) => log("AuthRepository: Achievement added"))
+        .catchError((onError) {
+          log("AuthRepository: ${onError.toString()}");
+        });
+  }
+
   Future<ProgressState> checkSavedProgress(String storyId) async {
     final user = FirebaseAuth.instance.currentUser;
     final documentReference = db
