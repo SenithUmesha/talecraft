@@ -43,10 +43,8 @@ class RegistrationController extends GetxController {
             uid: user?.uid,
             name: nameController.text.trim(),
             email: user?.email,
-            readStories: [],
             bookmarkedStories: [],
-            publishedStories: [],
-            achievementStories: []);
+            publishedStories: []);
         await authRepo.createUser(reader);
         await box.write('current_user', reader);
 

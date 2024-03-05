@@ -30,8 +30,8 @@ class HomeController extends GetxController {
 
   getStories() async {
     setLoader(true);
-    yourStoriesList = await storyRepo.getStories("published");
-    continueStoriesList = await storyRepo.getStories("continuing");
+    yourStoriesList = await storyRepo.getPublishedStories();
+    continueStoriesList = await storyRepo.getReadingStories();
     update();
     setLoader(false);
   }

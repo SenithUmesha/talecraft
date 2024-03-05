@@ -39,7 +39,7 @@ class StoryRepository extends GetxController {
     return url;
   }
 
-  Future<List<Story>> getStories(String type) async {
+  Future<List<Story>> getPublishedStories() async {
     final user = FirebaseAuth.instance.currentUser;
     final reader = await Get.put(AuthRepository()).fetchUser(user!.email!);
 
@@ -47,10 +47,7 @@ class StoryRepository extends GetxController {
       CollectionReference storiesCollection =
           FirebaseFirestore.instance.collection('stories');
       QuerySnapshot querySnapshot = await storiesCollection
-          .where('id',
-              whereIn: type == "published"
-                  ? reader.publishedStories
-                  : reader.publishedStories)
+          .where('id', whereIn: reader.publishedStories)
           .get();
       return querySnapshot.docs
           .map((doc) => Story.fromFirestore(
@@ -77,6 +74,24 @@ class StoryRepository extends GetxController {
       return stories;
     } catch (e) {
       print("StoryRepository: $e");
+      return [];
+    }
+  }
+
+  Future<List<Story>> getReadingStories() async {
+    final list = await Get.put(AuthRepository()).getUncompletedStoryIds();
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot =
+          await storiesCollection.where('id', whereIn: list).get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
       return [];
     }
   }

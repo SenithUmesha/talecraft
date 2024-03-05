@@ -87,7 +87,7 @@ class StoryDetails extends StatelessWidget {
                                           width: width * 0.03,
                                         ),
                                         AppWidgets.regularText(
-                                          text: "${story.readTime} read",
+                                          text: story.readTime,
                                           size: 14.0,
                                           color: AppColors.grey,
                                           weight: FontWeight.w400,
@@ -97,15 +97,30 @@ class StoryDetails extends StatelessWidget {
                                     SizedBox(
                                       height: height * 0.01,
                                     ),
-                                    RatingBarIndicator(
-                                      rating: story.rating ?? 0.0,
-                                      itemBuilder: (context, index) => Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      itemCount: 5,
-                                      itemSize: 18,
-                                      direction: Axis.horizontal,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        RatingBarIndicator(
+                                          rating: story.rating ?? 0.0,
+                                          itemBuilder: (context, index) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          itemCount: 5,
+                                          itemSize: 18,
+                                          direction: Axis.horizontal,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.01,
+                                        ),
+                                        AppWidgets.regularText(
+                                          text: "(${story.noOfRatings})",
+                                          size: 14.0,
+                                          color: AppColors.grey,
+                                          weight: FontWeight.w400,
+                                        ),
+                                      ],
                                     ),
                                     SizedBox(
                                       height: height * 0.02,

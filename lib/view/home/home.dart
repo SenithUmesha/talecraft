@@ -104,7 +104,7 @@ class Home extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: height * 0.008,
+                                height: height * 0.01,
                               ),
                               !controller.recommendedStoriesList.isEmpty
                                   ? Column(

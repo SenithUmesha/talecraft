@@ -176,4 +176,16 @@ class AuthRepository extends GetxController {
       return null;
     }
   }
+
+  Future<List<String>> getUncompletedStoryIds() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final querySnapshot = await db
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reading_stories")
+        .where('is_completed', isEqualTo: false)
+        .get();
+
+    return querySnapshot.docs.map((doc) => doc.id).toList();
+  }
 }

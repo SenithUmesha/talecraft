@@ -8,6 +8,7 @@ class Story {
   String? description;
   String? readTime;
   double? rating;
+  int? noOfRatings;
   String? image;
   List<String>? genres;
   int? achievementEndingId;
@@ -22,6 +23,7 @@ class Story {
       this.description,
       this.readTime,
       this.rating,
+      this.noOfRatings,
       this.image,
       this.genres,
       this.achievementEndingId,
@@ -38,6 +40,7 @@ class Story {
         description: data["description"] ?? "",
         readTime: data["read_time"] ?? "0 min",
         rating: data["rating"].toDouble() ?? 0.0,
+        noOfRatings: data["no_of_ratings"] ?? 0,
         image: data["image"] ?? "",
         genres: data["genres"] != null ? List<String>.from(data["genres"]) : [],
         achievementEndingId: data["achievement_ending_id"] ?? 0,
@@ -53,6 +56,7 @@ class Story {
         "description": description,
         "read_time": readTime,
         "rating": rating,
+        "no_of_ratings": noOfRatings,
         "image": image,
         "genres": genres,
         "achievement_ending_id": achievementEndingId,

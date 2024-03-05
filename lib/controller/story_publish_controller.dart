@@ -91,6 +91,7 @@ class StoryPublishController extends GetxController {
           description: storyDescriptionController.text,
           readTime: "${readTimeController.text} min read",
           rating: 0.0,
+          noOfRatings: 0,
           image: await storyRepo.uploadImage(imagePath),
           genres: selectedGenres,
           achievementEndingId: lastBlockList[position].id,
