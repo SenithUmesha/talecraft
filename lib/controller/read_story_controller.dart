@@ -334,7 +334,8 @@ class ReadStoryController extends GetxController {
       ),
     ));
     if (nextList[index].nextList[0].nextList.isEmpty &&
-        (nextList[index].data as Block).id == story.achievementEndingId) {
+        (nextList[index].nextList[0].data as Block).id ==
+            story.achievementEndingId) {
       confettiController.play();
 
       Timer(const Duration(seconds: 1), () {
@@ -435,7 +436,7 @@ class ReadStoryController extends GetxController {
                         ),
                       ));
                       if (nextList[index].nextList[0].nextList.isEmpty &&
-                          (nextList[index].data as Block).id ==
+                          (nextList[index].nextList[0].data as Block).id ==
                               story.achievementEndingId) {
                         confettiController.play();
 

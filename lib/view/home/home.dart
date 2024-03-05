@@ -78,7 +78,7 @@ class Home extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      top: 10, bottom: 0, left: 15, right: 15),
+                      top: 10, bottom: 15, left: 15, right: 15),
                   child: SingleChildScrollView(
                     child: controller.isLoading
                         ? Padding(
@@ -113,26 +113,31 @@ class Home extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: AppWidgets.regularText(
-                                                text: AppStrings
-                                                    .recommendedForYou,
-                                                size: 18.0,
-                                                color: AppColors.black,
-                                                weight: FontWeight.w600,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: AppWidgets.regularText(
+                                                  text: AppStrings
+                                                      .recommendedForYou,
+                                                  size: 18.0,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                color: Colors.black,
-                                                size: 18,
-                                              ),
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                            ),
+                                            // IconButton(
+                                            //   icon: const Icon(
+                                            //     Icons.arrow_forward_ios_rounded,
+                                            //     color: Colors.black,
+                                            //     size: 18,
+                                            //   ),
+                                            //   onPressed: () {
+                                            //
+                                            //   },
+                                            // ),
                                           ],
                                         ),
                                         Container(
@@ -169,26 +174,31 @@ class Home extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: AppWidgets.regularText(
-                                                text:
-                                                    AppStrings.continueStories,
-                                                size: 18.0,
-                                                color: AppColors.black,
-                                                weight: FontWeight.w600,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: AppWidgets.regularText(
+                                                  text: AppStrings
+                                                      .continueStories,
+                                                  size: 18.0,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                color: Colors.black,
-                                                size: 18,
-                                              ),
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                            ),
+                                            // IconButton(
+                                            //   icon: const Icon(
+                                            //     Icons.arrow_forward_ios_rounded,
+                                            //     color: Colors.black,
+                                            //     size: 18,
+                                            //   ),
+                                            //   onPressed: () {
+                                            //
+                                            //   },
+                                            // ),
                                           ],
                                         ),
                                         Container(
@@ -225,29 +235,34 @@ class Home extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: AppWidgets.regularText(
-                                                text: AppStrings.yourStories,
-                                                size: 18.0,
-                                                color: AppColors.black,
-                                                weight: FontWeight.w600,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: AppWidgets.regularText(
+                                                  text: AppStrings.yourStories,
+                                                  size: 18.0,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                color: Colors.black,
-                                                size: 18,
-                                              ),
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                            ),
+                                            // IconButton(
+                                            //   icon: const Icon(
+                                            //     Icons.arrow_forward_ios_rounded,
+                                            //     color: Colors.black,
+                                            //     size: 18,
+                                            //   ),
+                                            //   onPressed: () {
+                                            //
+                                            //   },
+                                            // ),
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.35,
+                                          height: height * 0.3,
                                           width: width,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
