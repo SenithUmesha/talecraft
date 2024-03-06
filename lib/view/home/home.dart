@@ -366,6 +366,9 @@ class Home extends StatelessWidget {
                                       ],
                                     )
                                   : Container(),
+                              SizedBox(
+                                height: height * 0.02,
+                              ),
                             ],
                           ),
                   ),

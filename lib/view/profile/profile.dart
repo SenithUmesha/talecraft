@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/profile_controller.dart';
 import 'package:talecraft/view/achievements/achievements.dart';
+import 'package:talecraft/view/read_history/read_history.dart';
 
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
@@ -136,6 +137,42 @@ class Profile extends StatelessWidget {
                   //     ],
                   //   ),
                   // ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, top: 12, right: 15),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => ReadHistory());
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.my_library_books_rounded,
+                                color: AppColors.black,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              AppWidgets.regularText(
+                                text: AppStrings.completedStories,
+                                size: 16.0,
+                                color: AppColors.black,
+                                weight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          color: AppColors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, top: 12, right: 15),
                     child: Column(

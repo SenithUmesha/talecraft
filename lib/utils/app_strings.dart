@@ -100,4 +100,5 @@ class AppStrings {
   static const error = "Error";
   static const success = "Success";
   static const accountCreationSuccess = "Account created successfully.";
+  static const completedStories = "Completed Stories";
 }
