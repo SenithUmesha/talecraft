@@ -1,13 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/search_controller.dart';
+import 'package:talecraft/utils/no_items.dart';
 import 'package:talecraft/utils/validator.dart';
 
+import '../../model/story.dart';
 import '../../utils/app_colors.dart';
+import '../../utils/app_images.dart';
 import '../../utils/app_strings.dart';
+import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
-import '../home/home.dart';
+import '../../utils/loading_overlay.dart';
+import '../home/story_details.dart';
 
 class Search extends StatelessWidget {
   const Search({super.key});
@@ -35,6 +41,9 @@ class Search extends StatelessWidget {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            onChanged: (value) {
+                              controller.searchStories(value);
+                            },
                             controller: controller.searchController,
                             maxLines: 1,
                             keyboardType: TextInputType.text,
@@ -63,47 +72,123 @@ class Search extends StatelessWidget {
                             validator: validateSearch,
                           ),
                         ),
-                        SizedBox(
-                          width: width * 0.025,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          icon: Icon(
-                            Icons.search_rounded,
-                            color: AppColors.black,
-                          ),
-                        )
                       ],
                     ),
                     SizedBox(
                       height: height * 0.01,
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: CupertinoScrollbar(
-                          controller: controller.scrollController,
-                          child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: EdgeInsets.only(bottom: 30, top: 10),
-                            controller: controller.scrollController,
-                            itemCount: controller.searchList.length,
-                            itemBuilder: (context, index) {
-                              return Home.getStoryItem(
-                                  height, width, controller.searchList[index]);
-                            },
-                          ),
-                        ),
-                      ),
+                      child: controller.isLoading
+                          ? LoadingOverlay()
+                          : controller.searchList.isEmpty
+                              ? NoItemsOverlay()
+                              : CupertinoScrollbar(
+                                  controller: controller.scrollController,
+                                  child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    padding:
+                                        EdgeInsets.only(bottom: 30, top: 10),
+                                    controller: controller.scrollController,
+                                    itemCount: controller.searchList.length,
+                                    itemBuilder: (context, index) {
+                                      return getStoryItem(height, width,
+                                          controller.searchList[index]);
+                                    },
+                                  ),
+                                ),
                     )
                   ],
                 ),
               ),
             );
           }),
+    );
+  }
+
+  static getStoryItem(double height, double width, Story story) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => StoryDetails(), arguments: [story]);
+      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Container(
+          height: height * 0.2,
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: AppWidgets.imageWidget(
+                  story.image,
+                  AppImages.noStoryCover,
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                height: height * 0.2,
+                width: width * 0.3,
+              ),
+              SizedBox(
+                width: width * 0.03,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppWidgets.regularText(
+                      text: story.name,
+                      size: 16.0,
+                      color: AppColors.black,
+                      weight: FontWeight.w600,
+                    ),
+                    AppWidgets.regularText(
+                      text: story.authorName,
+                      size: 14.0,
+                      color: AppColors.black,
+                      weight: FontWeight.w400,
+                    ),
+                    SizedBox(
+                      height: height * 0.006,
+                    ),
+                    AppWidgets.regularText(
+                        text: story.description,
+                        size: 12.0,
+                        color: AppColors.black,
+                        weight: FontWeight.w400,
+                        maxLines: 3,
+                        textOverFlow: TextOverflow.ellipsis),
+                    SizedBox(
+                      height: height * 0.006,
+                    ),
+                    AppWidgets.regularText(
+                      text: "${story.readTime} read",
+                      size: 12.0,
+                      color: AppColors.grey,
+                      weight: FontWeight.w400,
+                    ),
+                    SizedBox(
+                      height: height * 0.006,
+                    ),
+                    RatingBarIndicator(
+                      rating: story.rating ?? 0.0,
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      itemCount: 5,
+                      itemSize: 14,
+                      direction: Axis.horizontal,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

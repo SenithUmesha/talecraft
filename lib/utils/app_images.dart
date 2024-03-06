@@ -6,4 +6,5 @@ class AppImages {
   static const noStoryCover = "assets/images/no_image_story.png";
   static const banner = "assets/images/banner_one.png";
   static const playing = "assets/images/playing.json";
+  static const empty = "assets/images/empty.json";
 }

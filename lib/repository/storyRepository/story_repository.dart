@@ -122,4 +122,59 @@ class StoryRepository extends GetxController {
       return null;
     }
   }
+
+  Future<List<Story>> getBookmarkedStories() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final reader = await Get.put(AuthRepository()).fetchUser(user!.email!);
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot = await storiesCollection
+          .where('id', whereIn: reader.bookmarkedStories)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
+
+  Future<List<Story>> getAllStories() async {
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot = await storiesCollection.get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
+
+  Future<List<Story>> searchStoriesByName(String query) async {
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+
+      QuerySnapshot querySnapshot = await storiesCollection
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThan: query + 'z')
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
 }
