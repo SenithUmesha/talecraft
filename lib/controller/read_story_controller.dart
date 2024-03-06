@@ -67,11 +67,13 @@ class ReadStoryController extends GetxController {
   }
 
   void rateStory() {
-    showDialog(
-      context: Get.context!,
-      barrierDismissible: true,
-      builder: (context) => AppWidgets.showRatingDialog(story),
-    );
+    Timer(const Duration(seconds: 1), () {
+      showDialog(
+        context: Get.context!,
+        barrierDismissible: true,
+        builder: (context) => AppWidgets.showRatingDialog(story),
+      );
+    });
   }
 
   Future<void> startStoryProcess() async {

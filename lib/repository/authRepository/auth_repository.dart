@@ -188,4 +188,27 @@ class AuthRepository extends GetxController {
 
     return querySnapshot.docs.map((doc) => doc.id).toList();
   }
+
+  Future<List<String>> getCompletedStoryIds() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final collectionReference =
+        db.collection("users").doc(user?.uid).collection("reading_stories");
+
+    QuerySnapshot querySnapshot =
+        await collectionReference.where('is_completed', isEqualTo: true).get();
+
+    return querySnapshot.docs.map((doc) => doc.id).toList();
+  }
+
+  Future<List<String>> getAchievementCompletedStoryIds() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final collectionReference =
+        db.collection("users").doc(user?.uid).collection("reading_stories");
+
+    QuerySnapshot querySnapshot = await collectionReference
+        .where('achievement_done', isEqualTo: true)
+        .get();
+
+    return querySnapshot.docs.map((doc) => doc.id).toList();
+  }
 }

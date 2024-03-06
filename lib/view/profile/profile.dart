@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/controller/profile_controller.dart';
+import 'package:talecraft/view/achievements/achievements.dart';
 
 import '../../utils/app_colors.dart';
+import '../../utils/app_icons.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_widgets.dart';
@@ -64,14 +66,7 @@ class Profile extends StatelessWidget {
                     weight: FontWeight.w500,
                   ),
                   SizedBox(
-                    height: height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 12, right: 15),
-                    child: Divider(
-                      thickness: 1,
-                      color: AppColors.grey,
-                    ),
+                    height: height * 0.04,
                   ),
                   // Padding(
                   //   padding: EdgeInsets.only(left: 15, top: 12, right: 15),
@@ -141,6 +136,42 @@ class Profile extends StatelessWidget {
                   //     ],
                   //   ),
                   // ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, top: 12, right: 15),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => Achievements());
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                AppIcons.medal,
+                                scale: 4,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              AppWidgets.regularText(
+                                text: AppStrings.achievements,
+                                size: 16.0,
+                                color: AppColors.black,
+                                weight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          color: AppColors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, top: 12, right: 15),
                     child: Column(

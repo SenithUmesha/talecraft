@@ -68,6 +68,7 @@ class AppStrings {
   static const profile = "Profile";
   static const editProfile = "Edit Profile";
   static const changePassword = "Change Password";
+  static const achievements = "Achievements";
   static const logOut = "Log out";
   static const publishStory = "Publish Story";
   static const storyDescription = "Story Description";

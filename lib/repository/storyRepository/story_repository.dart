@@ -195,4 +195,41 @@ class StoryRepository extends GetxController {
       return [];
     }
   }
+
+  Future<List<Story>> getCompletedStories() async {
+    final list = await Get.put(AuthRepository()).getCompletedStoryIds();
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot =
+          await storiesCollection.where('id', whereIn: list).get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
+
+  Future<List<Story>> getAchievementCompletedStories() async {
+    final list =
+        await Get.put(AuthRepository()).getAchievementCompletedStoryIds();
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot =
+          await storiesCollection.where('id', whereIn: list).get();
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
 }
