@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:talecraft/model/saved_progress.dart';
@@ -63,6 +64,14 @@ class ReadStoryController extends GetxController {
     speech = stt.SpeechToText();
 
     startStoryProcess();
+  }
+
+  void rateStory() {
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (context) => AppWidgets.showRatingDialog(story),
+    );
   }
 
   Future<void> startStoryProcess() async {
@@ -425,7 +434,10 @@ class ReadStoryController extends GetxController {
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
     } else {
-      await authRepo.addCompletedToSavedProgress(story.id!);
+      if (status != ProgressState.Completed) {
+        await authRepo.addCompletedToSavedProgress(story.id!);
+        rateStory();
+      }
 
       widgetList.add(Container(
         width: width,

@@ -1,10 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:talecraft/utils/app_strings.dart';
 
+import '../model/story.dart';
+import '../repository/storyRepository/story_repository.dart';
 import 'app_colors.dart';
+import 'app_images.dart';
 
 class AppWidgets {
   static regularText(
@@ -243,6 +249,61 @@ class AppWidgets {
               color: Colors.white,
             ),
       duration: const Duration(milliseconds: 3000),
+    );
+  }
+
+  static showRatingDialog(Story story) {
+    var height = MediaQuery.of(Get.context!).size.height;
+    return RatingDialog(
+      initialRating: 1.0,
+      enableComment: false,
+      showCloseButton: true,
+      title: AppWidgets.regularText(
+        text: story.name,
+        size: 22.0,
+        alignment: TextAlign.center,
+        color: AppColors.black,
+        weight: FontWeight.w600,
+      ),
+      message: AppWidgets.regularText(
+        text: 'Tap a star to set your rating.',
+        size: 14.0,
+        alignment: TextAlign.center,
+        color: AppColors.black,
+        weight: FontWeight.w400,
+      ),
+      image: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: AppWidgets.imageWidget(
+          story.image,
+          AppImages.noStoryCover,
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        height: height * 0.2,
+      ),
+      submitButtonText: 'Submit',
+      onCancelled: () => log('Rating Cancelled'),
+      submitButtonTextStyle: TextStyle(
+          fontFamily: "Regular",
+          fontWeight: FontWeight.w600,
+          color: AppColors.black,
+          fontSize: 16),
+      onSubmitted: (response) async {
+        final storyRepo = Get.put(StoryRepository());
+        final newStory = await storyRepo.getCurrentStory(story.id!);
+        if (newStory != null) {
+          double currentRating = newStory.rating ?? 0.0;
+          int numberOfRatings = newStory.noOfRatings ?? 0;
+
+          double newRating =
+              ((currentRating * numberOfRatings) + response.rating) /
+                  (numberOfRatings + 1);
+          await storyRepo.updateStoryRatings(newRating, newStory);
+        }
+      },
     );
   }
 }

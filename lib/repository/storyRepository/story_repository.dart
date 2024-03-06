@@ -95,4 +95,31 @@ class StoryRepository extends GetxController {
       return [];
     }
   }
+
+  Future<void> updateStoryRatings(double newRating, Story story) async {
+    await db
+        .collection("stories")
+        .doc(story.id)
+        .update({'rating': newRating, 'no_of_ratings': story.noOfRatings! + 1})
+        .then((_) => log("StoryRepository: Rated"))
+        .catchError((onError) {
+          log("StoryRepository: ${onError.toString()}");
+        });
+  }
+
+  Future<Story?> getCurrentStory(String storyId) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await db.collection("stories").doc(storyId).get();
+
+      if (snapshot.exists) {
+        return Story.fromFirestore(snapshot);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("StoryRepository: $e");
+      return null;
+    }
+  }
 }
