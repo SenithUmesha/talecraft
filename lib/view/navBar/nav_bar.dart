@@ -33,25 +33,28 @@ class NavBar extends StatelessWidget {
                             : controller.bottomNavIndex == 3
                                 ? const Profile()
                                 : const Storyboard()),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: controller.bottomNavIndex == 4
-                  ? AppColors.black
-                  : AppColors.red,
-              shape: const CircleBorder(),
-              child: controller.bottomNavIndex == 4
-                  ? Icon(
-                      Icons.arrow_forward_rounded,
-                      color: AppColors.white,
-                    )
-                  : Icon(
-                      Icons.edit_rounded,
-                      color: AppColors.white,
-                    ),
-              onPressed: () {
-                controller.bottomNavIndex == 4
-                    ? Get.find<StoryboardController>().finalizeStory()
-                    : controller.updateIndex(4);
-              },
+            floatingActionButton: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0,
+              child: FloatingActionButton(
+                backgroundColor: controller.bottomNavIndex == 4
+                    ? AppColors.black
+                    : AppColors.red,
+                shape: const CircleBorder(),
+                child: controller.bottomNavIndex == 4
+                    ? Icon(
+                        Icons.arrow_forward_rounded,
+                        color: AppColors.white,
+                      )
+                    : Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.white,
+                      ),
+                onPressed: () {
+                  controller.bottomNavIndex == 4
+                      ? Get.find<StoryboardController>().finalizeStory()
+                      : controller.updateIndex(4);
+                },
+              ),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
