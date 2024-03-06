@@ -13,13 +13,15 @@ class HomeController extends GetxController {
   List<Story> continueStoriesList = [];
   List<Story> yourStoriesList = [];
   final storyRepo = Get.put(StoryRepository());
-  List<String> genreList = [
-    'Action',
-    'Adventure',
-    'Sci-Fi',
-    'Drama',
-    'Comedy',
-    'Thriller'
+  List<String> allGenres = [
+    "Action",
+    "Adventure",
+    "Comedy",
+    "Drama",
+    "Fantasy",
+    "Sci-Fi",
+    "AI",
+    "Thriller"
   ];
 
   @override

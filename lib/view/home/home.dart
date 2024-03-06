@@ -5,6 +5,7 @@ import 'package:talecraft/controller/nav_bar_controller.dart';
 import 'package:talecraft/model/story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
+import 'package:talecraft/view/home/genre_details.dart';
 import 'package:talecraft/view/home/story_details.dart';
 
 import '../../utils/app_images.dart';
@@ -93,12 +94,12 @@ class Home extends StatelessWidget {
                                   physics: BouncingScrollPhysics(),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: controller.genreList.length,
+                                  itemCount: controller.allGenres.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: getGenreItem(
-                                          controller.genreList[index], width),
+                                          controller.allGenres[index], width),
                                     );
                                   },
                                 ),
@@ -298,18 +299,27 @@ class Home extends StatelessWidget {
   }
 
   static getGenreItem(String genre, double width) {
-    return Container(
-      width: width * 0.25,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: AppColors.red.withOpacity(0.1),
-      ),
-      child: Center(
-        child: AppWidgets.regularText(
-          text: genre,
-          size: 14.0,
-          color: AppColors.red,
-          weight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+            () => GenreDetails(
+                  name: genre,
+                ),
+            arguments: [genre]);
+      },
+      child: Container(
+        width: width * 0.25,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: AppColors.red.withOpacity(0.1),
+        ),
+        child: Center(
+          child: AppWidgets.regularText(
+            text: genre,
+            size: 14.0,
+            color: AppColors.red,
+            weight: FontWeight.w500,
+          ),
         ),
       ),
     );

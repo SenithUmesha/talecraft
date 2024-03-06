@@ -177,4 +177,22 @@ class StoryRepository extends GetxController {
       return [];
     }
   }
+
+  Future<List<Story>> getStoriesByGenre(String genre) async {
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+
+      QuerySnapshot querySnapshot =
+          await storiesCollection.where('genres', arrayContains: genre).get();
+
+      return querySnapshot.docs
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
 }

@@ -62,6 +62,7 @@ class AppStrings {
   static const publish = "Publish";
   static const bookmarkedStories = "Bookmarked Stories";
   static const search = "Search";
+  static const filter = "Filter";
   static const storyName = "Story Name";
   static const storyCover = "Story Cover";
   static const profile = "Profile";

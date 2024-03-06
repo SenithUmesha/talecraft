@@ -38,7 +38,8 @@ class StoryPublishController extends GetxController {
     "Drama",
     "Fantasy",
     "Sci-Fi",
-    "AI"
+    "AI",
+    "Thriller"
   ];
   List<String> selectedGenres = [];
   bool genreValidationError = false;
