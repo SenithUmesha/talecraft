@@ -5,6 +5,7 @@ import 'package:talecraft/controller/nav_bar_controller.dart';
 import 'package:talecraft/model/story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
+import 'package:talecraft/view/home/browse_stories.dart';
 import 'package:talecraft/view/home/genre_details.dart';
 import 'package:talecraft/view/home/story_details.dart';
 
@@ -130,16 +131,21 @@ class Home extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            // IconButton(
-                                            //   icon: const Icon(
-                                            //     Icons.arrow_forward_ios_rounded,
-                                            //     color: Colors.black,
-                                            //     size: 18,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //
-                                            //   },
-                                            // ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.to(() => BrowseStories(
+                                                      name: AppStrings
+                                                          .recommendedForYou,
+                                                      list: controller
+                                                          .recommendedStoriesList,
+                                                    ));
+                                              },
+                                            ),
                                           ],
                                         ),
                                         Container(
@@ -190,16 +196,21 @@ class Home extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            // IconButton(
-                                            //   icon: const Icon(
-                                            //     Icons.arrow_forward_ios_rounded,
-                                            //     color: Colors.black,
-                                            //     size: 18,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //
-                                            //   },
-                                            // ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.to(() => BrowseStories(
+                                                      name:
+                                                          AppStrings.allStories,
+                                                      list:
+                                                          controller.allStories,
+                                                    ));
+                                              },
+                                            ),
                                           ],
                                         ),
                                         Container(
@@ -213,7 +224,7 @@ class Home extends StatelessWidget {
                                                 bottom: height * 0.008,
                                                 top: height * 0.008),
                                             controller: controller
-                                                .recommendedScrollController,
+                                                .allStoriesScrollController,
                                             itemCount:
                                                 controller.allStories.length,
                                             itemBuilder: (context, index) {
@@ -247,16 +258,21 @@ class Home extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            // IconButton(
-                                            //   icon: const Icon(
-                                            //     Icons.arrow_forward_ios_rounded,
-                                            //     color: Colors.black,
-                                            //     size: 18,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //
-                                            //   },
-                                            // ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.to(() => BrowseStories(
+                                                      name: AppStrings
+                                                          .continueStories,
+                                                      list: controller
+                                                          .continueStoriesList,
+                                                    ));
+                                              },
+                                            ),
                                           ],
                                         ),
                                         Container(
@@ -307,16 +323,21 @@ class Home extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            // IconButton(
-                                            //   icon: const Icon(
-                                            //     Icons.arrow_forward_ios_rounded,
-                                            //     color: Colors.black,
-                                            //     size: 18,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //
-                                            //   },
-                                            // ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                Get.to(() => BrowseStories(
+                                                      name: AppStrings
+                                                          .yourStories,
+                                                      list: controller
+                                                          .yourStoriesList,
+                                                    ));
+                                              },
+                                            ),
                                           ],
                                         ),
                                         Container(

@@ -8,6 +8,7 @@ import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/home.dart';
 import 'package:talecraft/view/readStory/read_story.dart';
 
+import '../../utils/app_icons.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
@@ -43,21 +44,60 @@ class StoryDetails extends StatelessWidget {
                                     left: 15, right: 15, top: 20),
                                 child: Column(
                                   children: [
-                                    Center(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: AppWidgets.imageWidget(
-                                          controller.story.image,
-                                          AppImages.noStoryCover,
-                                        ),
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        height: height * 0.3,
-                                        width: width * 0.45,
+                                    Container(
+                                      height: height * 0.3,
+                                      width: width * 0.45,
+                                      child: Stack(
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: AppWidgets.imageWidget(
+                                                controller.story.image,
+                                                AppImages.noStoryCover,
+                                              ),
+                                              clipBehavior:
+                                                  Clip.antiAliasWithSaveLayer,
+                                              height: height * 0.3,
+                                              width: width * 0.45,
+                                            ),
+                                          ),
+                                          controller.story.achievementDone !=
+                                                      null &&
+                                                  controller
+                                                      .story.achievementDone!
+                                              ? Positioned(
+                                                  top: 0,
+                                                  right: 0,
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                        color: AppColors.black
+                                                            .withOpacity(0.6),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        8),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        8))),
+                                                    child: Center(
+                                                      child: Image.asset(
+                                                        AppIcons.medal,
+                                                        scale: 4,
+                                                        color: AppColors.gold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(),
+                                        ],
                                       ),
                                     ),
                                     SizedBox(

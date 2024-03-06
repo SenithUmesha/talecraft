@@ -7,6 +7,7 @@ import '../repository/storyRepository/story_repository.dart';
 
 class HomeController extends GetxController {
   bool isLoading = false;
+  final allStoriesScrollController = ScrollController();
   final recommendedScrollController = ScrollController();
   final continueScrollController = ScrollController();
   final publishedScrollController = ScrollController();
@@ -48,7 +49,10 @@ class HomeController extends GetxController {
     allStories = await storyRepo.getAllStories();
     yourStoriesList = await storyRepo.getPublishedStories();
     continueStoriesList = await storyRepo.getReadingStories();
+    markAchievementDone(recommendedStoriesList);
     markAchievementDone(allStories);
+    markAchievementDone(continueStoriesList);
+    markAchievementDone(yourStoriesList);
     update();
     setLoader(false);
   }

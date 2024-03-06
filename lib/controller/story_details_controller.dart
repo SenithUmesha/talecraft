@@ -14,6 +14,7 @@ class StoryDetailsController extends GetxController {
   final authRepo = Get.put(AuthRepository());
   bool isLoading = false;
   late Story story;
+  List<String> achievementIds = [];
 
   @override
   void onInit() {
@@ -61,7 +62,13 @@ class StoryDetailsController extends GetxController {
 
   Future<void> getCurrentStory(String storyId) async {
     setLoader(true);
+    achievementIds = await authRepo.getAchievementCompletedStoryIds();
     story = (await storyRepo.getCurrentStory(storyId))!;
+
+    if (achievementIds.contains(story.id) && story.achievementDone == null) {
+      story.achievementDone = true;
+    }
+
     update();
     setLoader(false);
   }
