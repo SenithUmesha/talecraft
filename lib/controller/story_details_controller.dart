@@ -13,15 +13,21 @@ class StoryDetailsController extends GetxController {
   final storyRepo = Get.put(StoryRepository());
   final authRepo = Get.put(AuthRepository());
   bool isLoading = false;
+  late Story story;
 
   @override
   void onInit() {
     super.onInit();
+
+    story = Get.arguments[0] as Story;
+    String storyId = (Get.arguments[0] as Story).id!;
+
+    getCurrentStory(storyId);
     getStories();
     getCurrentReader();
   }
 
-  Future<void> updateIsBookmarked(Story story) async {
+  Future<void> updateIsBookmarked() async {
     setLoader(true);
     isBookmarked = !(isBookmarked);
     await authRepo.addIdToBookmarkedStories(story);
@@ -51,5 +57,12 @@ class StoryDetailsController extends GetxController {
   setLoader(bool value) {
     isLoading = value;
     update();
+  }
+
+  Future<void> getCurrentStory(String storyId) async {
+    setLoader(true);
+    story = (await storyRepo.getCurrentStory(storyId))!;
+    update();
+    setLoader(false);
   }
 }

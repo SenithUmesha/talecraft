@@ -14,8 +14,7 @@ import '../../utils/custom_app_bar.dart';
 import '../../utils/loading_overlay.dart';
 
 class StoryDetails extends StatelessWidget {
-  final Story story;
-  StoryDetails({super.key, required this.story});
+  StoryDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class StoryDetails extends StatelessWidget {
                                               BorderRadius.circular(8),
                                         ),
                                         child: AppWidgets.imageWidget(
-                                          story.image,
+                                          controller.story.image,
                                           AppImages.noStoryCover,
                                         ),
                                         clipBehavior:
@@ -65,7 +64,7 @@ class StoryDetails extends StatelessWidget {
                                       height: height * 0.02,
                                     ),
                                     AppWidgets.regularText(
-                                      text: story.name,
+                                      text: controller.story.name,
                                       size: 18.0,
                                       color: AppColors.black,
                                       weight: FontWeight.w600,
@@ -78,7 +77,7 @@ class StoryDetails extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         AppWidgets.regularText(
-                                          text: story.authorName,
+                                          text: controller.story.authorName,
                                           size: 14.0,
                                           color: AppColors.black,
                                           weight: FontWeight.w400,
@@ -87,7 +86,7 @@ class StoryDetails extends StatelessWidget {
                                           width: width * 0.03,
                                         ),
                                         AppWidgets.regularText(
-                                          text: story.readTime,
+                                          text: controller.story.readTime,
                                           size: 14.0,
                                           color: AppColors.grey,
                                           weight: FontWeight.w400,
@@ -102,7 +101,8 @@ class StoryDetails extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         RatingBarIndicator(
-                                          rating: story.rating ?? 0.0,
+                                          rating:
+                                              controller.story.rating ?? 0.0,
                                           itemBuilder: (context, index) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
@@ -115,7 +115,8 @@ class StoryDetails extends StatelessWidget {
                                           width: width * 0.01,
                                         ),
                                         AppWidgets.regularText(
-                                          text: "(${story.noOfRatings})",
+                                          text:
+                                              "(${controller.story.noOfRatings})",
                                           size: 14.0,
                                           color: AppColors.grey,
                                           weight: FontWeight.w400,
@@ -127,7 +128,7 @@ class StoryDetails extends StatelessWidget {
                                     ),
                                     AppWidgets.regularText(
                                       alignment: TextAlign.center,
-                                      text: story.description,
+                                      text: controller.story.description,
                                       size: 14.0,
                                       color: AppColors.black,
                                       weight: FontWeight.w400,
@@ -135,8 +136,8 @@ class StoryDetails extends StatelessWidget {
                                     SizedBox(
                                       height: height * 0.02,
                                     ),
-                                    story.genres == null ||
-                                            story.genres!.isEmpty
+                                    controller.story.genres == null ||
+                                            controller.story.genres!.isEmpty
                                         ? SizedBox()
                                         : Container(
                                             height: height * 0.04,
@@ -144,14 +145,16 @@ class StoryDetails extends StatelessWidget {
                                               physics: BouncingScrollPhysics(),
                                               shrinkWrap: true,
                                               scrollDirection: Axis.horizontal,
-                                              itemCount: story.genres!.length,
+                                              itemCount: controller
+                                                  .story.genres!.length,
                                               itemBuilder: (context, index) {
                                                 return Padding(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 8),
                                                   child: Home.getGenreItem(
-                                                      story.genres![index],
+                                                      controller
+                                                          .story.genres![index],
                                                       width),
                                                 );
                                               },
@@ -165,8 +168,8 @@ class StoryDetails extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
-                                          onTap: () => controller
-                                              .updateIsBookmarked(story),
+                                          onTap: () =>
+                                              controller.updateIsBookmarked(),
                                           child: !controller.isBookmarked
                                               ? Container(
                                                   width: width * 0.14,
@@ -215,10 +218,14 @@ class StoryDetails extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () => Get.to(
                                               () => ReadStory(
-                                                    name: story.name!,
+                                                    name:
+                                                        controller.story.name!,
                                                     isListening: false,
                                                   ),
-                                              arguments: [story, false]),
+                                              arguments: [
+                                                controller.story,
+                                                false
+                                              ]),
                                           child: Container(
                                             width: width * 0.4,
                                             height: width * 0.14,
@@ -251,10 +258,14 @@ class StoryDetails extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () => Get.to(
                                               () => ReadStory(
-                                                    name: story.name!,
+                                                    name:
+                                                        controller.story.name!,
                                                     isListening: true,
                                                   ),
-                                              arguments: [story, true]),
+                                              arguments: [
+                                                controller.story,
+                                                true
+                                              ]),
                                           child: Container(
                                             width: width * 0.4 +
                                                 width * 0.14 +
@@ -350,12 +361,8 @@ class StoryDetails extends StatelessWidget {
         StoryDetailsController storyDetailsController =
             Get.find<StoryDetailsController>();
         storyDetailsController.onInit();
-        Get.to(
-            () => StoryDetails(
-                  story: moreStory,
-                ),
-            arguments: [moreStory],
-            preventDuplicates: false);
+        Get.to(() => StoryDetails(),
+            arguments: [moreStory], preventDuplicates: false);
       },
       child: Column(
         children: [

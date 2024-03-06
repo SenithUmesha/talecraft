@@ -8,8 +8,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final List<Widget>? actions;
   final bool? cantGoBack;
+  final void Function()? onPressBack;
 
-  const CustomAppBar({super.key, this.title, this.actions, this.cantGoBack});
+  const CustomAppBar(
+      {super.key, this.title, this.actions, this.cantGoBack, this.onPressBack});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -27,9 +29,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Icons.arrow_back_ios_new_rounded,
                 color: Colors.black,
               ),
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: onPressBack != null
+                  ? onPressBack
+                  : () {
+                      Get.back();
+                    },
             ),
       actions: actions,
       title: title == null
