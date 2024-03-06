@@ -7,4 +7,5 @@ class AppImages {
   static const banner = "assets/images/banner_one.png";
   static const playing = "assets/images/playing.json";
   static const empty = "assets/images/empty.json";
+  static const frame = "assets/images/frame.json";
 }

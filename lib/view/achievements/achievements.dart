@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../controller/achievements_controller.dart';
 import '../../model/story.dart';
@@ -42,8 +42,7 @@ class Achievements extends StatelessWidget {
                                   child: ListView.builder(
                                     physics: BouncingScrollPhysics(),
                                     shrinkWrap: true,
-                                    padding:
-                                        EdgeInsets.only(bottom: 30, top: 10),
+                                    padding: EdgeInsets.only(bottom: 30),
                                     controller: controller.scrollController,
                                     itemCount: controller.allStories.length,
                                     itemBuilder: (context, index) {
@@ -66,82 +65,67 @@ class Achievements extends StatelessWidget {
       onTap: () {
         Get.to(() => StoryDetails(), arguments: [story]);
       },
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 10),
-        child: Container(
-          height: height * 0.2,
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AppWidgets.imageWidget(
-                  story.image,
-                  AppImages.noStoryCover,
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                height: height * 0.2,
-                width: width * 0.3,
-              ),
-              SizedBox(
-                width: width * 0.03,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppWidgets.regularText(
-                      text: story.name,
-                      size: 16.0,
-                      color: AppColors.black,
-                      weight: FontWeight.w600,
-                    ),
-                    AppWidgets.regularText(
-                      text: story.authorName,
-                      size: 14.0,
-                      color: AppColors.black,
-                      weight: FontWeight.w400,
-                    ),
-                    SizedBox(
-                      height: height * 0.006,
-                    ),
-                    AppWidgets.regularText(
-                        text: story.description,
-                        size: 12.0,
-                        color: AppColors.black,
-                        weight: FontWeight.w400,
-                        maxLines: 3,
-                        textOverFlow: TextOverflow.ellipsis),
-                    SizedBox(
-                      height: height * 0.006,
-                    ),
-                    AppWidgets.regularText(
-                      text: "${story.readTime} read",
-                      size: 12.0,
-                      color: AppColors.grey,
-                      weight: FontWeight.w400,
-                    ),
-                    SizedBox(
-                      height: height * 0.006,
-                    ),
-                    RatingBarIndicator(
-                      rating: story.rating ?? 0.0,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
+      child: Container(
+        height: height * 0.15,
+        child: Row(
+          children: [
+            Container(
+              height: width * 0.4,
+              child: Stack(
+                children: [
+                  Lottie.asset(
+                    AppImages.frame,
+                    fit: BoxFit.fill,
+                  ),
+                  Positioned(
+                    top: 27.8,
+                    left: 27.8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white, shape: BoxShape.circle),
+                      child: AppWidgets.imageWidget(
+                        story.image,
+                        AppImages.noStoryCover,
                       ),
-                      itemCount: 5,
-                      itemSize: 14,
-                      direction: Axis.horizontal,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      width: width * 0.18,
+                      height: width * 0.18,
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: width * 0.03,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppWidgets.regularText(
+                    text: story.name,
+                    size: 16.0,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                  ),
+                  SizedBox(
+                    height: height * 0.006,
+                  ),
+                  AppWidgets.regularText(
+                      text: story.description,
+                      size: 12.0,
+                      color: AppColors.black,
+                      weight: FontWeight.w400,
+                      maxLines: 3,
+                      textOverFlow: TextOverflow.ellipsis),
+                  SizedBox(
+                    height: height * 0.006,
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
