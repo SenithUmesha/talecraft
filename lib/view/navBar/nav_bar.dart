@@ -51,7 +51,7 @@ class NavBar extends StatelessWidget {
                       ),
                 onPressed: () {
                   controller.bottomNavIndex == 4
-                      ? Get.find<StoryboardController>().finalizeStory()
+                      ? Get.put(StoryboardController()).finalizeStory()
                       : controller.updateIndex(4);
                 },
               ),

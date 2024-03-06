@@ -39,7 +39,7 @@ class BrowseStories extends StatelessWidget {
                             child: ListView.builder(
                               physics: BouncingScrollPhysics(),
                               shrinkWrap: true,
-                              padding: EdgeInsets.only(bottom: 30),
+                              padding: EdgeInsets.only(bottom: 10),
                               controller: controller.scrollController,
                               itemCount: list.length,
                               itemBuilder: (context, index) {
@@ -113,7 +113,7 @@ class BrowseStories extends StatelessWidget {
                       height: height * 0.006,
                     ),
                     AppWidgets.regularText(
-                      text: "${story.readTime} read",
+                      text: "${story.readTime}",
                       size: 12.0,
                       color: AppColors.grey,
                       weight: FontWeight.w400,

@@ -86,10 +86,10 @@ class StoryPublishController extends GetxController {
       Map<String, dynamic> graphJson = box.read('saved_graph');
       Story story = Story(
           id: "",
-          name: storyNameController.text,
+          name: storyNameController.text.trim(),
           authorId: user?.uid,
           authorName: user?.displayName,
-          description: storyDescriptionController.text,
+          description: storyDescriptionController.text.trim(),
           readTime: "${readTimeController.text} min read",
           rating: 0.0,
           noOfRatings: 0,

@@ -47,7 +47,7 @@ class AppStrings {
       "Double press to edit blocks | Hold press to delete blocks";
   static const addSomeText = "Please enter some text";
   static const textShouldBeLessThan40 = "Text should be less than 40";
-  static const textShouldBeLessThan100 = "Text should be less than 100";
+  static const textShouldBeLessThan200 = "Text should be less than 200";
   static const textShouldBeLessThan150 = "Text should be less than 150";
   static const enterShortDescription = "Please enter a shorter description";
   static const endWithStoryBlock =

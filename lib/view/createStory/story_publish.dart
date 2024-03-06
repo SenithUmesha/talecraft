@@ -162,9 +162,9 @@ class StoryPublish extends StatelessWidget {
                                               if (value == null ||
                                                   value.trim().isEmpty) {
                                                 return AppStrings.addSomeText;
-                                              } else if (value.length > 100) {
+                                              } else if (value.length > 200) {
                                                 return AppStrings
-                                                    .textShouldBeLessThan100;
+                                                    .textShouldBeLessThan200;
                                               }
                                               return null;
                                             },

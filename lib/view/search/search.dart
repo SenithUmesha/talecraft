@@ -164,7 +164,7 @@ class Search extends StatelessWidget {
                       height: height * 0.006,
                     ),
                     AppWidgets.regularText(
-                      text: "${story.readTime} read",
+                      text: "${story.readTime}",
                       size: 12.0,
                       color: AppColors.grey,
                       weight: FontWeight.w400,
