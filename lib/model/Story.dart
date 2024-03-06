@@ -14,6 +14,7 @@ class Story {
   int? achievementEndingId;
   Map<String, dynamic>? storyJson;
   DateTime? createdAt;
+  bool? achievementDone;
 
   Story(
       {this.id,
@@ -28,7 +29,8 @@ class Story {
       this.genres,
       this.achievementEndingId,
       this.storyJson,
-      this.createdAt});
+      this.createdAt,
+      this.achievementDone});
 
   factory Story.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data()!;

@@ -8,6 +8,7 @@ import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/genre_details.dart';
 import 'package:talecraft/view/home/story_details.dart';
 
+import '../../utils/app_icons.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/loading_overlay.dart';
@@ -162,6 +163,62 @@ class Home extends StatelessWidget {
                                                   controller
                                                           .recommendedStoriesList[
                                                       index]);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              !controller.allStories.isEmpty
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: AppWidgets.regularText(
+                                                  text: AppStrings.allStories,
+                                                  size: 18.0,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                            // IconButton(
+                                            //   icon: const Icon(
+                                            //     Icons.arrow_forward_ios_rounded,
+                                            //     color: Colors.black,
+                                            //     size: 18,
+                                            //   ),
+                                            //   onPressed: () {
+                                            //
+                                            //   },
+                                            // ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: height * 0.3,
+                                          width: width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            physics: BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.only(
+                                                bottom: height * 0.008,
+                                                top: height * 0.008),
+                                            controller: controller
+                                                .recommendedScrollController,
+                                            itemCount:
+                                                controller.allStories.length,
+                                            itemBuilder: (context, index) {
+                                              return getStoryItem(height, width,
+                                                  controller.allStories[index]);
                                             },
                                           ),
                                         ),
@@ -338,18 +395,44 @@ class Home extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AppWidgets.imageWidget(
-                  story.image,
-                  AppImages.noStoryCover,
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                height: height * 0.2,
-                width: width * 0.3,
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: AppWidgets.imageWidget(
+                      story.image,
+                      AppImages.noStoryCover,
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    height: height * 0.2,
+                    width: width * 0.3,
+                  ),
+                  story.achievementDone != null && story.achievementDone!
+                      ? Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: AppColors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(8),
+                                    topRight: Radius.circular(8))),
+                            child: Center(
+                              child: Image.asset(
+                                AppIcons.medal,
+                                scale: 4,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
               ),
               SizedBox(
                 height: height * 0.015,
