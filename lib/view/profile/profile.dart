@@ -68,72 +68,79 @@ class Profile extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, top: 12, right: 15),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit_rounded,
-                                color: AppColors.black,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              AppWidgets.regularText(
-                                text: AppStrings.editProfile,
-                                size: 16.0,
-                                color: AppColors.black,
-                                weight: FontWeight.w600,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Divider(
-                          thickness: 1,
-                          color: AppColors.grey,
-                        ),
-                      ],
+                    child: Divider(
+                      thickness: 1,
+                      color: AppColors.grey,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 12, right: 15),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.key_rounded,
-                                color: AppColors.black,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              AppWidgets.regularText(
-                                text: AppStrings.changePassword,
-                                size: 16.0,
-                                color: AppColors.black,
-                                weight: FontWeight.w600,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Divider(
-                          thickness: 1,
-                          color: AppColors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 15, top: 12, right: 15),
+                  //   child: Column(
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () {},
+                  //         child: Row(
+                  //           children: [
+                  //             Icon(
+                  //               Icons.edit_rounded,
+                  //               color: AppColors.black,
+                  //             ),
+                  //             SizedBox(
+                  //               width: 15,
+                  //             ),
+                  //             AppWidgets.regularText(
+                  //               text: AppStrings.editProfile,
+                  //               size: 16.0,
+                  //               color: AppColors.black,
+                  //               weight: FontWeight.w600,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 12,
+                  //       ),
+                  //       Divider(
+                  //         thickness: 1,
+                  //         color: AppColors.grey,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 15, top: 12, right: 15),
+                  //   child: Column(
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () {},
+                  //         child: Row(
+                  //           children: [
+                  //             Icon(
+                  //               Icons.key_rounded,
+                  //               color: AppColors.black,
+                  //             ),
+                  //             SizedBox(
+                  //               width: 15,
+                  //             ),
+                  //             AppWidgets.regularText(
+                  //               text: AppStrings.changePassword,
+                  //               size: 16.0,
+                  //               color: AppColors.black,
+                  //               weight: FontWeight.w600,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 12,
+                  //       ),
+                  //       Divider(
+                  //         thickness: 1,
+                  //         color: AppColors.grey,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, top: 12, right: 15),
                     child: Column(
