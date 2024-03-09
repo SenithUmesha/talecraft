@@ -255,6 +255,7 @@ class AppWidgets {
   static showRatingDialog(Story story) {
     var height = MediaQuery.of(Get.context!).size.height;
     return RatingDialog(
+      starSize: 35,
       initialRating: 1.0,
       enableComment: false,
       showCloseButton: true,
@@ -264,6 +265,8 @@ class AppWidgets {
         alignment: TextAlign.center,
         color: AppColors.black,
         weight: FontWeight.w600,
+        maxLines: 2,
+        textOverFlow: TextOverflow.ellipsis,
       ),
       message: AppWidgets.regularText(
         text: 'Tap a star to set your rating.',

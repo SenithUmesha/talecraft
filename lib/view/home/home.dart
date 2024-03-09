@@ -149,7 +149,7 @@ class Home extends StatelessWidget {
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.3,
+                                          height: height * 0.31,
                                           width: width,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
@@ -214,7 +214,7 @@ class Home extends StatelessWidget {
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.3,
+                                          height: height * 0.31,
                                           width: width,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
@@ -276,7 +276,7 @@ class Home extends StatelessWidget {
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.3,
+                                          height: height * 0.31,
                                           width: width,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
@@ -341,7 +341,7 @@ class Home extends StatelessWidget {
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.3,
+                                          height: height * 0.31,
                                           width: width,
                                           child: ListView.builder(
                                             scrollDirection: Axis.horizontal,

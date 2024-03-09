@@ -94,7 +94,7 @@ class AppStrings {
   static const theEnd = "- The End -";
   static const secretEndingAchieved = "Secret ending achieved!";
   static const speechRecognitionNotAvailable =
-      "Speech recognition not available on this device";
+      "Either speech recognition not available on this device or permission not granted.";
   static const genres = "Genres";
   static const pickAtLeastOneGenre = "Please select at least one genre.";
   static const error = "Error";

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
@@ -28,14 +29,12 @@ class ReadStoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     root = GraphNode<Block>(
       data: Block(id: 0, type: BlockType.story, text: AppStrings.addStory),
       isRoot: true,
     );
 
     story = Get.arguments[0];
-
     jsonToGraph(root, story.storyJson!);
     startStoryProcess();
   }
@@ -55,6 +54,7 @@ class ReadStoryController extends GetxController {
     progress = await authRepo.getSavedProgress(story.id!);
     addStoryBlock(root);
     status == ProgressState.DocDoesNotExist ? createSaveProgress() : null;
+    log("Progress State: ${status.toString()}");
   }
 
   Future<void> createSaveProgress() async {
@@ -91,8 +91,7 @@ class ReadStoryController extends GetxController {
     if (!block.nextList.isEmpty) {
       addChoiceBlock(block.nextList);
     } else {
-      if (status != ProgressState.Completed ||
-          status != ProgressState.IncompleteNonEmptyChoices) {
+      if (status != ProgressState.Completed) {
         await authRepo.addCompletedToSavedProgress(story.id!);
         rateStory();
       }

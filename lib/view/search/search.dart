@@ -143,12 +143,16 @@ class Search extends StatelessWidget {
                       size: 16.0,
                       color: AppColors.black,
                       weight: FontWeight.w600,
+                      maxLines: 2,
+                      textOverFlow: TextOverflow.ellipsis,
                     ),
                     AppWidgets.regularText(
                       text: story.authorName,
                       size: 14.0,
                       color: AppColors.black,
                       weight: FontWeight.w400,
+                      maxLines: 1,
+                      textOverFlow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
                       height: height * 0.006,
@@ -158,7 +162,7 @@ class Search extends StatelessWidget {
                         size: 12.0,
                         color: AppColors.black,
                         weight: FontWeight.w400,
-                        maxLines: 3,
+                        maxLines: 2,
                         textOverFlow: TextOverflow.ellipsis),
                     SizedBox(
                       height: height * 0.006,
