@@ -485,14 +485,15 @@ class GestureStoryController extends FullLifeCycleController {
       initCamera();
     }
 
-    // Timer(const Duration(seconds: 1), () {
-    //   stopRecord();
-    //   resumeStory(0);
-    // });
+    Timer(const Duration(seconds: 2), () {
+      stopRecord();
+      resumeStory(0);
+    });
   }
 
   stopRecord() {
     cameraState = CameraState.done;
+    cameraController.dispose();
     update();
   }
 }

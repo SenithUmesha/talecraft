@@ -1,5 +1,4 @@
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,110 +51,104 @@ class GestureStory extends StatelessWidget {
         body: GetBuilder<GestureStoryController>(
             init: GestureStoryController(),
             builder: (controller) {
-              return controller.isRecording
-                  ? CameraPreview(controller.cameraController)
-                  : Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Column(
-                          children: [
-                            Expanded(
-                              child: CupertinoScrollbar(
-                                controller: controller.scrollController,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15, top: 20, bottom: 20),
-                                  controller: controller.scrollController,
-                                  itemCount: controller.widgetList.length,
-                                  itemBuilder: (context, index) {
-                                    return controller.widgetList[index];
-                                  },
-                                ),
+              return
+                  // controller.isRecording
+                  // ? CameraPreview(controller.cameraController)
+                  // :
+                  Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Column(
+                    children: [
+                      Expanded(
+                        child: CupertinoScrollbar(
+                          controller: controller.scrollController,
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, top: 20, bottom: 20),
+                            controller: controller.scrollController,
+                            itemCount: controller.widgetList.length,
+                            itemBuilder: (context, index) {
+                              return controller.widgetList[index];
+                            },
+                          ),
+                        ),
+                      ),
+                      controller.isEnded
+                          ? Container()
+                          : Container(
+                              width: width,
+                              height: height * 0.07,
+                              color: AppColors.black.withOpacity(0.1),
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: controller.isyetToPlay
+                                        ? Icon(
+                                            Icons.play_arrow_rounded,
+                                            color: AppColors.black,
+                                          )
+                                        : controller.isPlaying
+                                            ? Icon(
+                                                Icons.pause_rounded,
+                                                color: AppColors.black,
+                                              )
+                                            : controller.isPaused
+                                                ? Icon(
+                                                    Icons.play_arrow_rounded,
+                                                    color: AppColors.black,
+                                                  )
+                                                : controller.isRecording
+                                                    ? AvatarGlow(
+                                                        glowColor:
+                                                            AppColors.red,
+                                                        curve: Curves.ease,
+                                                        child: Icon(
+                                                          Icons
+                                                              .fiber_manual_record_rounded,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      )
+                                                    : controller.isDone
+                                                        ? Icon(
+                                                            Icons
+                                                                .fiber_manual_record_rounded,
+                                                            color:
+                                                                AppColors.black,
+                                                          )
+                                                        : Container(),
+                                    onPressed: () => controller.isyetToPlay
+                                        ? controller.speak()
+                                        : controller.isPlaying
+                                            ? controller.pause()
+                                            : controller.isPaused
+                                                ? controller.speak()
+                                                : null,
+                                  ),
+                                  Expanded(
+                                      child: controller.isPlaying
+                                          ? Lottie.asset(
+                                              AppImages.playing,
+                                              fit: BoxFit.fill,
+                                            )
+                                          : Container())
+                                ],
                               ),
                             ),
-                            controller.isEnded
-                                ? Container()
-                                : Container(
-                                    width: width,
-                                    height: height * 0.07,
-                                    color: AppColors.black.withOpacity(0.1),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          icon: controller.isyetToPlay
-                                              ? Icon(
-                                                  Icons.play_arrow_rounded,
-                                                  color: AppColors.black,
-                                                )
-                                              : controller.isPlaying
-                                                  ? Icon(
-                                                      Icons.pause_rounded,
-                                                      color: AppColors.black,
-                                                    )
-                                                  : controller.isPaused
-                                                      ? Icon(
-                                                          Icons
-                                                              .play_arrow_rounded,
-                                                          color:
-                                                              AppColors.black,
-                                                        )
-                                                      : controller.isRecording
-                                                          ? AvatarGlow(
-                                                              glowColor:
-                                                                  AppColors.red,
-                                                              curve:
-                                                                  Curves.ease,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .fiber_manual_record_rounded,
-                                                                color: AppColors
-                                                                    .red,
-                                                              ),
-                                                            )
-                                                          : controller.isDone
-                                                              ? Icon(
-                                                                  Icons
-                                                                      .fiber_manual_record_rounded,
-                                                                  color:
-                                                                      AppColors
-                                                                          .black,
-                                                                )
-                                                              : Container(),
-                                          onPressed: () =>
-                                              controller.isyetToPlay
-                                                  ? controller.speak()
-                                                  : controller.isPlaying
-                                                      ? controller.pause()
-                                                      : controller.isPaused
-                                                          ? controller.speak()
-                                                          : null,
-                                        ),
-                                        Expanded(
-                                            child: controller.isPlaying
-                                                ? Lottie.asset(
-                                                    AppImages.playing,
-                                                    fit: BoxFit.fill,
-                                                  )
-                                                : Container())
-                                      ],
-                                    ),
-                                  ),
-                          ],
-                        ),
-                        ConfettiWidget(
-                          confettiController: controller.confettiController,
-                          blastDirectionality: BlastDirectionality.explosive,
-                          shouldLoop: true,
-                          emissionFrequency: 0.20,
-                        )
-                      ],
-                    );
+                    ],
+                  ),
+                  ConfettiWidget(
+                    confettiController: controller.confettiController,
+                    blastDirectionality: BlastDirectionality.explosive,
+                    shouldLoop: true,
+                    emissionFrequency: 0.20,
+                  )
+                ],
+              );
             }),
       ),
     );

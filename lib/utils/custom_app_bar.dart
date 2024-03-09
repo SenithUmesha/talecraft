@@ -29,11 +29,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Icons.arrow_back_ios_new_rounded,
                 color: Colors.black,
               ),
-              onPressed: onPressBack != null
-                  ? onPressBack
-                  : () {
-                      Get.back();
-                    },
+              onPressed: onPressBack ??
+                  () {
+                    Get.back();
+                  },
             ),
       actions: actions,
       title: title == null
