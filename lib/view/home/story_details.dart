@@ -6,13 +6,15 @@ import 'package:talecraft/model/story.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_strings.dart';
 import 'package:talecraft/view/home/home.dart';
-import 'package:talecraft/view/readStory/read_story.dart';
+import 'package:talecraft/view/story/read_story.dart';
 
 import '../../utils/app_icons.dart';
 import '../../utils/app_images.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
 import '../../utils/loading_overlay.dart';
+import '../story/gesture_story.dart';
+import '../story/listen_story.dart';
 
 class StoryDetails extends StatelessWidget {
   StoryDetails({super.key});
@@ -258,14 +260,8 @@ class StoryDetails extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () => Get.to(
                                               () => ReadStory(
-                                                    name:
-                                                        controller.story.name!,
-                                                    isListening: false,
-                                                  ),
-                                              arguments: [
-                                                controller.story,
-                                                false
-                                              ]),
+                                                  name: controller.story.name!),
+                                              arguments: [controller.story]),
                                           child: Container(
                                             width: width * 0.4,
                                             height: width * 0.14,
@@ -297,19 +293,11 @@ class StoryDetails extends StatelessWidget {
                                       children: [
                                         GestureDetector(
                                           onTap: () => Get.to(
-                                              () => ReadStory(
-                                                    name:
-                                                        controller.story.name!,
-                                                    isListening: true,
-                                                  ),
-                                              arguments: [
-                                                controller.story,
-                                                true
-                                              ]),
+                                              () => ListenStory(
+                                                  name: controller.story.name!),
+                                              arguments: [controller.story]),
                                           child: Container(
-                                            width: width * 0.4 +
-                                                width * 0.14 +
-                                                width * 0.025,
+                                            width: width * 0.4,
                                             height: width * 0.14,
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -322,6 +310,32 @@ class StoryDetails extends StatelessWidget {
                                                 size: 16.0,
                                                 color: AppColors.white,
                                                 weight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.025,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () => Get.to(
+                                              () => GestureStory(
+                                                  name: controller.story.name!),
+                                              arguments: [controller.story]),
+                                          child: Container(
+                                            width: width * 0.14,
+                                            height: width * 0.14,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: AppColors.white,
+                                                border: Border.all(
+                                                    color: AppColors.black,
+                                                    width: 2)),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.back_hand_rounded,
+                                                color: AppColors.black,
                                               ),
                                             ),
                                           ),
