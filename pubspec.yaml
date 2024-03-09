@@ -60,7 +60,6 @@ dependencies:
   cloud_firestore: ^4.14.0
   firebase_storage: ^11.6.0
   rating_dialog: ^2.0.4
-  sliding_switch: ^1.1.0
   camera: ^0.10.5+9
 
 dev_dependencies:

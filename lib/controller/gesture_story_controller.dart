@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import '../main.dart';
 import '../model/block.dart';
 import '../repository/authRepository/auth_repository.dart';
 import '../utils/app_colors.dart';
@@ -18,7 +20,9 @@ import '../utils/app_widgets.dart';
 
 enum TtsState { playing, stopped, paused, ended, yetToPlay }
 
-class ListenStoryController extends GetxController {
+enum CameraState { recording, done }
+
+class GestureStoryController extends FullLifeCycleController {
   bool isLoading = false;
   final scrollController = ScrollController();
   List<Widget> widgetList = [];
@@ -31,12 +35,10 @@ class ListenStoryController extends GetxController {
   double pitch = 1.0;
   double rate = 0.4;
   List<GraphNode>? currentChoiceList;
-  late stt.SpeechToText speech;
-  bool isListening = false;
-  bool canRetry = false;
   final authRepo = Get.put(AuthRepository());
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
+  late CameraController cameraController;
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -44,6 +46,10 @@ class ListenStoryController extends GetxController {
   get isPaused => ttsState == TtsState.paused;
   get isEnded => ttsState == TtsState.ended;
   get isyetToPlay => ttsState == TtsState.yetToPlay;
+
+  CameraState cameraState = CameraState.done;
+  get isRecording => cameraState == CameraState.recording;
+  get isDone => cameraState == CameraState.done;
 
   @override
   void onInit() {
@@ -57,8 +63,56 @@ class ListenStoryController extends GetxController {
     jsonToGraph(root, story.storyJson!);
     flutterTts = FlutterTts();
     initTts();
-    speech = stt.SpeechToText();
+    cameraController = CameraController(cameras[1], ResolutionPreset.max);
     startStoryProcess();
+  }
+
+  initCamera() {
+    cameraController.initialize().then((_) {
+      if (!Get.context!.mounted) {
+        return;
+      }
+      update();
+    }).catchError((Object e) async {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            await [Permission.camera].request();
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      initCamera();
+    }
+  }
+
+  Future<bool> checkCameraPermission() async {
+    PermissionStatus status = await Permission.camera.status;
+
+    if (status == PermissionStatus.granted) {
+      return true;
+    } else {
+      Map<Permission, PermissionStatus> statusMap =
+          await [Permission.camera].request();
+      if (statusMap[Permission.camera] == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   void rateStory() {
@@ -87,142 +141,6 @@ class ListenStoryController extends GetxController {
         achievementDone: false));
   }
 
-  Future<void> startListening() async {
-    if (!isListening) {
-      bool available = await speech.initialize(
-        finalTimeout: Duration(minutes: 5),
-        onStatus: (val) {
-          log('STT Status: $val');
-          if (val.toString() == "notListening" ||
-              val.toString() == "done" && isListening) {
-            stopListening();
-          }
-        },
-        onError: (val) {
-          log('STT Status: $val');
-          stopListening();
-        },
-      );
-      if (available) {
-        isListening = true;
-        canRetry = false;
-        update();
-
-        speech.listen(
-          listenOptions: stt.SpeechListenOptions(enableHapticFeedback: true),
-          listenFor: Duration(minutes: 5),
-          onResult: (result) {
-            String spokenWord = result.recognizedWords;
-            List<String> wordList = generateWordList(currentChoiceList!.length);
-
-            if (spokenWord != "") {
-              log('Spoken Words: $spokenWord');
-
-              String matchingPortion = wordList.firstWhere(
-                (word) => spokenWord
-                    .toLowerCase()
-                    .split(' ')
-                    .any((spokenWordPart) => spokenWordPart.contains(word)),
-                orElse: () => '',
-              );
-
-              if (matchingPortion.isNotEmpty &&
-                  wordToNumber(matchingPortion) != 0) {
-                log('Picked choice: $matchingPortion - ${wordToNumber(matchingPortion)}');
-                speech.stop();
-                isListening = false;
-                update();
-                resumeStory(wordToNumber(matchingPortion) - 1);
-              } else {
-                stopListening();
-              }
-            } else {
-              stopListening();
-            }
-          },
-        );
-      } else {
-        AppWidgets.showSnackBar(
-            AppStrings.error, AppStrings.speechRecognitionNotAvailable);
-        stopListening();
-      }
-    } else {
-      stopListening(true);
-    }
-  }
-
-  void stopListening([bool? retry]) {
-    speech.stop();
-    isListening = false;
-    canRetry = retry ?? true;
-    update();
-  }
-
-  List<String> generateWordList(int length) {
-    List<String> wordList = [];
-    for (int i = 1; i <= length; i++) {
-      wordList.add(i.toString());
-      wordList.addAll(numberToWord(i));
-    }
-    return wordList;
-  }
-
-  List<String> numberToWord(int number) {
-    switch (number) {
-      case 1:
-        return ['one'];
-      case 2:
-        return ['two', 'to'];
-      case 3:
-        return ['three'];
-      case 4:
-        return ['four', 'for'];
-      case 5:
-        return ['five'];
-      case 6:
-        return ['six'];
-      case 7:
-        return ['seven'];
-      case 8:
-        return ['eight'];
-      case 9:
-        return ['nine'];
-      case 10:
-        return ['ten'];
-      default:
-        return [''];
-    }
-  }
-
-  int wordToNumber(String word) {
-    switch (word.toLowerCase()) {
-      case 'one':
-        return 1;
-      case 'two':
-      case 'to':
-        return 2;
-      case 'three':
-        return 3;
-      case 'four':
-      case 'for':
-        return 4;
-      case 'five':
-        return 5;
-      case 'six':
-        return 6;
-      case 'seven':
-        return 7;
-      case 'eight':
-        return 8;
-      case 'nine':
-        return 9;
-      case 'ten':
-        return 10;
-      default:
-        return 0;
-    }
-  }
-
   initTts() {
     flutterTts = FlutterTts();
 
@@ -243,13 +161,18 @@ class ListenStoryController extends GetxController {
         readText = "";
         update();
         log("TTS State: " + ttsState.toString());
-
         int id = progress != null ? hasMatchingChoices(currentChoiceList!) : -1;
 
         if (progress != null && id != -1) {
           resumeStory(id);
         } else {
-          startListening();
+          if (!cameraController.value.isInitialized &&
+              await checkCameraPermission()) {
+            record();
+          } else {
+            AppWidgets.showSnackBar(
+                AppStrings.error, AppStrings.permissionNotGranted);
+          }
         }
       }
     });
@@ -551,6 +474,25 @@ class ListenStoryController extends GetxController {
 
   setLoader(bool value) {
     isLoading = value;
+    update();
+  }
+
+  record() {
+    cameraState = CameraState.recording;
+    update();
+
+    if (!cameraController.value.isInitialized) {
+      initCamera();
+    }
+
+    // Timer(const Duration(seconds: 1), () {
+    //   stopRecord();
+    //   resumeStory(0);
+    // });
+  }
+
+  stopRecord() {
+    cameraState = CameraState.done;
     update();
   }
 }
