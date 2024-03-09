@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
+import 'package:tflite/tflite.dart';
 
 import '../main.dart';
 import '../model/block.dart';
@@ -39,6 +40,8 @@ class GestureStoryController extends FullLifeCycleController {
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
   late CameraController cameraController;
+  String answer = "";
+  CameraImage? cameraImage;
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -61,10 +64,18 @@ class GestureStoryController extends FullLifeCycleController {
 
     story = Get.arguments[0];
     jsonToGraph(root, story.storyJson!);
+    loadmodel();
     flutterTts = FlutterTts();
     initTts();
-    cameraController = CameraController(cameras[1], ResolutionPreset.max);
+    cameraController = CameraController(cameras[1], ResolutionPreset.medium);
     startStoryProcess();
+  }
+
+  loadmodel() async {
+    Tflite.loadModel(
+      model: "assets/model/detect.tflite",
+      labels: "assets/model/labels.txt",
+    );
   }
 
   initCamera() {
@@ -72,6 +83,15 @@ class GestureStoryController extends FullLifeCycleController {
       if (!Get.context!.mounted) {
         return;
       }
+      cameraController.startImageStream(
+        (image) => {
+          if (true)
+            {
+              cameraImage = image,
+              applyModelOnImages(),
+            }
+        },
+      );
       update();
     }).catchError((Object e) async {
       if (e is CameraException) {
@@ -84,6 +104,41 @@ class GestureStoryController extends FullLifeCycleController {
         }
       }
     });
+  }
+
+  applyModelOnImages() async {
+    if (cameraImage != null) {
+      var predictions = await Tflite.runModelOnFrame(
+          bytesList: cameraImage!.planes.map(
+            (plane) {
+              return plane.bytes;
+            },
+          ).toList(),
+          imageHeight: cameraImage!.height,
+          imageWidth: cameraImage!.width,
+          imageMean: 127.5,
+          imageStd: 127.5,
+          rotation: 90,
+          numResults: 3,
+          threshold: 0.1,
+          asynch: true);
+
+      answer = '';
+
+      predictions!.forEach(
+        (prediction) {
+          answer +=
+              prediction['label'].toString().substring(0, 1).toUpperCase() +
+                  prediction['label'].toString().substring(1) +
+                  " " +
+                  (prediction['confidence'] as double).toStringAsFixed(3) +
+                  '\n';
+        },
+      );
+
+      answer = answer;
+      update();
+    }
   }
 
   @override
@@ -220,8 +275,10 @@ class GestureStoryController extends FullLifeCycleController {
   }
 
   @override
-  void onClose() {
+  Future<void> onClose() async {
     flutterTts.stop();
+    await Tflite.close();
+    cameraController.dispose();
     super.onClose();
   }
 

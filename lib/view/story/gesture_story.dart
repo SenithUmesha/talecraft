@@ -10,6 +10,7 @@ import 'package:talecraft/utils/app_images.dart';
 import '../../controller/gesture_story_controller.dart';
 import '../../controller/read_story_controller.dart';
 import '../../controller/story_details_controller.dart';
+import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
 
 class GestureStory extends StatelessWidget {
@@ -135,7 +136,15 @@ class GestureStory extends StatelessWidget {
                                               AppImages.playing,
                                               fit: BoxFit.fill,
                                             )
-                                          : Container())
+                                          : controller.isRecording
+                                              ? AppWidgets.regularText(
+                                                  text: controller.answer,
+                                                  size: 15.0,
+                                                  alignment: TextAlign.justify,
+                                                  color: AppColors.black,
+                                                  weight: FontWeight.w500,
+                                                  height: 2.0)
+                                              : Container())
                                 ],
                               ),
                             ),
