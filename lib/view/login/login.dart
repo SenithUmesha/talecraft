@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:talecraft/utils/app_colors.dart';
 import 'package:talecraft/utils/app_widgets.dart';
 import 'package:talecraft/utils/loading_overlay.dart';
+import 'package:talecraft/view/forgotPassword/forgot_password.dart';
 import 'package:talecraft/view/registration/registration.dart';
 
 import '../../controller/login_controller.dart';
@@ -111,7 +112,9 @@ class Login extends StatelessWidget {
                                             MainAxisAlignment.end,
                                         children: [
                                           GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              Get.to(() => ForgotPassword());
+                                            },
                                             child: AppWidgets.regularText(
                                               text: AppStrings.forgotPassword,
                                               size: 16.0,
@@ -126,10 +129,6 @@ class Login extends StatelessWidget {
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          // if (formKey.currentState!.validate()) {
-                                          //   Get.to(() => const NavBar());
-                                          // }
-
                                           if (formKey.currentState!
                                               .validate()) {
                                             controller.login();
@@ -181,7 +180,7 @@ class Login extends StatelessWidget {
                                             weight: FontWeight.w500,
                                           ),
                                           GestureDetector(
-                                            onTap: () async {
+                                            onTap: () {
                                               Get.to(() => Registration());
                                             },
                                             child: AppWidgets.regularText(

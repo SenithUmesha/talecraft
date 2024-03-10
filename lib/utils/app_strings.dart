@@ -4,6 +4,7 @@ class AppStrings {
   static const password = "Password";
   static const rememberMe = "Remember me";
   static const forgotPassword = "Forgot Password?";
+  static const forgotPasswordWithOutQuestionMark = "Forgot Password";
   static const login = "Login";
   static const doNotHaveAnAccount = "Don’t have an account? ";
   static const signUp = "Sign Up";
@@ -13,6 +14,7 @@ class AppStrings {
   static const confirmPassword = "Confirm Password";
   static const name = "Name";
   static const register = "Register";
+  static const resetPassword = "Reset Password";
   static const passwordHelperText =
       "Password must have at least one uppercase letter, one lowercase letter, one number, and 8 digits long.";
   static const recommendedForYou = "Recommended For You";
@@ -101,6 +103,8 @@ class AppStrings {
   static const error = "Error";
   static const success = "Success";
   static const accountCreationSuccess = "Account created successfully.";
+  static const checkEmailForPasswordChangeLink =
+      "Check your email for password change instructions.";
   static const completedStories = "Completed Stories";
   static const storyCreateInfo =
       "• Use AI features to get started creating your story if you need a head start.\n\n• Double press on blocks to edit blocks or hold press to delete blocks.\n\n• A story block can have muliple choice blocks while choice blocks can have only one story block.\n\n• All branches need to end with a story block.\n\n• When branching, the story blocks must have at least two choice blocks.\n\n• Story must have at least 2 choice blocks.";
