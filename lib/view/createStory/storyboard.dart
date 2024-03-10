@@ -111,76 +111,85 @@ class _StoryboardState extends State<Storyboard> {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                controller.clearAllBlocks();
-                                AppWidgets.showToast(AppStrings.graphCleared);
-                              },
-                              child: Container(
-                                height: width * 0.12,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.white,
-                                    border: Border.all(
-                                        color: AppColors.black, width: 2)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppIcons.clear,
-                                      scale: 5,
+                        Container(
+                          width: width,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.clearAllBlocks();
+                                    AppWidgets.showToast(
+                                        AppStrings.graphCleared);
+                                  },
+                                  child: Container(
+                                    height: width * 0.12,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: AppColors.white,
+                                        border: Border.all(
+                                            color: AppColors.black, width: 2)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          AppIcons.clear,
+                                          scale: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        AppWidgets.regularText(
+                                            text: AppStrings.clearGraph,
+                                            size: 13.5,
+                                            alignment: TextAlign.center,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w400)
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    AppWidgets.regularText(
-                                        text: AppStrings.clearGraph,
-                                        size: 13.5,
-                                        alignment: TextAlign.center,
-                                        color: AppColors.black,
-                                        weight: FontWeight.w400)
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () => controller.showContextDialog(),
-                              child: Container(
-                                height: width * 0.12,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.white,
-                                    border: Border.all(
-                                        color: AppColors.black, width: 2)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppIcons.star,
-                                      scale: 5,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    AppWidgets.regularText(
-                                        text: AppStrings.getStartedWithAI,
-                                        size: 13.5,
-                                        alignment: TextAlign.center,
-                                        color: AppColors.black,
-                                        weight: FontWeight.w400)
-                                  ],
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () => controller.showContextDialog(),
+                                child: Container(
+                                  height: width * 0.12,
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: AppColors.white,
+                                      border: Border.all(
+                                          color: AppColors.black, width: 2)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        AppIcons.star,
+                                        scale: 5,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      AppWidgets.regularText(
+                                          text: AppStrings.getStartedWithAI,
+                                          size: 13.5,
+                                          alignment: TextAlign.center,
+                                          color: AppColors.black,
+                                          weight: FontWeight.w400)
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 5,
