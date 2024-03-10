@@ -40,7 +40,7 @@ class GestureStoryController extends FullLifeCycleController {
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
   late CameraController cameraController;
-  String answer = "";
+  int answer = -1;
   CameraImage? cameraImage;
 
   TtsState ttsState = TtsState.yetToPlay;
@@ -123,21 +123,22 @@ class GestureStoryController extends FullLifeCycleController {
           threshold: 0.1,
           asynch: true);
 
-      answer = '';
+      answer = -1;
 
       predictions!.forEach(
         (prediction) {
-          answer +=
-              prediction['label'].toString().substring(0, 1).toUpperCase() +
-                  prediction['label'].toString().substring(1) +
-                  " " +
-                  (prediction['confidence'] as double).toStringAsFixed(3) +
-                  '\n';
+          answer += int.parse(prediction['label'].toString().substring(1));
+
+          if (answer == 1 ||
+              answer == 2 ||
+              answer == 3 ||
+              answer == 4 ||
+              answer == 5) {
+            stopRecord();
+            resumeStory(answer);
+          }
         },
       );
-
-      answer = answer;
-      update();
     }
   }
 
@@ -221,9 +222,11 @@ class GestureStoryController extends FullLifeCycleController {
         if (progress != null && id != -1) {
           resumeStory(id);
         } else {
-          if (!cameraController.value.isInitialized &&
-              await checkCameraPermission()) {
-            record();
+          if (await checkCameraPermission()) {
+            cameraState = CameraState.recording;
+            update();
+
+            initCamera();
           } else {
             AppWidgets.showSnackBar(
                 AppStrings.error, AppStrings.permissionNotGranted);
@@ -532,20 +535,6 @@ class GestureStoryController extends FullLifeCycleController {
   setLoader(bool value) {
     isLoading = value;
     update();
-  }
-
-  record() {
-    cameraState = CameraState.recording;
-    update();
-
-    if (!cameraController.value.isInitialized) {
-      initCamera();
-    }
-
-    Timer(const Duration(seconds: 2), () {
-      stopRecord();
-      resumeStory(0);
-    });
   }
 
   stopRecord() {
