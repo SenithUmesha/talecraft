@@ -35,6 +35,7 @@ class AppStrings {
       "Please save your progress before going back.\n\nAre you sure you want to leave?";
   static const save = "Save";
   static const warning = "Warning";
+  static const howTo = "How To";
   static const storyBlock = "Story Block";
   static const choiceBlock = "Choice Block";
   static const editStoryBlock = "Edit Story Block";
@@ -101,4 +102,6 @@ class AppStrings {
   static const success = "Success";
   static const accountCreationSuccess = "Account created successfully.";
   static const completedStories = "Completed Stories";
+  static const storyCreateInfo =
+      "• Use AI features to get started creating your story if you need a head start.\n\n• Double press on blocks to edit blocks or hold press to delete blocks.\n\n• A story block can have muliple choice blocks while choice blocks can have only one story block.\n\n• All branches need to end with a story block.\n\n• When branching, the story blocks must have at least two choice blocks.\n\n• Story must have at least 2 choice blocks.";
 }

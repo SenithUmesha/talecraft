@@ -463,6 +463,44 @@ class StoryboardController extends GetxController {
     );
   }
 
+  showInfoDialog() {
+    return showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: AppWidgets.regularText(
+            text: AppStrings.howTo,
+            size: 20.0,
+            color: AppColors.black,
+            weight: FontWeight.w600,
+          ),
+          content: AppWidgets.regularText(
+            text: AppStrings.storyCreateInfo,
+            size: 16.0,
+            color: AppColors.black,
+            weight: FontWeight.w400,
+          ),
+          actions: [
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(AppColors.black)),
+              onPressed: () {
+                Get.back();
+              },
+              child: AppWidgets.regularText(
+                text: AppStrings.close,
+                size: 16.0,
+                color: AppColors.white,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   String getFirstFewCharacters(String input) {
     return input.length > 30 ? "${input.substring(0, 30)}..." : input;
   }

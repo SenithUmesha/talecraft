@@ -37,7 +37,8 @@ class _StoryboardState extends State<Storyboard> {
                 Icons.help_outline_rounded,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () =>
+                  Get.find<StoryboardController>().showInfoDialog(),
             ),
             IconButton(
               icon: const Icon(
