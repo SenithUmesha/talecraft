@@ -8,10 +8,10 @@ import 'package:talecraft/utils/app_colors.dart';
 
 import '../../controller/storyboard_controller.dart';
 import '../../model/block.dart';
-import '../../utils/app_icons.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/app_widgets.dart';
 import '../../utils/custom_app_bar.dart';
+import '../../utils/loading_overlay.dart';
 
 class Storyboard extends StatefulWidget {
   const Storyboard({Key? key}) : super(key: key);
@@ -28,6 +28,7 @@ class _StoryboardState extends State<Storyboard> {
       onWillPop: () =>
           Get.find<StoryboardController>().showExitConfirmationDialog(),
       child: Scaffold(
+        backgroundColor: AppColors.black.withOpacity(0.03),
         appBar: CustomAppBar(
           title: AppStrings.newStory,
           cantGoBack: true,
@@ -55,7 +56,7 @@ class _StoryboardState extends State<Storyboard> {
               return Column(
                 children: [
                   SizedBox(
-                    height: 5,
+                    height: 12,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +81,7 @@ class _StoryboardState extends State<Storyboard> {
                             controller.onDraggedBlock(BlockType.story),
                       ),
                       SizedBox(
-                        width: 5,
+                        width: 2,
                       ),
                       Draggable<GraphNodeFactory<Block>>(
                         data: GraphNodeFactory(
@@ -133,17 +134,14 @@ class _StoryboardState extends State<Storyboard> {
                                         borderRadius: BorderRadius.circular(5),
                                         color: AppColors.white,
                                         border: Border.all(
-                                            color: AppColors.black, width: 2)),
+                                            color: AppColors.grey, width: 1)),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          AppIcons.clear,
-                                          scale: 5,
-                                        ),
+                                        Icon(Icons.clear_rounded),
                                         SizedBox(
-                                          width: 10,
+                                          width: 12,
                                         ),
                                         AppWidgets.regularText(
                                             text: AppStrings.clearGraph,
@@ -168,16 +166,16 @@ class _StoryboardState extends State<Storyboard> {
                                       borderRadius: BorderRadius.circular(5),
                                       color: AppColors.white,
                                       border: Border.all(
-                                          color: AppColors.black, width: 2)),
+                                          color: AppColors.grey, width: 1)),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset(
-                                        AppIcons.star,
-                                        scale: 5,
+                                      Icon(
+                                        Icons.star_rounded,
+                                        color: AppColors.yellow,
                                       ),
                                       SizedBox(
-                                        width: 10,
+                                        width: 12,
                                       ),
                                       AppWidgets.regularText(
                                           text: AppStrings.getStartedWithAI,
@@ -204,18 +202,11 @@ class _StoryboardState extends State<Storyboard> {
                   ),
                   Expanded(
                     child: controller.isLoading
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                color: AppColors.black,
-                              ),
-                            ],
-                          )
+                        ? LoadingOverlay()
                         : StatefulBuilder(
                             builder: (context, setter) {
                               return DraggableFlowGraphView<Block>(
+                                padding: EdgeInsets.zero,
                                 root: controller.root,
                                 direction: Axis.vertical,
                                 centerLayout: true,
@@ -237,6 +228,7 @@ class _StoryboardState extends State<Storyboard> {
                                 },
                                 builder: (context, block) {
                                   return GestureDetector(
+                                    onTap: null,
                                     onDoubleTap: () => controller
                                         .showEditBlockDialog(block.data!),
                                     onLongPress: () {
@@ -250,32 +242,43 @@ class _StoryboardState extends State<Storyboard> {
                                                 BorderRadius.circular(5),
                                             color: AppColors.white,
                                             border: Border.all(
-                                                color: (block.data as Block)
-                                                            .type ==
-                                                        BlockType.story
-                                                    ? AppColors.black
-                                                    : AppColors.red,
-                                                width: 2)),
+                                                color: AppColors.grey,
+                                                width: 1)),
                                         padding: const EdgeInsets.all(12),
-                                        child: AppWidgets.regularText(
-                                            text: controller
-                                                .getFirstFewCharacters(
-                                                    (block.data as Block).text),
-                                            size: 14.0,
-                                            alignment: TextAlign.center,
-                                            color: AppColors.black,
-                                            weight: FontWeight.w400,
-                                            textOverFlow: TextOverflow.ellipsis,
-                                            maxLines: 1)),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            (block.data as Block).type ==
+                                                    BlockType.story
+                                                ? Icon(
+                                                    Icons.menu_book_rounded,
+                                                    color: AppColors.black,
+                                                  )
+                                                : Icon(
+                                                    Icons.playlist_add_check,
+                                                    color: AppColors.red,
+                                                  ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            AppWidgets.regularText(
+                                                text: controller
+                                                    .getFirstFewCharacters(
+                                                        (block.data as Block)
+                                                            .text),
+                                                size: 14.0,
+                                                alignment: TextAlign.center,
+                                                color: AppColors.black,
+                                                weight: FontWeight.w400,
+                                                textOverFlow:
+                                                    TextOverflow.ellipsis,
+                                                maxLines: 1)
+                                          ],
+                                        )),
                                   );
                                 },
                                 onEdgeColor: (n1, n2) {
-                                  if ((n1.data as Block).type ==
-                                      BlockType.story) {
-                                    return AppColors.black;
-                                  } else {
-                                    return AppColors.red;
-                                  }
+                                  return AppColors.grey.withOpacity(0.5);
                                 },
                               );
                             },

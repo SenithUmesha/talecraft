@@ -179,30 +179,50 @@ class StoryboardController extends GetxController {
 
   Widget storyBlock(double width) => Container(
         width: width * 0.45,
-        padding: const EdgeInsets.all(16),
+        height: width * 0.12,
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.white,
+            border: Border.all(color: AppColors.grey, width: 1)),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.menu_book_rounded),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.menu_book_rounded, color: AppColors.black),
             SizedBox(
-              width: 16,
+              width: 12,
             ),
-            Text(AppStrings.storyBlock)
+            AppWidgets.regularText(
+                text: AppStrings.storyBlock,
+                size: 13.5,
+                alignment: TextAlign.center,
+                color: AppColors.black,
+                weight: FontWeight.w400)
           ],
         ),
       );
 
   Widget choiceBlock(double width) => Container(
         width: width * 0.45,
-        padding: const EdgeInsets.all(16),
+        height: width * 0.12,
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColors.white,
+            border: Border.all(color: AppColors.grey, width: 1)),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.playlist_add_check),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.playlist_add_check, color: AppColors.red),
             SizedBox(
-              width: 16,
+              width: 12,
             ),
-            Text(AppStrings.choiceBlock)
+            AppWidgets.regularText(
+                text: AppStrings.choiceBlock,
+                size: 13.5,
+                alignment: TextAlign.center,
+                color: AppColors.black,
+                weight: FontWeight.w400)
           ],
         ),
       );
