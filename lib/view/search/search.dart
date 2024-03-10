@@ -109,7 +109,7 @@ class Search extends StatelessWidget {
   static getStoryItem(double height, double width, Story story) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => StoryDetails(), arguments: [story]);
+        Get.to(() => StoryDetails(refreshHome: false), arguments: [story]);
       },
       child: Padding(
         padding: EdgeInsets.only(bottom: 10),

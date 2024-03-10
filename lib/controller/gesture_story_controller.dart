@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
-import 'package:tflite/tflite.dart';
+import 'package:tflite_v2/tflite_v2.dart';
 
 import '../main.dart';
 import '../model/block.dart';

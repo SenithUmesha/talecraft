@@ -409,7 +409,7 @@ class Home extends StatelessWidget {
   static getStoryItem(double height, double width, Story story) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => StoryDetails(), arguments: [story]);
+        Get.to(() => StoryDetails(refreshHome: true), arguments: [story]);
       },
       child: Padding(
         padding: EdgeInsets.only(right: 15),

@@ -18,26 +18,33 @@ import '../story/gesture_story.dart';
 import '../story/listen_story.dart';
 
 class StoryDetails extends StatelessWidget {
-  StoryDetails({super.key});
+  final refreshHome;
+  StoryDetails({super.key, required this.refreshHome});
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: () async {
-        HomeController homeController = Get.find<HomeController>();
-        homeController.onInit();
+      onWillPop: refreshHome
+          ? () async {
+              HomeController homeController = Get.find<HomeController>();
+              homeController.onInit();
 
-        return true;
-      },
+              return true;
+            }
+          : () async {
+              return true;
+            },
       child: Scaffold(
         appBar: CustomAppBar(
-          onPressBack: () {
-            HomeController homeController = Get.find<HomeController>();
-            homeController.onInit();
-            Get.back();
-          },
+          onPressBack: refreshHome
+              ? () {
+                  HomeController homeController = Get.find<HomeController>();
+                  homeController.onInit();
+                  Get.back();
+                }
+              : () => Get.back(),
         ),
         body: GetBuilder<StoryDetailsController>(
             init: StoryDetailsController(),
@@ -440,7 +447,7 @@ class StoryDetails extends StatelessWidget {
         StoryDetailsController storyDetailsController =
             Get.find<StoryDetailsController>();
         storyDetailsController.onInit();
-        Get.to(() => StoryDetails(),
+        Get.to(() => StoryDetails(refreshHome: false),
             arguments: [moreStory], preventDuplicates: false);
       },
       child: Column(

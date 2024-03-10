@@ -61,7 +61,7 @@ dependencies:
   firebase_storage: ^11.6.0
   rating_dialog: ^2.0.4
   camera: ^0.10.5+9
-  tflite: ^1.1.2
+  tflite_v2: ^1.0.0
 
 dev_dependencies:
   flutter_test:
