@@ -50,6 +50,24 @@ class Story {
         createdAt: data["created_at"].toDate() ?? DateTime.now());
   }
 
+  factory Story.fromJson(Map<String, dynamic> json) {
+    return Story(
+      id: json["id"] ?? "",
+      name: json["name"] ?? "",
+      authorId: json["author_id"] ?? "",
+      authorName: json["author_name"] ?? "",
+      description: json["description"] ?? "",
+      readTime: json["read_time"] ?? "0 min",
+      rating: json["rating"].toDouble() ?? 0.0,
+      noOfRatings: json["no_of_ratings"] ?? 0,
+      image: json["image"] ?? "",
+      genres: json["genres"] != null ? List<String>.from(json["genres"]) : [],
+      achievementEndingId: json["achievement_ending_id"] ?? 0,
+      storyJson: json["story_json"] ?? {},
+      createdAt: DateTime.parse(json["created_at"] ?? ""),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
@@ -64,5 +82,21 @@ class Story {
         "achievement_ending_id": achievementEndingId,
         "story_json": storyJson,
         "created_at": createdAt
+      };
+
+  Map<String, dynamic> toBoxJson() => {
+        "id": id,
+        "name": name,
+        "author_id": authorId,
+        "author_name": authorName,
+        "description": description,
+        "read_time": readTime,
+        "rating": rating,
+        "no_of_ratings": noOfRatings,
+        "image": image,
+        "genres": genres,
+        "achievement_ending_id": achievementEndingId,
+        "story_json": storyJson,
+        "created_at": createdAt?.toIso8601String()
       };
 }

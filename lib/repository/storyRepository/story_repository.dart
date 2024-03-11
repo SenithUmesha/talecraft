@@ -232,4 +232,86 @@ class StoryRepository extends GetxController {
       return [];
     }
   }
+
+  Future<List<List<String>>> getCompletedStoriesGenres() async {
+    final List<String> completedStoryIds =
+        await Get.put(AuthRepository()).getCompletedStoryIds();
+
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+      QuerySnapshot querySnapshot =
+          await storiesCollection.where('id', whereIn: completedStoryIds).get();
+
+      List<List<String>> genresList = querySnapshot.docs.map((doc) {
+        final Story story =
+            Story.fromFirestore(doc as DocumentSnapshot<Map<String, dynamic>>);
+        return story.genres ?? [];
+      }).toList();
+
+      return genresList;
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
+
+  Future<List<Story>> getStoriesByGenreList(List<String> genres) async {
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+
+      QuerySnapshot querySnapshot = await storiesCollection
+          .where('genres', arrayContainsAny: genres)
+          .get();
+
+      Set<String> storyIdsSet = Set<String>();
+
+      List<Story> stories = querySnapshot.docs
+          .where((doc) {
+            final Story story = Story.fromFirestore(
+                doc as DocumentSnapshot<Map<String, dynamic>>);
+            return storyIdsSet.add(story.id!);
+          })
+          .map((doc) => Story.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+
+      return stories;
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
+
+  Future<List<Story>> getStoriesByGenresAndExcludeCompleted(
+      List<String> genres, List<String> completedStoryIds) async {
+    try {
+      CollectionReference storiesCollection =
+          FirebaseFirestore.instance.collection('stories');
+
+      QuerySnapshot querySnapshot = await storiesCollection
+          .where('genres', arrayContainsAny: genres)
+          .get();
+
+      Set<String> storyIdsSet = Set<String>();
+
+      List<Story> stories = querySnapshot.docs
+          .map((doc) {
+            final Story story = Story.fromFirestore(
+                doc as DocumentSnapshot<Map<String, dynamic>>);
+            return storyIdsSet.add(story.id!) &&
+                    !completedStoryIds.contains(story.id)
+                ? story
+                : null;
+          })
+          .whereType<Story>()
+          .toList();
+
+      return stories;
+    } catch (e) {
+      log("StoryRepository: ${e.toString()}");
+      return [];
+    }
+  }
 }

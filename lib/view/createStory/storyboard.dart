@@ -172,7 +172,7 @@ class _StoryboardState extends State<Storyboard> {
                                     children: [
                                       Icon(
                                         Icons.star_rounded,
-                                        color: AppColors.yellow,
+                                        color: Colors.amber,
                                       ),
                                       SizedBox(
                                         width: 12,
