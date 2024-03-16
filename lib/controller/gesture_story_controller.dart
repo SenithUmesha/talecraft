@@ -40,8 +40,9 @@ class GestureStoryController extends FullLifeCycleController {
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
   late CameraController cameraController;
-  int answer = -1;
+  String answer = "";
   CameraImage? cameraImage;
+  bool isWorking = false;
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -72,8 +73,8 @@ class GestureStoryController extends FullLifeCycleController {
   }
 
   loadmodel() async {
-    Tflite.loadModel(
-      model: "assets/model/detect.tflite",
+    await Tflite.loadModel(
+      model: "assets/model/model.tflite",
       labels: "assets/model/labels.txt",
     );
   }
@@ -84,26 +85,28 @@ class GestureStoryController extends FullLifeCycleController {
         return;
       }
       cameraController.startImageStream(
-        (image) => {
-          if (true)
-            {
-              cameraImage = image,
-              applyModelOnImages(),
-            }
+        (image) {
+          if (!isWorking) {
+            isWorking = true;
+            cameraImage = image;
+            applyModelOnImages();
+          }
         },
       );
       update();
-    }).catchError((Object e) async {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            await [Permission.camera].request();
-            break;
-          default:
-            break;
-        }
-      }
     });
+
+    // .catchError((Object e) async {
+    //   if (e is CameraException) {
+    //     switch (e.code) {
+    //       case 'CameraAccessDenied':
+    //         await [Permission.camera].request();
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    // });
   }
 
   applyModelOnImages() async {
@@ -119,26 +122,24 @@ class GestureStoryController extends FullLifeCycleController {
           imageMean: 127.5,
           imageStd: 127.5,
           rotation: 90,
-          numResults: 3,
+          numResults: 2,
           threshold: 0.1,
           asynch: true);
 
-      answer = -1;
+      answer = "";
 
       predictions!.forEach(
         (prediction) {
-          answer += int.parse(prediction['label'].toString().substring(1));
+          answer = prediction['label'][2];
+          log("Prediction -> ${answer}");
 
-          if (answer == 1 ||
-              answer == 2 ||
-              answer == 3 ||
-              answer == 4 ||
-              answer == 5) {
-            stopRecord();
-            resumeStory(answer);
-          }
+          //   stopRecord();
+          //   resumeStory(answer);
         },
       );
+
+      update();
+      isWorking = false;
     }
   }
 
@@ -280,6 +281,7 @@ class GestureStoryController extends FullLifeCycleController {
   @override
   Future<void> onClose() async {
     flutterTts.stop();
+    cameraController.stopImageStream();
     await Tflite.close();
     cameraController.dispose();
     super.onClose();

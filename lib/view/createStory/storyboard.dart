@@ -80,9 +80,6 @@ class _StoryboardState extends State<Storyboard> {
                         onDragStarted: () =>
                             controller.onDraggedBlock(BlockType.story),
                       ),
-                      SizedBox(
-                        width: 2,
-                      ),
                       Draggable<GraphNodeFactory<Block>>(
                         data: GraphNodeFactory(
                           dataBuilder: () => Block(
@@ -141,7 +138,7 @@ class _StoryboardState extends State<Storyboard> {
                                       children: [
                                         Icon(Icons.clear_rounded),
                                         SizedBox(
-                                          width: 12,
+                                          width: 8,
                                         ),
                                         AppWidgets.regularText(
                                             text: AppStrings.clearGraph,
@@ -155,7 +152,7 @@ class _StoryboardState extends State<Storyboard> {
                                 ),
                               ),
                               SizedBox(
-                                width: 10,
+                                width: 12,
                               ),
                               GestureDetector(
                                 onTap: () => controller.showContextDialog(),
@@ -175,7 +172,7 @@ class _StoryboardState extends State<Storyboard> {
                                         color: Colors.amber,
                                       ),
                                       SizedBox(
-                                        width: 12,
+                                        width: 8,
                                       ),
                                       AppWidgets.regularText(
                                           text: AppStrings.getStartedWithAI,

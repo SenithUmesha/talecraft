@@ -31,7 +31,7 @@ class HomeController extends GetxController {
     "AI",
     "Thriller"
   ];
-  final box = GetStorage();
+  var box = GetStorage();
 
   @override
   void onInit() {
@@ -75,11 +75,11 @@ class HomeController extends GetxController {
       });
     } else {
       if (box.hasData('recommendedStoriesList')) {
+        List<dynamic> dataList = box.read('recommendedStoriesList') ?? [];
+        List<Map<String, dynamic>> listOfMaps =
+            dataList.cast<Map<String, dynamic>>();
         recommendedStoriesList =
-            (box.read<List<Map<String, dynamic>>>('recommendedStoriesList') ??
-                    [])
-                .map((json) => Story.fromJson(json))
-                .toList();
+            listOfMaps.map((json) => Story.fromJson(json)).toList();
       }
     }
 

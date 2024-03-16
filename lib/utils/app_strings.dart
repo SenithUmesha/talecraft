@@ -88,7 +88,7 @@ class AppStrings {
   static const pleaseSelectEnding = "Please select an ending";
   static const selectEnding = "Select an ending";
   static const getStartedWithAI = "Get Started with AI";
-  static const clearGraph = "Clear Graph";
+  static const clearGraph = "Clear All";
   static const loadGeneratedStory = "Generated story loaded";
   static const readTime = "Read Time";
   static const readTimeShouldBeLessThan60 =

@@ -225,7 +225,7 @@ class StoryPublish extends StatelessWidget {
                                             height: height * 0.065,
                                             width: width,
                                             padding: const EdgeInsets.only(
-                                                left: 15, right: 15),
+                                                left: 15, right: 5),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5),
