@@ -43,6 +43,7 @@ class GestureStoryController extends FullLifeCycleController {
   String answer = "";
   CameraImage? cameraImage;
   bool isWorking = false;
+  bool isModelLoaded = false;
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -77,6 +78,7 @@ class GestureStoryController extends FullLifeCycleController {
       model: "assets/model/model.tflite",
       labels: "assets/model/labels.txt",
     );
+    isModelLoaded = true;
   }
 
   initCamera() {
@@ -89,24 +91,14 @@ class GestureStoryController extends FullLifeCycleController {
           if (!isWorking) {
             isWorking = true;
             cameraImage = image;
-            applyModelOnImages();
+            if (isModelLoaded) {
+              applyModelOnImages();
+            }
           }
         },
       );
       update();
     });
-
-    // .catchError((Object e) async {
-    //   if (e is CameraException) {
-    //     switch (e.code) {
-    //       case 'CameraAccessDenied':
-    //         await [Permission.camera].request();
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   }
-    // });
   }
 
   applyModelOnImages() async {
@@ -126,21 +118,48 @@ class GestureStoryController extends FullLifeCycleController {
           threshold: 0.1,
           asynch: true);
 
-      answer = "";
+      double highestConfidence = 0;
+      String highestConfidenceLabel = "";
 
-      predictions!.forEach(
-        (prediction) {
-          answer = prediction['label'][2];
-          log("Prediction -> ${answer}");
+      if (predictions != null) {
+        predictions.forEach((prediction) {
+          String label = prediction['label'][2];
+          double confidence = prediction['confidence'];
 
-          //   stopRecord();
-          //   resumeStory(answer);
-        },
-      );
+          if (confidence > 0.8 && confidence > highestConfidence) {
+            highestConfidence = confidence;
+            highestConfidenceLabel = label;
+
+            answer = highestConfidenceLabel;
+            log("Prediction -> ${answer} | Confidence -> ${confidence}");
+          }
+        });
+      }
+
+      // answer = "";
+
+      // predictions!.forEach(
+      //   (prediction) {
+      //     answer = prediction['label'][2];
+      //     log("Prediction -> ${answer}");
+
+      //       stopRecord();
+      //       resumeStory(answer);
+      //   },
+      // );
 
       update();
       isWorking = false;
     }
+  }
+
+  @override
+  Future<void> onClose() async {
+    await flutterTts.stop();
+    await cameraController.stopImageStream();
+    await Tflite.close();
+    await cameraController.dispose();
+    super.onClose();
   }
 
   @override
@@ -276,15 +295,6 @@ class GestureStoryController extends FullLifeCycleController {
     var result = await flutterTts.pause();
     if (result == 1) ttsState = TtsState.paused;
     update();
-  }
-
-  @override
-  Future<void> onClose() async {
-    flutterTts.stop();
-    cameraController.stopImageStream();
-    await Tflite.close();
-    cameraController.dispose();
-    super.onClose();
   }
 
   void setReadText(dynamic list, bool isChoice) {
