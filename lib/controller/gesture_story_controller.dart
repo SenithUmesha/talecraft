@@ -44,6 +44,7 @@ class GestureStoryController extends FullLifeCycleController {
   CameraImage? cameraImage;
   bool isWorking = false;
   bool isModelLoaded = false;
+  List<int> predictionList = [];
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -82,6 +83,10 @@ class GestureStoryController extends FullLifeCycleController {
   }
 
   initCamera() {
+    if (isDone) {
+      initCamera();
+    }
+
     cameraController.initialize().then((_) {
       if (!Get.context!.mounted) {
         return;
@@ -114,7 +119,7 @@ class GestureStoryController extends FullLifeCycleController {
           imageMean: 127.5,
           imageStd: 127.5,
           rotation: 90,
-          numResults: 2,
+          numResults: 1,
           threshold: 0.1,
           asynch: true);
 
@@ -122,43 +127,122 @@ class GestureStoryController extends FullLifeCycleController {
       String highestConfidenceLabel = "";
 
       if (predictions != null) {
-        predictions.forEach((prediction) {
+        predictions.forEach((prediction) async {
           String label = prediction['label'][2];
           double confidence = prediction['confidence'];
 
+          // if (predictionList.length < 40) {
+          //   if (confidence > 0.8 && confidence > highestConfidence) {
+          //     highestConfidence = confidence;
+          //     highestConfidenceLabel = label;
+          //     answer = highestConfidenceLabel;
+
+          //     predictionList.add(int.parse(answer));
+
+          //     log("Prediction -> ${answer} | Confidence -> ${confidence}");
+          //   }
+          // } else {
+          //   await stopRecord();
+          // }
           if (confidence > 0.8 && confidence > highestConfidence) {
             highestConfidence = confidence;
             highestConfidenceLabel = label;
-
             answer = highestConfidenceLabel;
+
             log("Prediction -> ${answer} | Confidence -> ${confidence}");
           }
         });
+
+        // await stopRecord();
+        // showConfirmationDialog(int.parse(answer) - 1);
       }
-
-      // answer = "";
-
-      // predictions!.forEach(
-      //   (prediction) {
-      //     answer = prediction['label'][2];
-      //     log("Prediction -> ${answer}");
-
-      //       stopRecord();
-      //       resumeStory(answer);
-      //   },
-      // );
 
       update();
       isWorking = false;
     }
   }
 
+  getMostCommonPrediction() {
+    Map<int, int> frequencyMap = {};
+
+    for (int prediction in predictionList) {
+      frequencyMap.update(prediction, (value) => value + 1, ifAbsent: () => 1);
+    }
+
+    int mostCommonPrediction = 0;
+    int highestFrequency = 0;
+
+    frequencyMap.forEach((prediction, frequency) {
+      if (frequency > highestFrequency) {
+        highestFrequency = frequency;
+        mostCommonPrediction = prediction;
+      }
+    });
+
+    predictionList.clear();
+    showConfirmationDialog(mostCommonPrediction - 1);
+  }
+
+  showConfirmationDialog(int mostCommonPrediction) {
+    return showDialog(
+      barrierDismissible: false,
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: AppWidgets.regularText(
+            text: "Confirmation",
+            size: 20.0,
+            color: AppColors.black,
+            weight: FontWeight.w600,
+          ),
+          content: AppWidgets.regularText(
+            text: "Confirm your choice",
+            size: 16.0,
+            color: AppColors.black,
+            weight: FontWeight.w400,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+                initCamera();
+              },
+              child: AppWidgets.regularText(
+                text: AppStrings.no,
+                size: 16.0,
+                color: AppColors.black,
+                weight: FontWeight.w400,
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(AppColors.black)),
+              onPressed: () {
+                Get.back();
+                resumeStory(mostCommonPrediction);
+              },
+              child: AppWidgets.regularText(
+                text: AppStrings.yes,
+                size: 16.0,
+                color: AppColors.white,
+                weight: FontWeight.w400,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Future<void> onClose() async {
     await flutterTts.stop();
-    await cameraController.stopImageStream();
-    await Tflite.close();
-    await cameraController.dispose();
+    if (isRecording) {
+      await cameraController.stopImageStream();
+      await Tflite.close();
+      await cameraController.dispose();
+    }
     super.onClose();
   }
 
@@ -549,9 +633,14 @@ class GestureStoryController extends FullLifeCycleController {
     update();
   }
 
-  stopRecord() {
+  stopRecord() async {
     cameraState = CameraState.done;
-    cameraController.dispose();
+    isWorking = false;
+    isModelLoaded = false;
+    getMostCommonPrediction();
+    await cameraController.stopImageStream();
+    await Tflite.close();
+    await cameraController.dispose();
     update();
   }
 }

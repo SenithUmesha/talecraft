@@ -114,11 +114,14 @@ class GestureStory extends StatelessWidget {
                                                         ),
                                                       )
                                                     : controller.isDone
-                                                        ? Icon(
-                                                            Icons
-                                                                .fiber_manual_record_rounded,
-                                                            color:
-                                                                AppColors.black,
+                                                        ? SizedBox(
+                                                            height: 20,
+                                                            width: 20,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
                                                           )
                                                         : Container(),
                                     onPressed: () => controller.isyetToPlay
