@@ -10,7 +10,6 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
-import 'package:tflite_v2/tflite_v2.dart';
 
 import '../main.dart';
 import '../model/block.dart';
@@ -40,11 +39,7 @@ class GestureStoryController extends FullLifeCycleController {
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
   late CameraController cameraController;
-  String answer = "";
   CameraImage? cameraImage;
-  bool isWorking = false;
-  bool isModelLoaded = false;
-  List<int> predictionList = [];
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -67,120 +62,21 @@ class GestureStoryController extends FullLifeCycleController {
 
     story = Get.arguments[0];
     jsonToGraph(root, story.storyJson!);
-    loadmodel();
     flutterTts = FlutterTts();
     initTts();
     cameraController = CameraController(cameras[1], ResolutionPreset.medium);
     startStoryProcess();
   }
 
-  loadmodel() async {
-    await Tflite.loadModel(
-      model: "assets/model/model.tflite",
-      labels: "assets/model/labels.txt",
-    );
-    isModelLoaded = true;
-  }
-
   initCamera() {
-    if (isDone) {
-      initCamera();
-    }
+    cameraState = CameraState.recording;
+    update();
 
     cameraController.initialize().then((_) {
       if (!Get.context!.mounted) {
         return;
       }
-      cameraController.startImageStream(
-        (image) {
-          if (!isWorking) {
-            isWorking = true;
-            cameraImage = image;
-            if (isModelLoaded) {
-              applyModelOnImages();
-            }
-          }
-        },
-      );
-      update();
     });
-  }
-
-  applyModelOnImages() async {
-    if (cameraImage != null) {
-      var predictions = await Tflite.runModelOnFrame(
-          bytesList: cameraImage!.planes.map(
-            (plane) {
-              return plane.bytes;
-            },
-          ).toList(),
-          imageHeight: cameraImage!.height,
-          imageWidth: cameraImage!.width,
-          imageMean: 127.5,
-          imageStd: 127.5,
-          rotation: 90,
-          numResults: 1,
-          threshold: 0.1,
-          asynch: true);
-
-      double highestConfidence = 0;
-      String highestConfidenceLabel = "";
-
-      if (predictions != null) {
-        predictions.forEach((prediction) async {
-          String label = prediction['label'][2];
-          double confidence = prediction['confidence'];
-
-          // if (predictionList.length < 40) {
-          //   if (confidence > 0.8 && confidence > highestConfidence) {
-          //     highestConfidence = confidence;
-          //     highestConfidenceLabel = label;
-          //     answer = highestConfidenceLabel;
-
-          //     predictionList.add(int.parse(answer));
-
-          //     log("Prediction -> ${answer} | Confidence -> ${confidence}");
-          //   }
-          // } else {
-          //   await stopRecord();
-          // }
-          if (confidence > 0.8 && confidence > highestConfidence) {
-            highestConfidence = confidence;
-            highestConfidenceLabel = label;
-            answer = highestConfidenceLabel;
-
-            log("Prediction -> ${answer} | Confidence -> ${confidence}");
-          }
-        });
-
-        // await stopRecord();
-        // showConfirmationDialog(int.parse(answer) - 1);
-      }
-
-      update();
-      isWorking = false;
-    }
-  }
-
-  getMostCommonPrediction() {
-    Map<int, int> frequencyMap = {};
-
-    for (int prediction in predictionList) {
-      frequencyMap.update(prediction, (value) => value + 1, ifAbsent: () => 1);
-    }
-
-    int mostCommonPrediction = 0;
-    int highestFrequency = 0;
-
-    frequencyMap.forEach((prediction, frequency) {
-      if (frequency > highestFrequency) {
-        highestFrequency = frequency;
-        mostCommonPrediction = prediction;
-      }
-    });
-
-    predictionList.clear();
-    showConfirmationDialog(mostCommonPrediction - 1);
   }
 
   showConfirmationDialog(int mostCommonPrediction) {
@@ -238,11 +134,7 @@ class GestureStoryController extends FullLifeCycleController {
   @override
   Future<void> onClose() async {
     await flutterTts.stop();
-    if (isRecording) {
-      await cameraController.stopImageStream();
-      await Tflite.close();
-      await cameraController.dispose();
-    }
+    await cameraController.dispose();
     super.onClose();
   }
 
@@ -327,9 +219,6 @@ class GestureStoryController extends FullLifeCycleController {
           resumeStory(id);
         } else {
           if (await checkCameraPermission()) {
-            cameraState = CameraState.recording;
-            update();
-
             initCamera();
           } else {
             AppWidgets.showSnackBar(
@@ -630,17 +519,6 @@ class GestureStoryController extends FullLifeCycleController {
 
   setLoader(bool value) {
     isLoading = value;
-    update();
-  }
-
-  stopRecord() async {
-    cameraState = CameraState.done;
-    isWorking = false;
-    isModelLoaded = false;
-    getMostCommonPrediction();
-    await cameraController.stopImageStream();
-    await Tflite.close();
-    await cameraController.dispose();
     update();
   }
 }

@@ -61,7 +61,6 @@ dependencies:
   firebase_storage: ^11.6.0
   rating_dialog: ^2.0.4
   camera: ^0.10.5+9
-  tflite_v2: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -94,7 +93,6 @@ flutter:
     - assets/
     - assets/images/
     - assets/icons/
-    - assets/model/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -140,7 +140,7 @@ class GestureStory extends StatelessWidget {
                                             )
                                           : controller.isRecording
                                               ? AppWidgets.regularText(
-                                                  text: controller.answer,
+                                                  text: "",
                                                   size: 15.0,
                                                   alignment: TextAlign.justify,
                                                   color: AppColors.black,
