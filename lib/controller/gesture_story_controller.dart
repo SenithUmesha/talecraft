@@ -105,21 +105,28 @@ class GestureStoryController extends FullLifeCycleController {
           String gesture = data['gesture'];
           int? number = int.tryParse(gesture);
           log('Image successfully processed! ${number.toString()}');
-          cameraState = CameraState.done;
-          update();
-          showConfirmationDialog(number! - 1);
+
+          if (number! <= currentChoiceList!.length) {
+            cameraState = CameraState.done;
+            update();
+            showConfirmationDialog(number - 1);
+          } else {
+            AppWidgets.showToast(AppStrings.invalidChoiceNo);
+            await Future.delayed(Duration(milliseconds: 500));
+            captureAndSendImage();
+          }
         } else {
           log('Failed to process image: ${response.statusCode}');
-          await Future.delayed(Duration(seconds: 2));
+          await Future.delayed(Duration(seconds: 1));
           captureAndSendImage();
         }
       } else {
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(Duration(milliseconds: 500));
         captureAndSendImage();
       }
     } catch (e) {
       log('Error capturing or sending image: $e');
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       captureAndSendImage();
     }
   }
