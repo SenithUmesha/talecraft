@@ -108,4 +108,5 @@ class AppStrings {
   static const completedStories = "Completed Stories";
   static const storyCreateInfo =
       "• Use AI features to get started creating your story if you need a head start.\n\n• Double press on blocks to edit blocks or hold press to delete blocks.\n\n• A story block can have muliple choice blocks while choice blocks can have only one story block.\n\n• All branches need to end with a story block.\n\n• When branching, the story blocks must have at least two choice blocks.\n\n• Story must have at least 2 choice blocks.";
+  static const confirmation = "Confirmation";
 }

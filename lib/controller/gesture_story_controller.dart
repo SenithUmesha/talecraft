@@ -125,55 +125,86 @@ class GestureStoryController extends FullLifeCycleController {
   }
 
   showConfirmationDialog(int number) {
+    int countdown = 5;
+    bool isCountdownCompleted = false;
+
+    void startCountdown(BuildContext context, StateSetter setState) {
+      Timer.periodic(Duration(seconds: 1), (timer) {
+        if (countdown != 0) {
+          if (context.mounted) {
+            setState(() {
+              countdown--;
+            });
+          }
+        } else {
+          timer.cancel();
+          if (!isCountdownCompleted) {
+            isCountdownCompleted = true;
+            Get.back();
+            resumeStory(number);
+          }
+        }
+      });
+    }
+
     return showDialog(
       barrierDismissible: false,
       context: Get.context!,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: AppWidgets.regularText(
-            text: "Confirmation",
-            size: 20.0,
-            color: AppColors.black,
-            weight: FontWeight.w600,
-          ),
-          content: AppWidgets.regularText(
-            text: "Was it ${number + 1} you picked?",
-            size: 16.0,
-            color: AppColors.black,
-            weight: FontWeight.w400,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                cameraState = CameraState.recording;
-                update();
-                Get.back();
-                captureAndSendImage();
-              },
-              child: AppWidgets.regularText(
-                text: AppStrings.no,
-                size: 16.0,
-                color: AppColors.black,
-                weight: FontWeight.w400,
-              ),
+        return StatefulBuilder(builder: (context, setState) {
+          startCountdown(context, setState);
+
+          return AlertDialog(
+            title: AppWidgets.regularText(
+              text: AppStrings.confirmation,
+              size: 20.0,
+              color: AppColors.black,
+              weight: FontWeight.w600,
             ),
-            ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(AppColors.black)),
-              onPressed: () {
-                Get.back();
-                resumeStory(number);
-              },
-              child: AppWidgets.regularText(
-                text: AppStrings.yes,
-                size: 16.0,
-                color: AppColors.white,
-                weight: FontWeight.w400,
-              ),
+            content: AppWidgets.regularText(
+              text: "Was it ${number + 1} you picked?",
+              size: 16.0,
+              color: AppColors.black,
+              weight: FontWeight.w400,
             ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (!isCountdownCompleted) {
+                    cameraState = CameraState.recording;
+                    update();
+                    Get.back();
+                    captureAndSendImage();
+                  }
+                },
+                child: AppWidgets.regularText(
+                  text: AppStrings.no,
+                  size: 16.0,
+                  color: AppColors.black,
+                  weight: FontWeight.w400,
+                ),
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(AppColors.black)),
+                onPressed: () {
+                  if (!isCountdownCompleted) {
+                    isCountdownCompleted = true;
+                    Get.back();
+                    resumeStory(number);
+                  }
+                },
+                child: AppWidgets.regularText(
+                  text: 'Yes ($countdown)',
+                  size: 16.0,
+                  color: AppColors.white,
+                  weight: FontWeight.w400,
+                ),
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -241,6 +272,7 @@ class GestureStoryController extends FullLifeCycleController {
         ttsState = TtsState.ended;
         readText = "";
         update();
+        await cameraController.dispose();
         log("TTS State: " + ttsState.toString());
       } else {
         ttsState = TtsState.stopped;
