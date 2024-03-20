@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talecraft/model/saved_progress.dart';
 import 'package:talecraft/model/story.dart';
+import 'package:http/http.dart' as http;
 
 import '../main.dart';
 import '../model/block.dart';
@@ -20,7 +22,7 @@ import '../utils/app_widgets.dart';
 
 enum TtsState { playing, stopped, paused, ended, yetToPlay }
 
-enum CameraState { recording, done }
+enum CameraState { recording, done, sending }
 
 class GestureStoryController extends FullLifeCycleController {
   bool isLoading = false;
@@ -39,7 +41,6 @@ class GestureStoryController extends FullLifeCycleController {
   ProgressState status = ProgressState.DocDoesNotExist;
   SavedProgress? progress;
   late CameraController cameraController;
-  CameraImage? cameraImage;
 
   TtsState ttsState = TtsState.yetToPlay;
   get isPlaying => ttsState == TtsState.playing;
@@ -50,6 +51,7 @@ class GestureStoryController extends FullLifeCycleController {
 
   CameraState cameraState = CameraState.done;
   get isRecording => cameraState == CameraState.recording;
+  get isSending => cameraState == CameraState.sending;
   get isDone => cameraState == CameraState.done;
 
   @override
@@ -68,18 +70,61 @@ class GestureStoryController extends FullLifeCycleController {
     startStoryProcess();
   }
 
-  initCamera() {
-    cameraState = CameraState.recording;
-    update();
-
-    cameraController.initialize().then((_) {
-      if (!Get.context!.mounted) {
-        return;
-      }
-    });
+  Future<void> initCamera() async {
+    if (!cameraController.value.isInitialized) {
+      await cameraController.initialize().then((value) {
+        cameraState = CameraState.recording;
+        update();
+      });
+    } else {
+      cameraState = CameraState.recording;
+      update();
+    }
   }
 
-  showConfirmationDialog(int mostCommonPrediction) {
+  Future<void> captureAndSendImage() async {
+    await initCamera();
+
+    try {
+      if (!cameraController.value.isTakingPicture) {
+        XFile imageFile = await cameraController.takePicture();
+        List<int> imageBytes = await imageFile.readAsBytes();
+        String base64Image = base64Encode(imageBytes);
+
+        Map<String, String> requestBody = {'image': base64Image};
+        String jsonBody = jsonEncode(requestBody);
+
+        var response = await http.post(
+          Uri.parse('http://192.168.1.102:5000/process_image'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonBody,
+        );
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(response.body);
+          String gesture = data['gesture'];
+          int? number = int.tryParse(gesture);
+          log('Image successfully processed! ${number.toString()}');
+          cameraState = CameraState.done;
+          update();
+          showConfirmationDialog(number! - 1);
+        } else {
+          log('Failed to process image: ${response.statusCode}');
+          await Future.delayed(Duration(seconds: 2));
+          captureAndSendImage();
+        }
+      } else {
+        await Future.delayed(Duration(seconds: 2));
+        captureAndSendImage();
+      }
+    } catch (e) {
+      log('Error capturing or sending image: $e');
+      await Future.delayed(Duration(seconds: 2));
+      captureAndSendImage();
+    }
+  }
+
+  showConfirmationDialog(int number) {
     return showDialog(
       barrierDismissible: false,
       context: Get.context!,
@@ -92,7 +137,7 @@ class GestureStoryController extends FullLifeCycleController {
             weight: FontWeight.w600,
           ),
           content: AppWidgets.regularText(
-            text: "Confirm your choice",
+            text: "Was it ${number + 1} you picked?",
             size: 16.0,
             color: AppColors.black,
             weight: FontWeight.w400,
@@ -100,8 +145,10 @@ class GestureStoryController extends FullLifeCycleController {
           actions: [
             TextButton(
               onPressed: () {
+                cameraState = CameraState.recording;
+                update();
                 Get.back();
-                initCamera();
+                captureAndSendImage();
               },
               child: AppWidgets.regularText(
                 text: AppStrings.no,
@@ -116,7 +163,7 @@ class GestureStoryController extends FullLifeCycleController {
                       MaterialStateProperty.all<Color>(AppColors.black)),
               onPressed: () {
                 Get.back();
-                resumeStory(mostCommonPrediction);
+                resumeStory(number);
               },
               child: AppWidgets.regularText(
                 text: AppStrings.yes,
@@ -136,19 +183,6 @@ class GestureStoryController extends FullLifeCycleController {
     await flutterTts.stop();
     await cameraController.dispose();
     super.onClose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!cameraController.value.isInitialized) {
-      return;
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      cameraController.dispose();
-    } else if (state == AppLifecycleState.resumed) {
-      initCamera();
-    }
   }
 
   Future<bool> checkCameraPermission() async {
@@ -219,7 +253,7 @@ class GestureStoryController extends FullLifeCycleController {
           resumeStory(id);
         } else {
           if (await checkCameraPermission()) {
-            initCamera();
+            await captureAndSendImage();
           } else {
             AppWidgets.showSnackBar(
                 AppStrings.error, AppStrings.permissionNotGranted);

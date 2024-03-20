@@ -58,24 +58,44 @@ class GestureStory extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      controller.isRecording
-                          ? CameraPreview(controller.cameraController)
-                          : Expanded(
-                              child: CupertinoScrollbar(
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            CupertinoScrollbar(
+                              controller: controller.scrollController,
+                              child: ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 20, bottom: 20),
                                 controller: controller.scrollController,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15, top: 20, bottom: 20),
-                                  controller: controller.scrollController,
-                                  itemCount: controller.widgetList.length,
-                                  itemBuilder: (context, index) {
-                                    return controller.widgetList[index];
-                                  },
-                                ),
+                                itemCount: controller.widgetList.length,
+                                itemBuilder: (context, index) {
+                                  return controller.widgetList[index];
+                                },
                               ),
                             ),
+                            controller.isRecording
+                                ? Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        margin: EdgeInsets.only(
+                                            bottom: 10, right: 10),
+                                        height: 150,
+                                        width: 100,
+                                        child: CameraPreview(
+                                            controller.cameraController)),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
                       controller.isEnded
                           ? Container()
                           : Container(
@@ -113,7 +133,7 @@ class GestureStory extends StatelessWidget {
                                                           color: AppColors.red,
                                                         ),
                                                       )
-                                                    : controller.isDone
+                                                    : controller.isSending
                                                         ? SizedBox(
                                                             height: 20,
                                                             width: 20,
