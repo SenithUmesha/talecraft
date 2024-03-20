@@ -61,6 +61,7 @@ dependencies:
   firebase_storage: ^11.6.0
   rating_dialog: ^2.0.4
   camera: ^0.10.5+9
+  tutorial_coach_mark: ^1.2.11
 
 dev_dependencies:
   flutter_test:

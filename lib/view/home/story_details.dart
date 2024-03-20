@@ -17,16 +17,30 @@ import '../../utils/loading_overlay.dart';
 import '../story/gesture_story.dart';
 import '../story/listen_story.dart';
 
-class StoryDetails extends StatelessWidget {
+class StoryDetails extends StatefulWidget {
   final refreshHome;
   StoryDetails({super.key, required this.refreshHome});
+
+  @override
+  State<StoryDetails> createState() => _StoryDetailsState();
+}
+
+class _StoryDetailsState extends State<StoryDetails> {
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 1), () {
+      Get.put(StoryDetailsController()).showTutorial(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
     return WillPopScope(
-      onWillPop: refreshHome
+      onWillPop: widget.refreshHome
           ? () async {
               HomeController homeController = Get.find<HomeController>();
               homeController.onInit();
@@ -38,7 +52,7 @@ class StoryDetails extends StatelessWidget {
             },
       child: Scaffold(
         appBar: CustomAppBar(
-          onPressBack: refreshHome
+          onPressBack: widget.refreshHome
               ? () {
                   HomeController homeController = Get.find<HomeController>();
                   homeController.onInit();
@@ -289,6 +303,7 @@ class StoryDetails extends StatelessWidget {
                                                         controller.story.name!),
                                                 arguments: [controller.story]),
                                             child: Container(
+                                              key: controller.read,
                                               width: width * 0.4,
                                               height: width * 0.14,
                                               decoration: BoxDecoration(
@@ -324,6 +339,7 @@ class StoryDetails extends StatelessWidget {
                                                         controller.story.name!),
                                                 arguments: [controller.story]),
                                             child: Container(
+                                              key: controller.listen,
                                               width: width * 0.4,
                                               height: width * 0.14,
                                               decoration: BoxDecoration(
@@ -351,6 +367,7 @@ class StoryDetails extends StatelessWidget {
                                                         controller.story.name!),
                                                 arguments: [controller.story]),
                                             child: Container(
+                                              key: controller.gesture,
                                               width: width * 0.14,
                                               height: width * 0.14,
                                               decoration: BoxDecoration(
