@@ -14,7 +14,6 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final authRepo = Get.put(AuthRepository());
   final box = GetStorage();
-  String code = "+91";
   bool passwordObscureText = true;
   bool isLoading = false;
 

@@ -20,7 +20,7 @@ class RegistrationController extends GetxController {
   final box = GetStorage();
 
   void showPassword(bool obscureText, int index) {
-    if (index == 4) {
+    if (index == 2) {
       passwordObscureText = !obscureText;
     } else {
       confirmPasswordObscureText = !obscureText;
@@ -38,7 +38,6 @@ class RegistrationController extends GetxController {
       )
           .then((value) async {
         User? user = value.user;
-        await user?.updateDisplayName(nameController.text.trim());
         Reader reader = Reader(
             uid: user?.uid,
             name: nameController.text.trim(),
@@ -47,6 +46,7 @@ class RegistrationController extends GetxController {
             publishedStories: []);
         await authRepo.createUser(reader);
         await box.write('current_user', reader);
+        await user?.updateDisplayName(nameController.text.trim());
 
         AppWidgets.showSnackBar(
             AppStrings.success, AppStrings.accountCreationSuccess);

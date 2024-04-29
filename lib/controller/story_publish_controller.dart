@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flow_graph/flow_graph.dart';
 import 'package:flutter/material.dart';
@@ -171,18 +173,14 @@ class StoryPublishController extends GetxController {
                 weight: FontWeight.w400,
               ),
               onPressed: (context) async {
-                if (await Permission.camera.isGranted) {
+                if (await getCamaraPermission()) {
                   takePhoto();
+                  Get.back();
                 } else {
-                  final hasFilePermission = await requestPermission();
-                  if (hasFilePermission) {
-                    takePhoto();
-                  } else {
-                    AppWidgets.showSnackBar(
-                        AppStrings.error, AppStrings.permissionNotGranted);
-                  }
+                  Get.back();
+                  AppWidgets.showSnackBar(
+                      AppStrings.error, AppStrings.permissionNotGranted);
                 }
-                Get.back();
               }),
           BottomSheetAction(
               title: AppWidgets.regularText(
@@ -192,18 +190,14 @@ class StoryPublishController extends GetxController {
                 weight: FontWeight.w400,
               ),
               onPressed: (context) async {
-                if (await Permission.photos.isGranted) {
+                if (await getStoragePermission()) {
                   pickImageFromGallery();
+                  Get.back();
                 } else {
-                  final hasFilePermission = await requestPermission();
-                  if (hasFilePermission) {
-                    pickImageFromGallery();
-                  } else {
-                    AppWidgets.showSnackBar(
-                        AppStrings.error, AppStrings.permissionNotGranted);
-                  }
+                  Get.back();
+                  AppWidgets.showSnackBar(
+                      AppStrings.error, AppStrings.permissionNotGranted);
                 }
-                Get.back();
               }),
         ],
         cancelAction: CancelAction(
@@ -216,22 +210,53 @@ class StoryPublishController extends GetxController {
         ));
   }
 
-  Future<bool> requestPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-      Permission.storage,
-    ].request();
+  Future<bool> getCamaraPermission() async {
+    var permission = await Permission.camera.status;
 
-    if (statuses[Permission.camera] == PermissionStatus.granted &&
-        statuses[Permission.storage] == PermissionStatus.granted) {
-      return true;
-    } else if (statuses[Permission.camera] ==
-            PermissionStatus.permanentlyDenied ||
-        statuses[Permission.storage] == PermissionStatus.permanentlyDenied) {
-      openAppSettings();
-      return false;
+    if (permission == PermissionStatus.denied) {
+      permission = await Permission.camera.request();
+
+      if (permission == PermissionStatus.denied) {
+        log('Camara permission is denied');
+        return false;
+      } else {
+        log('Camara permission is denied');
+        return true;
+      }
     } else {
-      return false;
+      log('Camara permission is denied');
+      return true;
+    }
+  }
+
+  Future<bool> getStoragePermission() async {
+    var permission = await Permission.storage.status;
+
+    if (permission == PermissionStatus.denied) {
+      if (Platform.isAndroid) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        if (androidInfo.version.sdkInt <= 32) {
+          permission = await Permission.storage.request();
+        } else {
+          permission = await Permission.photos.request();
+        }
+      } else {
+        permission = await Permission.storage.request();
+      }
+
+      if (permission == PermissionStatus.denied) {
+        log('storage permission is denied');
+        return false;
+      } else if (permission == PermissionStatus.granted) {
+        log('storage permission is denied');
+        return true;
+      } else {
+        log('storage permission is denied');
+        return false;
+      }
+    } else {
+      log('storage permission is denied');
+      return true;
     }
   }
 
