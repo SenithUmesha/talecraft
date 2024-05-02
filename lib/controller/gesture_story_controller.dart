@@ -95,7 +95,7 @@ class GestureStoryController extends FullLifeCycleController {
         String jsonBody = jsonEncode(requestBody);
 
         var response = await http.post(
-          Uri.parse('http://192.168.1.101:5000/process_image'),
+          Uri.parse('http://192.168.1.100:5000/process_image'),
           headers: {'Content-Type': 'application/json'},
           body: jsonBody,
         );
